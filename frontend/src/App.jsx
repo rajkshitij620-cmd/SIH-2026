@@ -3,25 +3,25 @@ import {Routes,Route,Navigate,useLocation} from 'react-router-dom';import Layout
 function Protected({children}){const {user,loading}=useAuth(),location=useLocation();if(loading)return <div className="shell py-12">Loading…</div>;return user?children:<Navigate to="/register" replace state={{from:location.pathname}}/>}
 
 const pageTitles={
-  '/':'TourMitra',
-  '/login':'Login | TourMitra',
-  '/register':'Sign Up | TourMitra',
-  '/plan':'Plan Your Trip | TourMitra',
-  '/tour-guide':'Tour Guide | TourMitra',
-  '/previous-trips':'Previous Trips | TourMitra',
-  '/saved-tours':'Saved Tours | TourMitra',
-  '/find-travelers':'Find TravelMates | TourMitra',
-  '/requests':'Group Requests | TourMitra',
-  '/groups':'My Travel Groups | TourMitra',
-  '/explore':'Explore Destinations | TourMitra',
-  '/assistant':'AI Assistant | TourMitra',
-  '/saved':'Saved Itineraries | TourMitra',
+  '/':'Tourmitra',
+  '/login':'Login | Tourmitra',
+  '/register':'Sign Up | Tourmitra',
+  '/plan':'Plan Your Trip | Tourmitra',
+  '/tour-guide':'Tour Guide | Tourmitra',
+  '/previous-trips':'Previous Trips | Tourmitra',
+  '/saved-tours':'Saved Tours | Tourmitra',
+  '/find-travelers':'Find TravelMates | Tourmitra',
+  '/requests':'Group Requests | Tourmitra',
+  '/groups':'My Travel Groups | Tourmitra',
+  '/explore':'Explore Destinations | Tourmitra',
+  '/assistant':'AI Assistant | Tourmitra',
+  '/saved':'Saved Itineraries | Tourmitra',
 };
 
 function PageTitle(){
   const {pathname}=useLocation();
   useEffect(()=>{
-    const title=pathname.startsWith('/itinerary/')?'Your Itinerary | TourMitra':pathname.startsWith('/destinations/')?'Destination Details | TourMitra':pathname.startsWith('/travelers/')?'Traveller Profile | TourMitra':pageTitles[pathname]||'TourMitra';
+    const title=pathname.startsWith('/itinerary/')?'Your Itinerary | Tourmitra':pathname.startsWith('/destinations/')?'Destination Details | Tourmitra':pathname.startsWith('/travelers/')?'Traveller Profile | Tourmitra':pageTitles[pathname]||'Tourmitra';
     document.title=title;
   },[pathname]);
   return null;

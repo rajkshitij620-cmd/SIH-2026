@@ -38,7 +38,7 @@ export default function Layout({children}) {
  return <div className="flex min-h-screen flex-col">
   <header className="site-header sticky top-0 z-40 border-b border-slate-200 bg-stone-50/95 backdrop-blur">
    <div className="shell flex min-h-16 items-center justify-between gap-4">
-    <Link to="/" className="brand font-serif text-xl font-bold text-slate-900" onClick={closeMenu}>TourMitra <span className="text-teal-700">AI</span></Link>
+    <Link to="/" className="brand font-serif text-xl font-bold text-slate-900" onClick={closeMenu}>Tourmitra</Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
     <div className="hidden items-center gap-3 md:flex">
      <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
@@ -53,7 +53,7 @@ export default function Layout({children}) {
     <div className="shell grid gap-8 sm:grid-cols-2 md:grid-cols-4">
      <div className="sm:col-span-2">
       <Link to="/" className="brand font-serif text-xl font-bold text-slate-900">
-       TourMitra <span className="text-teal-700">AI</span>
+       Tourmitra
       </Link>
       <p className="mt-3 max-w-sm text-sm text-slate-600">
        Your AI-powered companion for smart, sustainable, and crowd-aware travel planning across India.
@@ -82,7 +82,7 @@ export default function Layout({children}) {
      </div>
     </div>
     <div className="shell mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-slate-200/80 pt-6 text-xs text-slate-500 dark:border-slate-800">
-     <p>© {new Date().getFullYear()} TourMitra AI. All rights reserved.</p>
+     <p>© {new Date().getFullYear()} Tourmitra. All rights reserved.</p>
      <p>Made with ♥ for Smart Tourism in India</p>
     </div>
    </footer>
