@@ -3,18 +3,18 @@ import {Routes,Route,Navigate,useLocation} from 'react-router-dom';import Layout
 function Protected({children}){const {user,loading}=useAuth(),location=useLocation();if(loading)return <div className="shell py-12">Loading…</div>;return user?children:<Navigate to="/register" replace state={{from:location.pathname}}/>}
 
 const pageTitles={
-  '/':'Tourmitra',
-  '/login':'Login | Tourmitra',
-  '/register':'Sign Up | Tourmitra',
-  '/plan':'Plan Your Trip | Tourmitra',
-  '/tour-guide':'Tour Guide | Tourmitra',
-  '/previous-trips':'Previous Trips | Tourmitra',
-  '/saved-tours':'Saved Tours | Tourmitra',
+  '/':'Tourmitra | Next-Gen Smart Tourism AI',
+  '/login':'Sign In | Tourmitra',
+  '/register':'Create Account | Tourmitra',
+  '/plan':'AI Trip Planner | Tourmitra',
+  '/tour-guide':'Tour Guide & Itinerary | Tourmitra',
+  '/previous-trips':'Trip History | Tourmitra',
+  '/saved-tours':'Saved Itineraries | Tourmitra',
   '/find-travelers':'Find TravelMates | Tourmitra',
-  '/requests':'Group Requests | Tourmitra',
+  '/requests':'TravelMate Requests | Tourmitra',
   '/groups':'My Travel Groups | Tourmitra',
   '/explore':'Explore Destinations | Tourmitra',
-  '/assistant':'AI Assistant | Tourmitra',
+  '/assistant':'AI Travel Assistant | Tourmitra',
   '/saved':'Saved Itineraries | Tourmitra',
 };
 

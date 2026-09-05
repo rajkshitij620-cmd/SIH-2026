@@ -427,19 +427,19 @@ export function Planner(){
      <button type="button" className="btn-ghost" onClick={()=>{setErr('');setMakingGroup(false)}} disabled={load}>Back</button>
     </div>
    </form>
-   {cameraTarget!==null&&<LiveCamera onClose={()=>setCameraTarget(null)} onCapture={image=>{setPhoto(image);setCameraTarget(null)}}/>}
+{cameraTarget!==null&&<LiveCamera onClose={()=>setCameraTarget(null)} onCapture={image=>{setPhoto(image);setCameraTarget(null)}}/>}
   </div>
  );
 
  return (
   <div className="shell max-w-3xl py-10 sm:py-14">
    <div className="text-center max-w-xl mx-auto">
-    <p className="eyebrow">{hasPreviousTrip?'New Trip Planner':'Smart Trip Planner'}</p>
+    <p className="eyebrow">{hasPreviousTrip?'AI-Powered Trip Engine':'Smart Itinerary Planner'}</p>
     <h1 className="mt-1 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-     {hasPreviousTrip?'Plan another journey with AI':'Plan your personalized journey'}
+     {hasPreviousTrip?'Plan Another Journey with AI':'Craft Your Personalized Journey'}
     </h1>
-    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-     Choose Solo Travel or Group Travel to generate day-wise attraction schedules, budget allocations, and weather-protected itineraries.
+    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+     Generate smart day-wise schedules, weather-protected itineraries, and intelligent budget optimization for your Indian adventure.
     </p>
    </div>
 
@@ -459,12 +459,12 @@ export function Planner(){
        <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
          <User size={18} className={travelType==='single'?'text-teal-600':'text-slate-400'}/>
-         <span>Single Travel</span>
+         <span>Solo Traveler</span>
         </div>
-        <span className="rounded-full bg-teal-100 dark:bg-teal-900 px-2 py-0.5 text-[10px] font-bold text-teal-800 dark:text-teal-200">Solo or Make Group</span>
+        <span className="rounded-full bg-teal-100 dark:bg-teal-900 px-2.5 py-0.5 text-[10px] font-bold text-teal-800 dark:text-teal-200">Solo & Matchmaking</span>
        </div>
-       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
-        Get an individual tour guide or connect with matched TravelMates for this destination.
+       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        Generate a personalized solo tour guide or connect with verified TravelMates heading to this destination.
        </p>
       </div>
 
@@ -479,12 +479,12 @@ export function Planner(){
        <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
          <Users size={18} className={travelType==='group'?'text-teal-600':'text-slate-400'}/>
-         <span>Group Travel</span>
+         <span>Group & Family</span>
         </div>
-        <span className="rounded-full bg-emerald-100 dark:bg-emerald-900 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">Complete Guide</span>
+        <span className="rounded-full bg-emerald-100 dark:bg-emerald-900 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">Full Guide & Split</span>
        </div>
-       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400">
-        Full destination guide with per-head shared budget split for your group of friends or family.
+       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+        Complete multi-person itinerary with automated per-head shared budget splitting for friends and family.
        </p>
       </div>
      </div>
@@ -492,7 +492,7 @@ export function Planner(){
 
     {/* Destination Input */}
     <div>
-     <label className="label" htmlFor="destination">Destination City / Place in India</label>
+     <label className="label" htmlFor="destination">Destination City or Heritage Site</label>
      <div className="relative mt-1">
       <MapPin size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-teal-600"/>
       <input 
@@ -501,7 +501,7 @@ export function Planner(){
        name="destination" 
        value={destinationInput}
        onChange={e=>setDestinationInput(e.target.value)}
-       placeholder="e.g. Varanasi, Goa, Jaipur, Agra, Kerala, Ladakh…" 
+       placeholder="e.g. Varanasi, Goa, Jaipur, Agra, Manali, Kerala Backwaters…" 
        autoComplete="address-level2" 
        required
       />
@@ -523,8 +523,8 @@ export function Planner(){
     {/* Budget & Presets */}
     <div>
      <div className="flex items-center justify-between">
-      <label className="label" htmlFor="budget">Total Budget (₹ INR)</label>
-      <span className="text-xs text-slate-500 font-medium">Auto-distributed by AI</span>
+      <label className="label" htmlFor="budget">Total Estimated Budget (₹ INR)</label>
+      <span className="text-xs text-slate-500 font-medium">Smartly allocated across stays, food & transit</span>
      </div>
      <div className="relative mt-1">
       <IndianRupee size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"/>
@@ -546,7 +546,7 @@ export function Planner(){
        {label:'₹5,000 (Budget)',val:'5000'},
        {label:'₹15,000 (Standard)',val:'15000'},
        {label:'₹30,000 (Comfort)',val:'30000'},
-       {label:'₹50,000 (Premium)',val:'50000'}
+       {label:'₹50,000 (Luxury)',val:'50000'}
       ].map(p=>(
        <button 
         key={p.val} 
@@ -567,7 +567,7 @@ export function Planner(){
     {/* Conditional Fields based on Single vs Group */}
     {travelType==='single'?(
      <div>
-      <label className="label" htmlFor="gender">Gender</label>
+      <label className="label" htmlFor="gender">Gender (For Community Matchmaking)</label>
       <select className="input" id="gender" name="gender" defaultValue="" required>
        <option value="" disabled>Select gender for profile matching</option>
        <option value="male">Male</option>
@@ -577,13 +577,13 @@ export function Planner(){
      </div>
     ):(
      <div>
-      <label className="label" htmlFor="travellers">Number of People in Group</label>
+      <label className="label" htmlFor="travellers">Number of Travelers in Group</label>
       <select className="input" id="travellers" name="travellers" defaultValue="2" required>
        {[2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50].map(count=>(
-        <option value={count} key={count}>{count} people travelling together</option>
+        <option value={count} key={count}>{count} travelers in group</option>
        ))}
       </select>
-      <p className="mt-1 text-xs text-slate-500">The total group budget will be partitioned among all members.</p>
+      <p className="mt-1 text-xs text-slate-500">The total group budget will be partitioned evenly among all members.</p>
      </div>
     )}
 
@@ -594,7 +594,7 @@ export function Planner(){
      className="btn w-full !py-3.5 text-base font-bold shadow-lg shadow-teal-700/20" 
      disabled={load}
     >
-     {load?'Generating AI Tour Guide…':travelType==='group'?'View Complete Destination Guide':'Continue to Travel Options →'}
+     {load ? 'Crafting Your AI Itinerary…' : travelType === 'group' ? 'Generate Group Itinerary & Guide →' : 'Continue to Exploration Options →'}
     </button>
    </form>
   </div>

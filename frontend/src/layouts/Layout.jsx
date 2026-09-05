@@ -83,16 +83,13 @@ export default function Layout({children}) {
   });
  },[user,pathname]);
 
- const planLabel=hasPreviousTrip?'New plan trip':'Plan trip';
- const isMakeGroupPage=['/find-travelers','/requests','/groups'].some(p=>pathname===p||pathname.startsWith(p+'/'));
- const isUnsavedTourView=pathname==='/tour-guide'||pathname.startsWith('/travel-plan/');
  const links = isMakeGroupPage
-  ? [['/','Home'],['/plan',planLabel],['/groups','My groups'],['/find-travelers','Find TravelMates'],['/requests','Requests'],['/assistant','AI assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
   : hasSavedTours
-  ? [['/','Home'],['/plan',planLabel],['/saved-tours','Saved tours'],['/assistant','AI assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
   : isUnsavedTourView
-  ? [['/','Home'],['/plan',planLabel],['/tour-guide','Tour guide'],['/assistant','AI assistant']]
-  : [['/','Home'],['/plan',planLabel],['/assistant','AI assistant']];
+  ? [['/','Home'],['/plan','Plan Trip'],['/tour-guide','Tour Guide'],['/assistant','AI Assistant']]
+  : [['/','Home'],['/plan','Plan Trip'],['/assistant','AI Assistant']];
   const isHomePage = pathname === '/';
   return <div className="flex min-h-screen flex-col">
    <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
