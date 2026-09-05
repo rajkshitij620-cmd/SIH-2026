@@ -33,39 +33,8 @@ const allIndiaDestinations = [
 
 const popularCities=['Agra','Varanasi','Jaipur','Goa','Kerala','Ladakh','Kolkata','Udaipur','Manali','Amritsar'];
 
-const getTodayStr = (offsetDays = 0) => {
-  const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
-  return d.toISOString().split('T')[0];
-};
-
-const formatCardDate = (dateStr) => {
-  if (!dateStr) return { day: '--', monthYear: '--', weekday: '--' };
-  try {
-    const d = new Date(`${dateStr}T00:00:00`);
-    const day = d.getDate();
-    const month = d.toLocaleString('en-IN', { month: 'short' });
-    const year = String(d.getFullYear()).slice(2);
-    const weekday = d.toLocaleString('en-IN', { weekday: 'long' });
-    return { day: `${day}`, monthYear: `${month}'${year}`, weekday };
-  } catch {
-    return { day: dateStr, monthYear: '', weekday: '' };
-  }
-};
-
 export function Home(){
- const {user}=useAuth(),nav=useNavigate(),[hasPreviousTrip,setHasPreviousTrip]=useState(false);
- const [activeCategory,setActiveCategory]=useState('All'),[displayedPlaces,setDisplayedPlaces]=useState([]),[isShuffling,setIsShuffling]=useState(false);
-
- // Hero Card Interactive State (MakeMyTrip Style)
- const [heroTravelType,setHeroTravelType]=useState('single');
- const [heroDestination,setHeroDestination]=useState('Varanasi');
- const [heroStartDate,setHeroStartDate]=useState(()=>getTodayStr(2));
- const [heroEndDate,setHeroEndDate]=useState(()=>getTodayStr(5));
- const [heroTravellers,setHeroTravellers]=useState('1');
- const [heroBudget,setHeroBudget]=useState('15000');
- const [activeServiceTab,setActiveServiceTab]=useState('guide');
- const [showCityPicker,setShowCityPicker]=useState(false);
+ const {user}=useAuth(),nav=useNavigate(),[hasPreviousTrip,setHasPreviousTrip]=useState(false),[searchCity,setSearchCity]=useState(''),[activeCategory,setActiveCategory]=useState('All'),[displayedPlaces,setDisplayedPlaces]=useState([]),[isShuffling,setIsShuffling]=useState(false);
 
  const shuffleAndSet=(cat='All')=>{
   setIsShuffling(true);
@@ -80,6 +49,7 @@ export function Home(){
   api.get('/trips/history').then(trips=>setHasPreviousTrip(trips.length>0)).catch(()=>setHasPreviousTrip(false));
  },[user]);
 
+ // Every time user lands on Home page, dynamically pick a fresh randomized set of famous Indian destinations
  useEffect(()=>{
   shuffleAndSet('All');
  },[]);
@@ -89,289 +59,79 @@ export function Home(){
   shuffleAndSet(cat);
  };
 
- const handleHeroSubmit=(e)=>{
-  if(e)e.preventDefault();
-  const dest=heroDestination.trim()||'Varanasi';
-  const params=new URLSearchParams({
-   destination:dest,
-   type:heroTravelType,
-   budget:heroBudget,
-   start_date:heroStartDate,
-   end_date:heroEndDate,
-   travellers:heroTravelType==='group'?(Math.max(2,Number(heroTravellers)||2).toString()):'1'
-  });
-  nav(`/plan?${params.toString()}`);
+ const handleQuickSearch=(e)=>{
+  e.preventDefault();
+  if(searchCity.trim()){
+   nav(`/plan?destination=${encodeURIComponent(searchCity.trim())}`);
+  }else{
+   nav('/plan');
+  }
  };
 
- const startFormatted=formatCardDate(heroStartDate);
- const endFormatted=formatCardDate(heroEndDate);
-
  return (
-  <div className="space-y-16">
-   {/* Full-width Panoramic Hero Container */}
-   <div className="relative -mx-5 sm:-mx-8 -mt-8 sm:-mt-12 overflow-hidden bg-slate-950 pb-20 pt-10 sm:pt-14 px-4 sm:px-8 border-b border-slate-800">
-    {/* Panoramic Traveling Background Image with Depth & Overlay */}
+  <div className="shell py-8 sm:py-12 space-y-16">
+   {/* Hero Section - Light & Fresh Aesthetic for Both Light and Dark Modes */}
+   <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-50/85 via-white/95 to-emerald-50/75 dark:from-slate-800/95 dark:via-slate-800/80 dark:to-teal-950/60 p-6 sm:p-12 lg:p-16 border border-teal-100/90 dark:border-teal-700/40 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-teal-950/30">
+    {/* Low-Opacity Travel Scenic Background Image */}
     <div 
-     className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 transition-transform duration-1000"
+     className="absolute inset-0 bg-cover bg-center sm:bg-right-bottom opacity-[0.09] dark:opacity-[0.14] pointer-events-none mix-blend-multiply dark:mix-blend-overlay scale-105 transition-transform duration-1000"
      style={{
-      backgroundImage: `url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=2400&q=85')`
+      backgroundImage: `url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=2000&q=80')`
      }}
     />
-    {/* Subtle Dark Gradient Overlay for Contrast & Readability */}
-    <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-900/60 to-slate-950/90 pointer-events-none" />
 
-    <div className="relative z-10 max-w-6xl mx-auto">
-     {/* Top Floating Service Navigation Pills (MakeMyTrip Style) */}
-     <div className="flex justify-center mb-6 overflow-x-auto py-1 scrollbar-none">
-      <div className="inline-flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-white/20 dark:border-slate-700 shadow-2xl shadow-slate-950/50">
-       {[
-        { id: 'guide', label: 'AI Solo Guide', icon: Compass, action: () => { setActiveServiceTab('guide'); setHeroTravelType('single'); } },
-        { id: 'group', label: 'Group Travel', icon: Users, action: () => { setActiveServiceTab('group'); setHeroTravelType('group'); if(heroTravellers==='1') setHeroTravellers('3'); } },
-        { id: 'travelmates', label: 'Find TravelMates', icon: ShieldCheck, action: () => nav('/find-travelers') },
-        { id: 'assistant', label: 'AI Assistant', icon: Sparkles, action: () => nav('/assistant') },
-        { id: 'heritage', label: 'Explore Heritage', icon: MapPin, action: () => nav('/explore') },
-       ].map(tab => (
-        <button
-         key={tab.id}
-         type="button"
-         onClick={tab.action}
-         className={`flex items-center gap-2 px-3.5 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all duration-200 whitespace-nowrap ${
-          activeServiceTab === tab.id
-           ? 'bg-gradient-to-r from-teal-700 to-emerald-700 text-white shadow-md shadow-teal-900/40'
-           : 'text-slate-700 dark:text-slate-300 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-         }`}
-        >
-         <tab.icon size={15} />
-         <span>{tab.label}</span>
-        </button>
-       ))}
-      </div>
+    {/* Ambient Soft Glows */}
+    <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-200/35 dark:bg-teal-400/20 blur-3xl pointer-events-none"/>
+    <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-200/25 dark:bg-emerald-400/15 blur-3xl pointer-events-none"/>
+
+    <div className="relative z-10 max-w-3xl">
+     <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 dark:border-teal-500/40 bg-teal-100/80 dark:bg-teal-900/60 px-3.5 py-1.5 text-xs font-semibold text-teal-900 dark:text-teal-200 backdrop-blur-md shadow-sm">
+      <Sparkles size={14} className="text-teal-600 dark:text-teal-300"/>
+      <span>Next-Gen Smart Tourism AI · SIH 2026</span>
      </div>
 
-     {/* Main MakeMyTrip Planning Box */}
-     <div className="relative rounded-3xl bg-white dark:bg-slate-900 p-6 sm:p-8 shadow-2xl border border-slate-200/80 dark:border-slate-800">
-      {/* Mode Radios / Toggles */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
-       <div className="flex flex-wrap items-center gap-6 text-sm font-semibold">
-        <label className="flex items-center gap-2.5 cursor-pointer text-slate-800 dark:text-slate-200">
-         <input
-          type="radio"
-          name="hero-mode"
-          checked={heroTravelType === 'single'}
-          onChange={() => { setHeroTravelType('single'); setActiveServiceTab('guide'); }}
-          className="h-4 w-4 text-teal-700 focus:ring-teal-600 accent-teal-700"
-         />
-         <span>Single Travel <span className="text-xs font-normal text-slate-500 dark:text-slate-400">(Solo Guide / TravelMate)</span></span>
-        </label>
-        <label className="flex items-center gap-2.5 cursor-pointer text-slate-800 dark:text-slate-200">
-         <input
-          type="radio"
-          name="hero-mode"
-          checked={heroTravelType === 'group'}
-          onChange={() => { setHeroTravelType('group'); setActiveServiceTab('group'); if(heroTravellers==='1') setHeroTravellers('3'); }}
-          className="h-4 w-4 text-teal-700 focus:ring-teal-600 accent-teal-700"
-         />
-         <span>Group Travel <span className="text-xs font-normal text-slate-500 dark:text-slate-400">(Shared Budget Split)</span></span>
-        </label>
-       </div>
+     <h1 className="mt-5 font-serif text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white">
+      Discover Incredible India with <span className="bg-gradient-to-r from-teal-700 via-emerald-600 to-amber-600 dark:from-teal-300 dark:via-emerald-300 dark:to-amber-200 bg-clip-text text-transparent">AI Precision</span>
+     </h1>
 
-       <div className="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400">
-        <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-        <span>Next-Gen Smart Tourism AI · SIH 2026</span>
-       </div>
+     <p className="mt-5 text-base sm:text-lg text-slate-600 dark:text-slate-200 leading-relaxed font-normal">
+      Personalized day-wise schedules, live weather-adaptive adjustments, intelligent budget distribution, and smart TravelMate group connections.
+     </p>
+
+     {/* Search & Quick Planner Bar */}
+     <form onSubmit={handleQuickSearch} className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-2xl sm:rounded-full bg-white dark:bg-slate-700/85 p-2 border border-slate-200 dark:border-slate-600 shadow-lg shadow-slate-200/60 dark:shadow-slate-950/40">
+      <div className="flex flex-1 items-center gap-3 px-4 py-2">
+       <MapPin size={20} className="text-teal-600 dark:text-teal-300 shrink-0"/>
+       <input 
+        type="text" 
+        value={searchCity}
+        onChange={(e)=>setSearchCity(e.target.value)}
+        placeholder="Where in India are you travelling? (e.g. Varanasi, Goa, Jaipur, Manali)" 
+        className="w-full bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-300 outline-none font-medium"
+       />
       </div>
+      <button type="submit" className="btn !bg-gradient-to-r !from-teal-800 !to-teal-900 dark:!from-teal-400 dark:!to-emerald-400 !text-white dark:!text-slate-950 font-bold !rounded-xl sm:!rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-md shadow-teal-900/10 dark:shadow-teal-400/20 hover:scale-[1.02] active:scale-95 transition-all">
+       <span>{hasPreviousTrip?'Plan New Trip':'Plan My Trip'}</span>
+       <ArrowRight size={16}/>
+      </button>
+     </form>
 
-      {/* 4 Large Interactive Multi-Segment Boxes */}
-      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-       {/* Box 1: Destination */}
-       <div className="relative rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 hover:border-teal-500 dark:hover:border-teal-400 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-all duration-200 cursor-pointer group">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-         <span className="uppercase tracking-wider">Destination City</span>
-         <MapPin size={15} className="text-teal-600 group-hover:scale-110 transition" />
-        </div>
-        <div className="mt-1">
-         <input
-          type="text"
-          value={heroDestination}
-          onChange={(e) => setHeroDestination(e.target.value)}
-          onFocus={() => setShowCityPicker(true)}
-          placeholder="Enter city (e.g. Varanasi)"
-          className="w-full bg-transparent font-serif text-2xl font-extrabold text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
-         />
-         <p className="text-xs font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">
-          {popularCities.includes(heroDestination) ? `${heroDestination}, India · Iconic Sights` : 'India · Day-Wise Custom Guide'}
-         </p>
-        </div>
-
-        {/* Popular City Quick Dropdown */}
-        {showCityPicker && (
-         <div 
-          className="absolute left-0 top-full mt-2 w-72 rounded-2xl bg-white dark:bg-slate-800 p-3 shadow-2xl border border-slate-200 dark:border-slate-700 z-50"
-          onMouseLeave={() => setShowCityPicker(false)}
-         >
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Suggested Indian Cities</p>
-          <div className="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto">
-           {popularCities.map(city => (
-            <button
-             key={city}
-             type="button"
-             onClick={() => { setHeroDestination(city); setShowCityPicker(false); }}
-             className="rounded-lg bg-slate-100 hover:bg-teal-50 dark:bg-slate-700 dark:hover:bg-teal-950 px-2.5 py-1 text-xs font-medium text-slate-800 dark:text-slate-200 transition"
-            >
-             {city}
-            </button>
-           ))}
-          </div>
-         </div>
-        )}
-       </div>
-
-       {/* Box 2: Start Date */}
-       <div className="relative rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 hover:border-teal-500 dark:hover:border-teal-400 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-all duration-200 cursor-pointer group">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-         <span className="uppercase tracking-wider">Start Date</span>
-         <Calendar size={15} className="text-teal-600 group-hover:scale-110 transition" />
-        </div>
-        <div className="mt-1 relative">
-         <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-extrabold text-slate-900 dark:text-white font-serif">{startFormatted.day}</span>
-          <span className="text-sm font-bold text-slate-600 dark:text-slate-300">{startFormatted.monthYear}</span>
-         </div>
-         <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{startFormatted.weekday || 'Departure Day'}</p>
-         <input
-          type="date"
-          value={heroStartDate}
-          onChange={(e) => setHeroStartDate(e.target.value)}
-          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-         />
-        </div>
-       </div>
-
-       {/* Box 3: Return Date */}
-       <div className="relative rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 hover:border-teal-500 dark:hover:border-teal-400 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-all duration-200 cursor-pointer group">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-         <span className="uppercase tracking-wider">Return Date</span>
-         <Calendar size={15} className="text-teal-600 group-hover:scale-110 transition" />
-        </div>
-        <div className="mt-1 relative">
-         <div className="flex items-baseline gap-1.5">
-          <span className="text-2xl font-extrabold text-slate-900 dark:text-white font-serif">{endFormatted.day}</span>
-          <span className="text-sm font-bold text-slate-600 dark:text-slate-300">{endFormatted.monthYear}</span>
-         </div>
-         <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{endFormatted.weekday || 'Flexible Weather Adjust'}</p>
-         <input
-          type="date"
-          value={heroEndDate}
-          onChange={(e) => setHeroEndDate(e.target.value)}
-          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-         />
-        </div>
-       </div>
-
-       {/* Box 4: Travellers & Budget */}
-       <div className="relative rounded-2xl border border-slate-200 dark:border-slate-700/80 p-4 hover:border-teal-500 dark:hover:border-teal-400 hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition-all duration-200 cursor-pointer group">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
-         <span className="uppercase tracking-wider">Travellers & Budget</span>
-         <Users size={15} className="text-teal-600 group-hover:scale-110 transition" />
-        </div>
-        <div className="mt-1">
-         <div className="flex items-baseline gap-1.5">
-          <span className="text-xl font-extrabold text-slate-900 dark:text-white">
-           {heroTravelType === 'single' ? '1 Person' : `${heroTravellers} People`}
-          </span>
-          <span className="text-sm font-bold text-teal-700 dark:text-teal-400">· ₹{Number(heroBudget).toLocaleString()}</span>
-         </div>
-         <div className="mt-1 flex items-center gap-2">
-          {heroTravelType === 'group' && (
-           <select
-            value={heroTravellers}
-            onChange={(e) => setHeroTravellers(e.target.value)}
-            className="text-xs font-semibold bg-slate-100 dark:bg-slate-800 rounded px-1.5 py-0.5 text-slate-700 dark:text-slate-300 border-none"
-           >
-            {[2,3,4,5,6,8,10,15,20].map(c => (
-             <option key={c} value={c}>{c} Pax</option>
-            ))}
-           </select>
-          )}
-          <select
-           value={heroBudget}
-           onChange={(e) => setHeroBudget(e.target.value)}
-           className="text-xs font-semibold bg-slate-100 dark:bg-slate-800 rounded px-1.5 py-0.5 text-slate-700 dark:text-slate-300 border-none"
-          >
-           <option value="5000">₹5,000 (Budget)</option>
-           <option value="15000">₹15,000 (Standard)</option>
-           <option value="30000">₹30,000 (Comfort)</option>
-           <option value="50000">₹50,000 (Premium)</option>
-          </select>
-         </div>
-        </div>
-       </div>
-      </div>
-
-      {/* Smart Feature Badges Inside Card */}
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800 pt-4 text-xs">
-       <div className="flex flex-wrap items-center gap-4 text-slate-600 dark:text-slate-400">
-        <span className="flex items-center gap-1.5 font-medium"><Sparkles size={14} className="text-teal-600 dark:text-teal-400"/> Demand-Aware AI Scheduling</span>
-        <span className="flex items-center gap-1.5 font-medium"><Sun size={14} className="text-amber-500"/> Live Weather-Adaptive</span>
-        <span className="flex items-center gap-1.5 font-medium"><Languages size={14} className="text-purple-600 dark:text-purple-400"/> 22 Indian Languages</span>
-        <span className="flex items-center gap-1.5 font-medium"><ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400"/> Verified Stays & Food</span>
-       </div>
-      </div>
-
-      {/* Centered Overlapping Floating Search Button */}
-      <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 z-20">
-       <button
-        type="button"
-        onClick={handleHeroSubmit}
-        className="btn !bg-gradient-to-r !from-teal-700 !via-teal-800 !to-emerald-800 hover:!from-teal-800 hover:!to-emerald-900 !text-white font-extrabold !text-sm sm:!text-base px-8 sm:px-12 py-3.5 sm:py-4 !rounded-full shadow-2xl shadow-teal-950/50 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 tracking-wider uppercase border-2 border-white/20"
+     {/* Popular Chips */}
+     <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+      <span className="font-semibold text-slate-700 dark:text-slate-200">Popular:</span>
+      {popularCities.map((city)=>(
+       <button 
+        key={city} 
+        type="button" 
+        onClick={()=>nav(`/plan?destination=${encodeURIComponent(city)}`)}
+        className="rounded-full bg-slate-100 hover:bg-teal-50 dark:bg-slate-700/90 dark:hover:bg-teal-900/60 border border-slate-200 dark:border-slate-600 hover:border-teal-300 dark:hover:border-teal-400 px-3 py-1 text-xs text-slate-700 hover:text-teal-800 dark:text-slate-100 dark:hover:text-teal-200 transition shadow-sm"
        >
-        <Sparkles size={18} />
-        <span>GENERATE AI TOUR GUIDE</span>
-        <ArrowRight size={18} />
+        {city}
        </button>
-      </div>
-     </div>
-
-     {/* Quick Tools Bar (Below Main Card) */}
-     <div className="mt-12 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs text-white/90">
-      <button
-       type="button"
-       onClick={() => nav('/explore')}
-       className="flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 font-semibold transition border border-white/10"
-      >
-       <Compass size={14} className="text-teal-400" />
-       <span>Where2Go (AI Insights)</span>
-      </button>
-      <button
-       type="button"
-       onClick={() => nav('/explore')}
-       className="flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 font-semibold transition border border-white/10"
-      >
-       <TrendingUp size={14} className="text-amber-400" />
-       <span>Trending Hotspots</span>
-      </button>
-      <button
-       type="button"
-       onClick={() => nav('/assistant')}
-       className="flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 font-semibold transition border border-white/10"
-      >
-       <Sun size={14} className="text-sky-400" />
-       <span>AI Weather Shield</span>
-      </button>
-      <button
-       type="button"
-       onClick={() => nav('/find-travelers')}
-       className="flex items-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 font-semibold transition border border-white/10"
-      >
-       <Users size={14} className="text-purple-400" />
-       <span>Smart TravelMates</span>
-      </button>
+      ))}
      </div>
     </div>
    </div>
-
-   {/* Rest of the Home content */}
-   <div className="shell space-y-16">
 
    {/* Stats / Key Metrics Bar */}
    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -582,7 +342,6 @@ export function Home(){
     </div>
    </div>
   </div>
-  </div>
  );
 }
 
@@ -596,29 +355,11 @@ const cleanPlace=(name,dest='City')=>{if(!name||typeof name!=='string'||name.inc
 const DayWisePlacesChart=({trip})=>{if(!trip?.days?.length)return null;const destName=trip.destination?.name||trip.input?.destination||'Destination',famousPlaces=trip.destination?.famous_places||trip.travel_guide?.famous_places||[];return <section className="card mt-6"><div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-4"><div><p className="eyebrow">Day-Wise Tour Guide & Chart</p><h2 className="mt-1 text-2xl font-bold">Famous Places Organised Day-Wise</h2><p className="mt-1 text-sm text-slate-600">All top attractions and landmarks structured into a daily schedule chart with real-time weather alignment.</p></div><span className="rounded-full bg-teal-100 px-3.5 py-1 text-xs font-semibold text-teal-900">{trip.days.length} Day Schedule Chart</span></div>{famousPlaces.length>0&&<div className="mt-5 rounded-xl border border-teal-100 bg-teal-50/70 p-4"><p className="text-xs font-semibold uppercase tracking-wider text-teal-900">Top Famous Attractions Covered in this Destination:</p><div className="mt-2.5 flex flex-wrap gap-2">{famousPlaces.map((place,i)=><span key={i} className="inline-flex items-center gap-1.5 rounded-lg border border-teal-200 bg-white px-3 py-1 text-xs font-semibold text-teal-900 shadow-sm"><MapPin size={13} className="text-teal-600"/>{place}</span>)}</div></div>}<div className="mt-6 overflow-x-auto rounded-xl border border-slate-200"><table className="w-full text-left text-sm"><thead className="border-b border-slate-200 bg-slate-100/80 text-xs font-semibold uppercase tracking-wider text-slate-700"><tr><th className="px-4 py-3">Day & Date</th><th className="px-4 py-3">Weather & Suitability</th><th className="px-4 py-3">Key Famous Places</th><th className="px-4 py-3">Morning Landmark (9:30 AM)</th><th className="px-4 py-3">Afternoon Food (1:00 PM)</th><th className="px-4 py-3">Evening Sightseeing (4:30 PM)</th></tr></thead><tbody className="divide-y divide-slate-100 bg-white">{trip.days.map((day)=>{const indoor=day.weather?.outdoor_suitability==='low';const morning=day.activities?.find(a=>a.time?.includes('AM')||a.time==='09:30 AM'||a.time==='10:00 AM'||a.category?.includes('Sightseeing')||a.category?.includes('Heritage'));const lunch=day.activities?.find(a=>a.category==='Food'||a.time==='01:00 PM'||a.time==='01:30 PM');const evening=day.activities?.find(a=>a.time?.includes('PM')&&a!==lunch);const dayPlaces=(day.famous_places?.length>0?day.famous_places:[cleanPlace(morning?.place,destName),cleanPlace(evening?.place,destName)]).filter(p=>Boolean(p)&&!p.includes('Museum, gallery')&&!p.includes('craft studio'));return <tr key={day.day} className="hover:bg-slate-50 transition-colors"><td className="px-4 py-3.5 font-medium whitespace-nowrap"><span className="inline-block rounded bg-teal-900 px-2 py-0.5 text-xs font-bold text-white">Day {day.day}</span><p className="mt-1 text-xs text-slate-500">{formatDate(day.date)}</p></td><td className="px-4 py-3.5"><span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium ${indoor?'bg-sky-100 text-sky-800':'bg-emerald-100 text-emerald-800'}`}>{indoor?<CloudRain size={12}/>:<Sun size={12}/>}{day.weather?.condition||(indoor?'Indoor Plan':'Good Outdoor')}</span></td><td className="px-4 py-3.5"><div className="flex flex-wrap gap-1.5">{(dayPlaces.length?dayPlaces:[`${destName} Highlights`]).map((p,idx)=><span key={idx} className="rounded bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-800 border border-teal-200">★ {cleanPlace(p,destName)}</span>)}</div></td><td className="px-4 py-3.5 text-slate-700"><span className="font-semibold text-teal-950">{cleanPlace(morning?.place,destName)}</span></td><td className="px-4 py-3.5 text-slate-700"><span>{lunch?.place&&!lunch.place.includes('well-reviewed')?lunch.place:`${destName} Traditional Kitchen`}</span></td><td className="px-4 py-3.5 text-slate-700"><span className="font-semibold text-slate-900">{cleanPlace(evening?.place,destName)}</span></td></tr>})}</tbody></table></div><div className="mt-6 grid gap-4 md:grid-cols-2">{trip.days.map((day)=>{const indoor=day.weather?.outdoor_suitability==='low';const cleanedDayPlaces=(day.famous_places?.length>0?day.famous_places:[cleanPlace(day.activities?.[0]?.place,destName),cleanPlace(day.activities?.[2]?.place,destName)]).filter(p=>Boolean(p)&&!p.includes('Museum, gallery')&&!p.includes('craft studio'));return <article key={day.day} className={`rounded-xl border p-5 ${indoor?'border-sky-200 bg-sky-50/40':'border-slate-200 bg-white'} shadow-sm`}><div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3"><div><div className="flex items-center gap-2"><span className="rounded bg-teal-800 px-2.5 py-0.5 text-xs font-bold text-white">Day {day.day}</span><h3 className="font-bold text-slate-900">{day.theme?.includes('Indoor discovery')?'Cultural & Heritage discovery':day.theme}</h3></div><p className="mt-1 text-xs text-slate-500">{formatDate(day.date)}</p></div><span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${indoor?'bg-sky-100 text-sky-800':'bg-emerald-100 text-emerald-800'}`}>{indoor?<CloudRain size={13}/>:<Sun size={13}/>}{day.weather?.condition||'Clear Weather'}</span></div>{cleanedDayPlaces.length>0&&<div className="mt-3 flex flex-wrap items-center gap-1.5"><span className="text-xs font-semibold text-slate-500">Day Landmarks:</span>{cleanedDayPlaces.map((p,idx)=><span key={idx} className="rounded bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-800 border border-teal-200">★ {cleanPlace(p,destName)}</span>)}</div>}<div className="mt-4 space-y-3">{day.activities?.map((activity,index)=>{const isGeneric=activity.place?.includes('Museum, gallery')||activity.place?.includes('craft studio')||activity.place?.includes('well-reviewed');const placeTitle=cleanPlace(activity.place,destName);const cost=activity.estimated_cost>0?activity.estimated_cost:activity.category==='Food'?300:0;const travelTime=activity.travel_time&&!activity.travel_time.includes('Confirm')?activity.travel_time:'15-20 mins';const whyText=isGeneric?`Recommended ${activity.category?.toLowerCase()} for Day ${day.day} in ${destName}.`:activity.why_recommended;return <div key={index} className="flex items-start gap-3 rounded-lg border border-slate-100 bg-slate-50/80 p-3"><div className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-md bg-teal-100 text-teal-800 font-bold text-xs">{activity.time?.slice(0,2)||'09'}</div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center justify-between gap-1"><b className="text-sm text-slate-900">{placeTitle}</b><span className="text-xs font-medium text-slate-500">{activity.time}</span></div><p className="mt-0.5 text-xs text-teal-800 font-medium">{activity.category} {cost>0&&`· ₹${cost}`} {`· ⏱️ ${travelTime}`}</p><p className="mt-1 text-xs text-slate-600">{whyText}</p></div></div>})}</div></article>})}</div></section>};
 
 export function Planner(){
- const {user}=useAuth(),nav=useNavigate(),locationRoute=useLocation(),searchParams=new URLSearchParams(locationRoute.search);
- const prefilledDest=searchParams.get('destination')||'';
- const prefilledType=searchParams.get('type')||searchParams.get('travel_type')||'single';
- const prefilledBudget=searchParams.get('budget')||'15000';
- const prefilledStart=searchParams.get('start_date')||'';
- const prefilledEnd=searchParams.get('end_date')||'';
- const prefilledTravellers=searchParams.get('travellers')||'2';
-
- const [travelType,setTravelType]=useState(prefilledType);
- const [destinationInput,setDestinationInput]=useState(prefilledDest);
- const [budgetInput,setBudgetInput]=useState(prefilledBudget);
- const [startDateInput,setStartDateInput]=useState(prefilledStart);
- const [endDateInput,setEndDateInput]=useState(prefilledEnd);
- const [travellersInput,setTravellersInput]=useState(prefilledTravellers);
- const [location,setLocation]=useState(''),[coords,setCoords]=useState({}),[photo,setPhoto]=useState(''),[age,setAge]=useState(''),[cameraTarget,setCameraTarget]=useState(null),[draft,setDraft]=useState(null),[makingGroup,setMakingGroup]=useState(false),[load,setLoad]=useState(false),[err,setErr]=useState(''),[hasPreviousTrip,setHasPreviousTrip]=useState(false),galleryRef=useRef(),cameraRef=useRef();
+ const {user}=useAuth(),nav=useNavigate(),locationRoute=useLocation(),searchParams=new URLSearchParams(locationRoute.search),prefilledDest=searchParams.get('destination')||'';
+ const [travelType,setTravelType]=useState('single'),[destinationInput,setDestinationInput]=useState(prefilledDest),[budgetInput,setBudgetInput]=useState('15000'),[location,setLocation]=useState(''),[coords,setCoords]=useState({}),[photo,setPhoto]=useState(''),[age,setAge]=useState(''),[cameraTarget,setCameraTarget]=useState(null),[draft,setDraft]=useState(null),[makingGroup,setMakingGroup]=useState(false),[load,setLoad]=useState(false),[err,setErr]=useState(''),[hasPreviousTrip,setHasPreviousTrip]=useState(false),galleryRef=useRef(),cameraRef=useRef();
 
  useEffect(()=>{api.get('/trips/history').then(trips=>setHasPreviousTrip(trips.length>0)).catch(()=>setHasPreviousTrip(false))},[]);
  useEffect(()=>{if(prefilledDest)setDestinationInput(prefilledDest)},[prefilledDest]);
- useEffect(()=>{if(prefilledType)setTravelType(prefilledType)},[prefilledType]);
- useEffect(()=>{if(prefilledBudget)setBudgetInput(prefilledBudget)},[prefilledBudget]);
- useEffect(()=>{if(prefilledStart)setStartDateInput(prefilledStart)},[prefilledStart]);
- useEffect(()=>{if(prefilledEnd)setEndDateInput(prefilledEnd)},[prefilledEnd]);
- useEffect(()=>{if(prefilledTravellers)setTravellersInput(prefilledTravellers)},[prefilledTravellers]);
 
  const getUserCurrentLocation=()=>{setErr('');if(!navigator.geolocation){setErr('Location is unavailable on this device. Enter your city manually.');return}navigator.geolocation.getCurrentPosition(p=>{setCoords({current_location_latitude:p.coords.latitude,current_location_longitude:p.coords.longitude});setLocation('Near your current location')},()=>setErr('Location permission is required for Single Travel. Enter your city manually.'))};
  const readImage=(file,onLoad)=>{setErr('');if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){setErr('Upload a JPEG, JPG, or PNG photo only.');return}if(file.size>4*1024*1024){setErr('Each photo must be 4 MB or smaller.');return}const reader=new FileReader();reader.onload=()=>onLoad(reader.result);reader.readAsDataURL(file)};
@@ -794,27 +535,11 @@ export function Planner(){
     <div className="grid gap-4 sm:grid-cols-2">
      <div>
       <label className="label" htmlFor="start_date">Trip Start Date</label>
-      <input 
-       className="input" 
-       id="start_date" 
-       name="start_date" 
-       type="date" 
-       value={startDateInput}
-       onChange={e=>setStartDateInput(e.target.value)}
-       required
-      />
+      <input className="input" id="start_date" name="start_date" type="date" required/>
      </div>
      <div>
       <label className="label" htmlFor="end_date">Trip End Date</label>
-      <input 
-       className="input" 
-       id="end_date" 
-       name="end_date" 
-       type="date" 
-       value={endDateInput}
-       onChange={e=>setEndDateInput(e.target.value)}
-       required
-      />
+      <input className="input" id="end_date" name="end_date" type="date" required/>
      </div>
     </div>
 
@@ -876,14 +601,7 @@ export function Planner(){
     ):(
      <div>
       <label className="label" htmlFor="travellers">Number of People in Group</label>
-      <select 
-       className="input" 
-       id="travellers" 
-       name="travellers" 
-       value={travellersInput}
-       onChange={e=>setTravellersInput(e.target.value)}
-       required
-      >
+      <select className="input" id="travellers" name="travellers" defaultValue="2" required>
        {[2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50].map(count=>(
         <option value={count} key={count}>{count} people travelling together</option>
        ))}
