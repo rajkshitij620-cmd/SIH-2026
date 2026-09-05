@@ -39,7 +39,7 @@ export default function Layout({children}) {
   return <div className="flex min-h-screen flex-col">
    <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
      isHomePage 
-       ? '!bg-white/25 dark:!bg-slate-950/30 !border-b !border-white/20 dark:!border-white/10 backdrop-blur-md' 
+       ? '!bg-transparent !border-b-0 !border-transparent !shadow-none !backdrop-blur-none' 
        : 'border-b border-slate-200 bg-stone-50/95 backdrop-blur'
    }`}>
     <div className="shell flex min-h-16 items-center justify-between gap-4">
@@ -48,12 +48,12 @@ export default function Layout({children}) {
     </Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
     <div className="hidden items-center gap-3 md:flex">
-     <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
-     {user?<button type="button" className="btn-ghost !px-3 !py-2" onClick={logout}>Sign out</button>:<NavLink to="/login" className={linkClass}>Sign in</NavLink>}
+     <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
+     {user?<button type="button" className="btn-ghost !px-3 !py-2 !bg-white/80 dark:!bg-slate-800/80 backdrop-blur-sm" onClick={logout}>Sign out</button>:<NavLink to="/login" className={`${linkClass} font-semibold !text-slate-900 dark:!text-white`}>Sign in</NavLink>}
     </div>
-    <div className="flex items-center gap-2 md:hidden"><button type="button" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button><button type="button" className="theme-toggle" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>{menuOpen?<X size={19}/>:<Menu size={19}/>}</button></div>
+    <div className="flex items-center gap-2 md:hidden"><button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button><button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>{menuOpen?<X size={19}/>:<Menu size={19}/>}</button></div>
    </div>
-   {menuOpen&&<nav className="shell flex flex-col gap-3 border-t border-slate-200 py-4 md:hidden" aria-label="Mobile navigation">{user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}{user?<button type="button" className="text-left text-sm font-medium text-slate-600" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}</nav>}
+   {menuOpen&&<nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">{user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}{user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}</nav>}
   </header>
   <main className="flex-1">{children}</main>
   <footer className="border-t border-slate-200 bg-stone-100/70 py-10 transition-colors dark:border-slate-800 dark:bg-stone-900/60">
