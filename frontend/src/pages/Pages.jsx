@@ -322,7 +322,86 @@ export function Home(){
  );
 }
 
-export function Auth({register=false}){const {auth}=useAuth(),nav=useNavigate(),location=useLocation(),[mode,setMode]=useState(register?'register':'login'),[err,setErr]=useState(''),[msg,setMsg]=useState(location.state?.message||''),[showPassword,setShowPassword]=useState(false);useEffect(()=>{setMode(register?'register':'login');setErr('');setMsg(location.state?.message||'');setShowPassword(false)},[register,location.state]);const go=async e=>{e.preventDefault();setErr('');setMsg('');const body=Object.fromEntries(new FormData(e.target));try{if(mode==='register'){await auth('/auth/register',body);nav('/',{replace:true})}else if(mode==='reset'){await auth('/auth/reset-password',{email:body.email,new_password:body.password});nav('/',{replace:true})}else{await auth('/auth/login',body);nav('/',{replace:true})}}catch(x){if(mode==='register'&&x.message==='Email is already registered'){setErr('An account already exists with this email. Please sign in or reset your password below.');setMode('login');return}setErr(x.message)}};return <div className="shell grid min-h-[70vh] place-items-center"><form onSubmit={go} className="card w-full max-w-md"><p className="eyebrow">Welcome to Tourmitra</p><h1 className="mt-2 text-2xl font-bold">{mode==='register'?'Create your account':mode==='reset'?'Reset your password':'Sign in to plan better'}</h1>{msg&&<p className="mt-3 text-sm text-teal-700" role="status">{msg}</p>}{mode==='register'&&<Field n="name" label="Name" autoComplete="name"/>}<Field n="email" label="Email" type="email" d={location.state?.email||''} autoComplete="email"/><div className="relative"><Field n="password" label={mode==='reset'?'New Password':'Password'} type={showPassword?'text':'password'} autoComplete={mode==='login'?'current-password':'new-password'}/><button className="absolute bottom-3 right-3 text-slate-500 hover:text-teal-800" type="button" onClick={()=>setShowPassword(value=>!value)} aria-label={showPassword?'Hide password':'Show password'}>{showPassword?<EyeOff size={18}/>:<Eye size={18}/>}</button></div>{err&&<p className="mt-3 text-sm text-red-600" role="alert">{err}</p>}<button className="btn mt-6 w-full">{mode==='register'?'Create account':mode==='reset'?'Update password & sign in':'Sign in'}</button><div className="mt-4 flex flex-wrap items-center justify-between text-sm">{mode==='login'?<><button type="button" onClick={()=>{setMode('reset');setErr('')}} className="text-teal-800">Forgot / Reset password?</button><Link to="/register" className="text-teal-800">Create account</Link></>:mode==='reset'?<><button type="button" onClick={()=>{setMode('login');setErr('')}} className="text-teal-800">Back to Sign in</button><Link to="/register" className="text-teal-800">Create account</Link></>:<><Link to="/login" className="text-teal-800">Already registered? Sign in</Link><button type="button" onClick={()=>{setMode('reset');setErr('')}} className="text-teal-800">Reset password</button></>}</div></form></div>}
+export function Auth({register=false}){
+  const {auth}=useAuth(),
+  nav=useNavigate(),
+  location=useLocation(),
+  [mode,setMode]=useState(register?'register':'login'),
+  [err,setErr]=useState(''),
+  [msg,setMsg]=useState(location.state?.message||''),
+  [showPassword,setShowPassword]=useState(false);
+
+  useEffect(()=>{
+    setMode(register?'register':'login');
+    setErr('');
+    setMsg(location.state?.message||'');
+    setShowPassword(false);
+  },[register,location.state]);
+
+  const go=async e=>{
+    e.preventDefault();
+    setErr('');
+    setMsg('');
+    const body=Object.fromEntries(new FormData(e.target));
+    try{
+      if(mode==='register'){
+        await api.post('/auth/register',body);
+        nav('/login',{replace:true,state:{message:'Account created successfully! Please sign in with your credentials.',email:body.email}});
+      }else if(mode==='reset'){
+        await auth('/auth/reset-password',{email:body.email,new_password:body.password});
+        nav('/',{replace:true});
+      }else{
+        await auth('/auth/login',body);
+        nav('/',{replace:true});
+      }
+    }catch(x){
+      if(mode==='register'&&x.message==='Email is already registered'){
+        setErr('An account already exists with this email. Please sign in or reset your password below.');
+        setMode('login');
+        return;
+      }
+      setErr(x.message);
+    }
+  };
+
+  return (
+    <div className="shell grid min-h-[70vh] place-items-center">
+      <form onSubmit={go} className="card w-full max-w-md">
+        <p className="eyebrow">Welcome to Tourmitra</p>
+        <h1 className="mt-2 text-2xl font-bold">{mode==='register'?'Create your account':mode==='reset'?'Reset your password':'Sign in to plan better'}</h1>
+        {msg&&<p className="mt-3 text-sm font-medium text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/50 p-3 rounded-xl border border-emerald-200 dark:border-emerald-800" role="status">✓ {msg}</p>}
+        {mode==='register'&&<Field n="name" label="Name" autoComplete="name"/>}
+        <Field n="email" label="Email" type="email" d={location.state?.email||''} autoComplete="email"/>
+        <div className="relative">
+          <Field n="password" label={mode==='reset'?'New Password':'Password'} type={showPassword?'text':'password'} autoComplete={mode==='login'?'current-password':'new-password'}/>
+          <button className="absolute bottom-3 right-3 text-slate-500 hover:text-teal-800" type="button" onClick={()=>setShowPassword(value=>!value)} aria-label={showPassword?'Hide password':'Show password'}>
+            {showPassword?<EyeOff size={18}/>:<Eye size={18}/>}
+          </button>
+        </div>
+        {err&&<p className="mt-3 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50 p-3 rounded-xl border border-red-200 dark:border-red-800" role="alert">{err}</p>}
+        <button className="btn mt-6 w-full">{mode==='register'?'Create account':mode==='reset'?'Update password & sign in':'Sign in'}</button>
+        <div className="mt-4 flex flex-wrap items-center justify-between text-sm">
+          {mode==='login'?(
+            <>
+              <button type="button" onClick={()=>{setMode('reset');setErr('');setMsg('')}} className="text-teal-800 dark:text-teal-400 font-medium hover:underline">Forgot / Reset password?</button>
+              <Link to="/register" className="text-teal-800 dark:text-teal-400 font-semibold hover:underline">Create account</Link>
+            </>
+          ):mode==='reset'?(
+            <>
+              <button type="button" onClick={()=>{setMode('login');setErr('');setMsg('')}} className="text-teal-800 dark:text-teal-400 font-medium hover:underline">Back to Sign in</button>
+              <Link to="/register" className="text-teal-800 dark:text-teal-400 font-semibold hover:underline">Create account</Link>
+            </>
+          ):(
+            <>
+              <Link to="/login" className="text-teal-800 dark:text-teal-400 font-semibold hover:underline">Already registered? Sign in</Link>
+              <button type="button" onClick={()=>{setMode('reset');setErr('');setMsg('')}} className="text-teal-800 dark:text-teal-400 font-medium hover:underline">Reset password</button>
+            </>
+          )}
+        </div>
+      </form>
+    </div>
+  );
+}
 const Avatar=({user,size='h-12 w-12'})=>user?.avatar_url?<img className={`${size} rounded-full object-cover`} src={user.avatar_url} alt="Profile"/>:<div className={`${size} grid place-items-center rounded-full bg-teal-800 font-semibold text-white`}>{(user?.name||'T').split(' ').map(x=>x[0]).join('').slice(0,2)}</div>;
 const PhotoSource=({photo,onGallery,onCamera,onRemove})=><section className="trip-photo-panel mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white sm:col-span-2"><div className="border-b border-slate-100 px-4 py-3"><p className="font-semibold text-slate-800">Trip photo <span className="text-red-600">*</span></p><p className="mt-1 text-sm text-slate-500">Required · JPEG, JPG or PNG · maximum 4 MB</p></div><details className="group border-b border-slate-100"><summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 font-medium text-slate-700"><span className="flex items-center gap-2"><ImageUp size={18} className="text-teal-700"/>Upload from gallery</span><ChevronDown size={18} className="transition group-open:rotate-180"/></summary><div className="px-4 pb-4"><button type="button" className="btn-ghost" onClick={onGallery}>Choose a photo</button></div></details><details className="group"><summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 font-medium text-slate-700"><span className="flex items-center gap-2"><Camera size={18} className="text-teal-700"/>Take a live photo</span><ChevronDown size={18} className="transition group-open:rotate-180"/></summary><div className="px-4 pb-4"><button type="button" className="btn-ghost" onClick={onCamera}>Open camera</button></div></details>{photo&&<div className="flex items-center gap-3 border-t border-slate-100 px-4 py-3"><img className="h-16 w-16 rounded-lg object-cover" src={photo} alt="Selected trip"/><span className="text-sm text-teal-800">Photo selected</span><button type="button" className="ml-auto text-sm font-medium text-red-600" onClick={onRemove}>Remove</button></div>}</section>;
 const LiveCamera=({onCapture,onClose})=>{const videoRef=useRef(),[error,setError]=useState('');useEffect(()=>{let stream;const start=async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw new Error('Camera is not supported by this browser.');stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'user'}},audio:false});if(videoRef.current){videoRef.current.srcObject=stream;await videoRef.current.play()}}catch(x){setError(x.message||'Camera access was not available.')}};start();return()=>stream?.getTracks().forEach(track=>track.stop())},[]);const capture=()=>{const video=videoRef.current;if(!video?.videoWidth)return;const canvas=document.createElement('canvas');canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext('2d').drawImage(video,0,0);onCapture(canvas.toDataURL('image/jpeg',0.9))};return <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/75 p-4" role="dialog" aria-modal="true" aria-label="Take live photo"><section className="card w-full max-w-lg"><h2 className="text-xl font-semibold">Take live photo</h2>{error?<><p className="mt-3 text-red-600">{error}</p><button className="btn-ghost mt-5" type="button" onClick={onClose}>Close</button></>:<><video className="mt-4 aspect-video w-full rounded-lg bg-slate-900 object-cover" ref={videoRef} muted playsInline/><div className="mt-4 flex justify-end gap-2"><button className="btn-ghost" type="button" onClick={onClose}>Cancel</button><button className="btn" type="button" onClick={capture}>Capture photo</button></div></>}</section></div>};
