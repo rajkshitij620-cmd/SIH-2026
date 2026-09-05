@@ -90,7 +90,7 @@ export function Home(){
     <div className="relative z-10 max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/90 via-white/95 to-emerald-50/80 dark:from-slate-800/95 dark:via-slate-800/90 dark:to-teal-950/75 p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
      <div className="max-w-3xl">
       <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-       Explore India with <span className="bg-gradient-to-r from-teal-700 via-emerald-600 to-amber-600 dark:from-teal-300 dark:via-emerald-300 dark:to-amber-200 bg-clip-text text-transparent">AI Precision</span>
+       Explore India with AI Precision
       </h1>
       <p className="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-200">
        Smart itineraries, live weather updates & verified TravelMate connections.
