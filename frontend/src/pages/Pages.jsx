@@ -86,9 +86,17 @@ export function Home(){
     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-300/20 dark:bg-emerald-500/10 blur-3xl pointer-events-none"/>
 
-    {/* Centered Hero Card (Original Clean Card Component) */}
-    <div className="relative z-10 max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/90 via-white/95 to-emerald-50/80 dark:from-slate-800/95 dark:via-slate-800/90 dark:to-teal-950/75 p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
-     <div className="max-w-3xl">
+    {/* Centered Hero Card with Background Image */}
+    <div className="relative z-10 max-w-4xl mx-auto rounded-3xl overflow-hidden p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
+     {/* Card Background Image */}
+     <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.25] dark:opacity-[0.20] pointer-events-none"
+      style={{ backgroundImage: `url('/card-bg.jpg')` }}
+     />
+     {/* Gradient Overlay for Optimal Readability */}
+     <div className="absolute inset-0 bg-gradient-to-br from-teal-50/90 via-white/90 to-emerald-50/85 dark:from-slate-900/92 dark:via-slate-800/90 dark:to-teal-950/85 pointer-events-none" />
+
+     <div className="relative z-10 max-w-3xl">
       <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 dark:border-teal-500/40 bg-teal-100/80 dark:bg-teal-900/60 px-3.5 py-1.5 text-xs font-semibold text-teal-900 dark:text-teal-200 backdrop-blur-md shadow-sm">
        <Sparkles size={14} className="text-teal-600 dark:text-teal-300"/>
        <span>Next-Gen Smart Tourism AI · SIH 2026</span>
