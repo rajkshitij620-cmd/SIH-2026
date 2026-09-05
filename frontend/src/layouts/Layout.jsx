@@ -40,6 +40,7 @@ export default function Layout({children}) {
  const [menuOpen,setMenuOpen]=useState(false),[hasPreviousTrip,setHasPreviousTrip]=useState(false),[hasSavedTours,setHasSavedTours]=useState(false);
  const [settingsOpen, setSettingsOpen] = useState(false);
  const [currentLang, setCurrentLang] = useState(() => localStorage.getItem('tourmitra_lang') || 'English');
+ const [scrolled, setScrolled] = useState(false);
  const settingsRef = useRef(null);
 
  const closeMenu=()=>setMenuOpen(false);
@@ -49,6 +50,16 @@ export default function Layout({children}) {
   localStorage.setItem('tourmitra_lang', langName);
   window.dispatchEvent(new CustomEvent('tourmitra_lang_changed', { detail: langName }));
  };
+
+ // Listen to window scroll position
+ useEffect(() => {
+  const handleScroll = () => {
+   setScrolled(window.scrollY > 40);
+  };
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+  return () => window.removeEventListener('scroll', handleScroll);
+ }, []);
 
  // Click outside to close settings dropdown
  useEffect(() => {
@@ -86,8 +97,10 @@ export default function Layout({children}) {
   return <div className="flex min-h-screen flex-col">
    <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
      isHomePage 
-       ? '!bg-transparent !border-b-0 !border-transparent !shadow-none !backdrop-blur-none' 
-       : 'border-b border-slate-200 bg-stone-50/95 backdrop-blur'
+       ? scrolled
+         ? '!bg-white/95 dark:!bg-slate-900/95 !backdrop-blur-md !shadow-md !border-b !border-slate-200/90 dark:!border-slate-800'
+         : '!bg-transparent !border-b-0 !border-transparent !shadow-none !backdrop-blur-none' 
+       : 'border-b border-slate-200 bg-stone-50/95 backdrop-blur shadow-sm'
    }`}>
     <div className="shell flex min-h-16 items-center justify-between gap-4">
     <Link to="/" className="flex items-center gap-2 py-1" onClick={closeMenu}>
