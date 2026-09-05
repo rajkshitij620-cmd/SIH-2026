@@ -72,15 +72,15 @@ export function Home(){
   <div className="space-y-16">
    {/* Full-Screen Panoramic Travel Scenic Background Section (from navbar down to below the card component) */}
    <div className="relative -mx-5 sm:-mx-8 -mt-8 sm:-mt-12 overflow-hidden bg-slate-950/20 py-12 sm:py-16 lg:py-20 px-4 sm:px-8 border-b border-slate-200/60 dark:border-slate-800/80">
-    {/* Full-Screen Panoramic Travel Scenic Background Image */}
+    {/* Full-Screen Panoramic Travel Scenic Background Image with Higher Opacity */}
     <div 
-     className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.22] dark:opacity-[0.32] scale-105 transition-transform duration-1000"
+     className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.68] dark:opacity-[0.58] scale-105 transition-transform duration-1000"
      style={{
       backgroundImage: `url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=2400&q=85')`
      }}
     />
     {/* Ambient Gradient Overlays for Smooth Readability */}
-    <div className="absolute inset-0 bg-gradient-to-b from-stone-50/70 via-transparent to-stone-50/90 dark:from-[#0b0f19]/80 dark:via-[#0b0f19]/50 dark:to-[#0b0f19]/95 pointer-events-none" />
+    <div className="absolute inset-0 bg-gradient-to-b from-stone-50/45 via-transparent to-stone-50/65 dark:from-[#0b0f19]/65 dark:via-[#0b0f19]/30 dark:to-[#0b0f19]/80 pointer-events-none" />
 
     {/* Ambient Soft Glows */}
     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
