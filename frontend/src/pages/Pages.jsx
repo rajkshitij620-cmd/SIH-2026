@@ -155,20 +155,9 @@ export function Home(){
     ))}
    </div>
 
-   {/* 4 Core Technology Pillars */}
-   <div>
-    <div className="text-center max-w-2xl mx-auto">
-     <p className="eyebrow">Smart AI Tourism System</p>
-     <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-      Why Tourmitra stands ahead of conventional travel apps
-     </h2>
-     <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300">
-      Engineered for demand-aware crowd management, budget optimization, and authentic local cultural discovery.
-     </p>
-    </div>
-
-    <div className="mt-10 grid gap-6 md:grid-cols-3">
-     <div className="card hover:shadow-xl transition-all duration-300 border-t-4 border-t-teal-500">
+   {/* 3 Core Technology Pillars */}
+   <div className="grid gap-6 md:grid-cols-3">
+    <div className="card hover:shadow-xl transition-all duration-300 border-t-4 border-t-teal-500">
       <div className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-teal-950/60 dark:text-teal-300 mb-4">
        <Sparkles size={24}/>
       </div>
@@ -198,7 +187,6 @@ export function Home(){
       </p>
      </div>
     </div>
-   </div>
 
    {/* Curated India Highlights Gallery with Dynamic Rotating Showcase */}
    <div>
