@@ -72,15 +72,15 @@ export function Home(){
   <div className="space-y-16">
     {/* Full-Screen Panoramic Travel Scenic Background Section (from navbar down to below the card component) */}
     <div className="relative -mx-5 sm:-mx-8 -mt-8 sm:-mt-12 overflow-hidden bg-slate-950/20 py-12 sm:py-16 lg:py-20 px-4 sm:px-8 border-b border-slate-200/60 dark:border-slate-800/80">
-     {/* Full-Screen Panoramic Travel Scenic Background Image with New India Tourism Collage */}
+     {/* Full-Screen Panoramic Travel Scenic Background Image with Full 100% Opacity */}
      <div 
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-[0.82] dark:opacity-[0.65] scale-105 transition-transform duration-1000"
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 scale-105 transition-transform duration-1000"
       style={{
        backgroundImage: `url('/hero-bg.jpg')`
       }}
      />
-     {/* Ambient Gradient Overlays for Smooth Readability */}
-     <div className="absolute inset-0 bg-gradient-to-b from-stone-50/45 via-transparent to-stone-50/65 dark:from-[#0b0f19]/65 dark:via-[#0b0f19]/30 dark:to-[#0b0f19]/80 pointer-events-none" />
+     {/* Subtle Edge Gradients */}
+     <div className="absolute inset-0 bg-gradient-to-b from-stone-50/15 via-transparent to-stone-50/30 dark:from-[#0b0f19]/25 dark:via-transparent dark:to-[#0b0f19]/40 pointer-events-none" />
 
      {/* Ambient Soft Glows */}
      <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
