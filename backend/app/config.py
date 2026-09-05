@@ -23,7 +23,7 @@ class Settings:
     # local development resilient to that port change.
     cors_origin_regex = os.getenv(
         'CORS_ORIGIN_REGEX',
-        r'^https?://(localhost|127\.0\.0\.1)(:\d+)?$',
+        r'^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://.*\.vercel\.app$',
     )
     demo_mode = os.getenv('DEMO_MODE', 'true').lower() == 'true'
     weather_key = os.getenv('WEATHER_API_KEY', '')
