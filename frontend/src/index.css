@@ -44,26 +44,115 @@
   }
 }
 
-.dark body { background: #0b0f19; color: #f1f5f9; }
-.dark .card { background: #131b2e; border-color: #1e293b; box-shadow: none; }
-.dark .card:hover { border-color: #334155; }
-.dark .site-header { background: rgba(11, 15, 25, 0.88); border-color: #1e293b; }
-.dark .site-footer { border-color: #1e293b; background: #080c14; }
-.dark .brand, .dark h1, .dark h2, .dark h3, .dark b { color: #f8fafc; }
-.dark p, .dark .text-slate-600, .dark .text-slate-500 { color: #94a3b8 !important; }
-.dark .nav-link { color: #cbd5e1; }
-.dark .nav-link.active { color: #5eead4; }
-.dark .input, .dark select { background: #0f172a; border-color: #334155; color: #f8fafc; }
-.dark .btn-ghost { background: #131b2e; border-color: #334155; color: #e2e8f0; }
-.dark .trip-photo-panel { background: #131b2e; border-color: #334155; }
-.dark .trip-photo-panel > div, .dark .trip-photo-panel details { border-color: #1e293b; }
-.dark .trip-photo-panel .text-slate-800, .dark .trip-photo-panel .text-slate-700 { color: #f8fafc; }
-.dark .trip-photo-panel .text-slate-500 { color: #94a3b8 !important; }
-.dark .trip-photo-panel .text-teal-700 { color: #5eead4; }
-.dark .trip-photo-panel .text-teal-800 { color: #99f6e4; }
-.dark .bg-stone-100, .dark .bg-sky-50, .dark .bg-teal-50, .dark .bg-stone-50 { background: #1a233a !important; }
-.dark .border-sky-200, .dark .border-teal-200 { border-color: #334155 !important; }
-.dark .text-sky-950, .dark .text-teal-950, .dark .text-teal-900 { color: #e0f2fe !important; }
+.dark body { 
+  background: #090d16; 
+  color: #f1f5f9; 
+}
+.dark .card { 
+  background: #111827; 
+  border-color: #1f293d; 
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4); 
+}
+.dark .card:hover { 
+  border-color: #334155; 
+}
+.dark .site-header { 
+  background: rgba(9, 13, 22, 0.92); 
+  border-color: #1e293b; 
+}
+.dark .site-footer { 
+  border-color: #1e293b; 
+  background: #060911; 
+}
+.dark .brand, .dark h1, .dark h2, .dark h3, .dark h4, .dark b, .dark strong { 
+  color: #f8fafc; 
+}
+.dark .nav-link { 
+  color: #94a3b8; 
+}
+.dark .nav-link:hover, .dark .nav-link.active { 
+  color: #2dd4bf; 
+}
+.dark .input, .dark select { 
+  background: #0d1322; 
+  border-color: #1e293b; 
+  color: #f8fafc; 
+}
+.dark .input:focus, .dark select:focus {
+  border-color: #0d9488;
+  box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25);
+}
+.dark .btn-ghost { 
+  background: #111827; 
+  border-color: #1f293d; 
+  color: #e2e8f0; 
+}
+.dark .btn-ghost:hover { 
+  background: #1e293b; 
+  border-color: #0d9488; 
+  color: #5eead4; 
+}
+.dark .eyebrow { 
+  color: #2dd4bf; 
+}
+.dark .label { 
+  color: #94a3b8; 
+}
+
+/* Background mappings for dynamic components in dark mode */
+.dark .bg-white { 
+  background-color: #111827 !important; 
+}
+.dark .bg-slate-50, .dark .bg-stone-50 { 
+  background-color: #161f33 !important; 
+}
+.dark .bg-slate-100, .dark .bg-stone-100 { 
+  background-color: #1a243b !important; 
+}
+.dark .bg-teal-50 { 
+  background-color: rgba(13, 148, 136, 0.12) !important; 
+}
+.dark .bg-amber-50 { 
+  background-color: rgba(217, 119, 6, 0.12) !important; 
+}
+.dark .bg-sky-50 { 
+  background-color: rgba(2, 132, 199, 0.12) !important; 
+}
+
+/* Border mappings for dark mode */
+.dark .border-slate-100, .dark .border-slate-200 { 
+  border-color: #1f293d !important; 
+}
+.dark .border-teal-100, .dark .border-teal-200 { 
+  border-color: rgba(13, 148, 136, 0.35) !important; 
+}
+.dark .border-amber-100, .dark .border-amber-200 { 
+  border-color: rgba(217, 119, 6, 0.35) !important; 
+}
+.dark .border-sky-100, .dark .border-sky-200 { 
+  border-color: rgba(2, 132, 199, 0.35) !important; 
+}
+
+/* Text color refinements in dark mode */
+.dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { 
+  color: #f1f5f9; 
+}
+.dark .text-slate-600 { 
+  color: #94a3b8; 
+}
+.dark .text-slate-500 { 
+  color: #64748b; 
+}
+.dark .text-teal-950, .dark .text-teal-900, .dark .text-teal-800, .dark .text-teal-700 { 
+  color: #5eead4; 
+}
+.dark .text-amber-950, .dark .text-amber-900, .dark .text-amber-800, .dark .text-amber-700 { 
+  color: #fcd34d; 
+}
+.dark .text-sky-950, .dark .text-sky-900, .dark .text-sky-800, .dark .text-sky-700 { 
+  color: #7dd3fc; 
+}
+
 .theme-toggle { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid #cbd5e1; border-radius: 0.75rem; color: #0f766e; transition: all 0.2s; }
 .theme-toggle:hover { border-color: #0f766e; background: #f0fdfa; }
 .dark .theme-toggle { border-color: #334155; color: #5eead4; }
