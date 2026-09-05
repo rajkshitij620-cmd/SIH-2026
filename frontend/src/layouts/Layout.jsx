@@ -35,9 +35,14 @@ export default function Layout({children}) {
   : isUnsavedTourView
   ? [['/','Home'],['/plan',planLabel],['/tour-guide','Tour guide'],['/assistant','AI assistant']]
   : [['/','Home'],['/plan',planLabel],['/assistant','AI assistant']];
- return <div className="flex min-h-screen flex-col">
-  <header className="site-header sticky top-0 z-40 border-b border-slate-200 bg-stone-50/95 backdrop-blur">
-   <div className="shell flex min-h-16 items-center justify-between gap-4">
+  const isHomePage = pathname === '/';
+  return <div className="flex min-h-screen flex-col">
+   <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
+     isHomePage 
+       ? '!bg-white/25 dark:!bg-slate-950/30 !border-b !border-white/20 dark:!border-white/10 backdrop-blur-md' 
+       : 'border-b border-slate-200 bg-stone-50/95 backdrop-blur'
+   }`}>
+    <div className="shell flex min-h-16 items-center justify-between gap-4">
     <Link to="/" className="flex items-center gap-2 py-1" onClick={closeMenu}>
      <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert" />
     </Link>

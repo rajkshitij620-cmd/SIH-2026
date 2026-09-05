@@ -70,25 +70,25 @@ export function Home(){
 
  return (
   <div className="space-y-16">
-    {/* Full-Screen Panoramic Travel Scenic Background Section (from navbar down to below the card component) */}
-    <div className="relative -mx-5 sm:-mx-8 -mt-8 sm:-mt-12 overflow-hidden bg-slate-950/20 py-12 sm:py-16 lg:py-20 px-4 sm:px-8 border-b border-slate-200/60 dark:border-slate-800/80">
-     {/* Full-Screen Panoramic Travel Scenic Background Image with Full 100% Opacity */}
-     <div 
-      className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 scale-105 transition-transform duration-1000"
-      style={{
-       backgroundImage: `url('/hero-bg.jpg')`
-      }}
-     />
-     {/* Subtle Edge Gradients */}
-     <div className="absolute inset-0 bg-gradient-to-b from-stone-50/15 via-transparent to-stone-50/30 dark:from-[#0b0f19]/25 dark:via-transparent dark:to-[#0b0f19]/40 pointer-events-none" />
+   {/* Full-Screen Panoramic Travel Scenic Background Section (starts directly from the very top under transparent navbar) */}
+   <div className="relative -mx-5 sm:-mx-8 -mt-16 sm:-mt-20 overflow-hidden bg-slate-950/20 pt-24 sm:pt-28 pb-12 sm:pb-16 lg:pb-20 px-4 sm:px-8 border-b border-slate-200/60 dark:border-slate-800/80">
+    {/* Full-Screen Panoramic Travel Scenic Background Image with Full 100% Opacity */}
+    <div 
+     className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 scale-105 transition-transform duration-1000"
+     style={{
+      backgroundImage: `url('/hero-bg.jpg')`
+     }}
+    />
+    {/* Subtle Edge Gradients */}
+    <div className="absolute inset-0 bg-gradient-to-b from-stone-50/15 via-transparent to-stone-50/30 dark:from-[#0b0f19]/25 dark:via-transparent dark:to-[#0b0f19]/40 pointer-events-none" />
 
-     {/* Ambient Soft Glows */}
-     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
-     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-300/20 dark:bg-emerald-500/10 blur-3xl pointer-events-none"/>
+    {/* Ambient Soft Glows */}
+    <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
+    <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-300/20 dark:bg-emerald-500/10 blur-3xl pointer-events-none"/>
 
-     {/* Centered Hero Card (Clean Glassmorphism Card Component) */}
-     <div className="relative z-10 max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/90 via-white/95 to-emerald-50/80 dark:from-slate-800/95 dark:via-slate-800/90 dark:to-teal-950/75 p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
-      <div className="max-w-3xl">
+    {/* Centered Hero Card (Original Clean Card Component) */}
+    <div className="relative z-10 max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/90 via-white/95 to-emerald-50/80 dark:from-slate-800/95 dark:via-slate-800/90 dark:to-teal-950/75 p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
+     <div className="max-w-3xl">
       <div className="inline-flex items-center gap-2 rounded-full border border-teal-200 dark:border-teal-500/40 bg-teal-100/80 dark:bg-teal-900/60 px-3.5 py-1.5 text-xs font-semibold text-teal-900 dark:text-teal-200 backdrop-blur-md shadow-sm">
        <Sparkles size={14} className="text-teal-600 dark:text-teal-300"/>
        <span>Next-Gen Smart Tourism AI · SIH 2026</span>
@@ -307,7 +307,7 @@ export function Home(){
    {/* 3-Step Journey Banner */}
    <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-8 sm:p-12">
     <div className="text-center max-w-2xl mx-auto">
-     <p className="eyebrow">Simple & Seamless</p>
+     <h2 className="eyebrow">Simple & Seamless</h2>
      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">How Tourmitra Works in 3 Steps</h2>
     </div>
 
