@@ -8,9 +8,13 @@ export default function DestinationCard({x,showWhy=true}){
       <div className="relative h-48 w-full overflow-hidden bg-slate-900">
         <img 
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105" 
-          src={x.image} 
+          src={x.image || 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80'} 
           alt={x.name}
           loading="lazy"
+          onError={(e)=>{
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=80';
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
         
