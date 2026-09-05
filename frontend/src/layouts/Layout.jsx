@@ -137,8 +137,8 @@ export default function Layout({children}) {
      <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert" />
     </Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
-    <div className="hidden items-center gap-3 md:flex">
-     {/* Settings Dropdown (Theme & Language) */}
+    <div className="flex items-center gap-3">
+     {/* Universal Settings Dropdown (Theme & Language) */}
      <div className="relative" ref={settingsRef}>
       <button 
         type="button" 
@@ -151,7 +151,7 @@ export default function Layout({children}) {
       </button>
 
       {settingsOpen && (
-       <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 z-50 backdrop-blur-md animate-in fade-in zoom-in-95 duration-150">
+       <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 z-50 backdrop-blur-md animate-in fade-in zoom-in-95 duration-150">
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
          <div className="flex items-center gap-2">
           <Settings size={16} className="text-teal-600 dark:text-teal-400" />
@@ -237,11 +237,15 @@ export default function Layout({children}) {
       )}
      </div>
 
-     {user?<button type="button" className="btn-ghost !px-3 !py-2 !bg-white/80 dark:!bg-slate-800/80 backdrop-blur-sm" onClick={logout}>Sign out</button>:<NavLink to="/login" className={`${linkClass} font-semibold !text-slate-900 dark:!text-white`}>Sign in</NavLink>}
-    </div>
-    <div className="flex items-center gap-2 md:hidden">
-     <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm" onClick={()=>setSettingsOpen(o=>!o)} aria-label="Settings and Preferences"><Settings size={17}/></button>
-     <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>{menuOpen?<X size={19}/>:<Menu size={19}/>}</button>
+     {/* Sign in / Sign out button on desktop */}
+     <div className="hidden md:flex items-center">
+      {user?<button type="button" className="btn-ghost !px-3 !py-2 !bg-white/80 dark:!bg-slate-800/80 backdrop-blur-sm" onClick={logout}>Sign out</button>:<NavLink to="/login" className={`${linkClass} font-semibold !text-slate-900 dark:!text-white`}>Sign in</NavLink>}
+     </div>
+
+     {/* Mobile hamburger menu toggle */}
+     <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm md:hidden" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
+      {menuOpen?<X size={19}/>:<Menu size={19}/>}
+     </button>
     </div>
    </div>
    {menuOpen&&<nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">{user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}{user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}</nav>}
