@@ -69,9 +69,48 @@
 .dark .theme-toggle { border-color: #334155; color: #5eead4; }
 .dark .theme-toggle:hover { border-color: #5eead4; background: #131b2e; }
 
-/* The itinerary focuses on booking choices and the day-by-day plan. */
-.shell.py-10 > section.card:has(> .mt-4.grid.gap-5.md\:grid-cols-2) { display: none; }
-.shell.py-10 > div.mt-8.grid.gap-8.lg\:grid-cols-\[1fr_280px\] > div:first-child { display: none; }
-.card:has(button.border-red-200) { position: relative; padding-bottom: 5.5rem; }
-.card:has(button.border-red-200) > div > button.border-red-200 { position: absolute; right: 1.25rem; bottom: 1.25rem; }
+/* Google Translate System Styling */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-gadget-icon,
+.VIpgJd-ZVi9od-ORHb-OEVmfc,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+.VIpgJd-ZVi9od-aZ2wEe-OiiCO,
+.VIpgJd-ZVi9od-v2bZUd {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-gadget {
+  color: transparent !important;
+  font-size: 0px !important;
+}
+
+#google_translate_element {
+  display: none !important;
+}
+
+.goog-tooltip, #goog-gt-tt, .goog-te-balloon-frame {
+  display: none !important;
+}
+
+.goog-tooltip:hover {
+  display: none !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
 

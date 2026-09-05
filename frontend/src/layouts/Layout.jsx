@@ -40,15 +40,46 @@ export default function Layout({children}) {
  const [menuOpen,setMenuOpen]=useState(false),[hasPreviousTrip,setHasPreviousTrip]=useState(false),[hasSavedTours,setHasSavedTours]=useState(false);
  const [settingsOpen, setSettingsOpen] = useState(false);
  const [currentLang, setCurrentLang] = useState(() => localStorage.getItem('tourmitra_lang') || 'English');
+ const [langSearch, setLangSearch] = useState('');
  const [scrolled, setScrolled] = useState(false);
  const settingsRef = useRef(null);
 
  const closeMenu=()=>setMenuOpen(false);
 
- const handleLangChange = (langName) => {
-  setCurrentLang(langName);
-  localStorage.setItem('tourmitra_lang', langName);
-  window.dispatchEvent(new CustomEvent('tourmitra_lang_changed', { detail: langName }));
+ const handleLangChange = (lang) => {
+  setCurrentLang(lang.name);
+  localStorage.setItem('tourmitra_lang', lang.name);
+  localStorage.setItem('tourmitra_lang_code', lang.code);
+  window.dispatchEvent(new CustomEvent('tourmitra_lang_changed', { detail: lang.name }));
+
+  const cookieVal = lang.code === 'en' ? '' : `/en/${lang.code}`;
+  const domain = window.location.hostname;
+  const date = new Date();
+  date.setTime(date.getTime() + (365*24*60*60*1000));
+  const expires = "; expires=" + date.toUTCString();
+
+  if (lang.code === 'en') {
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${domain};`;
+  } else {
+    document.cookie = `googtrans=${cookieVal}${expires}; path=/;`;
+    document.cookie = `googtrans=${cookieVal}${expires}; path=/; domain=${domain};`;
+    if (domain.includes('.')) {
+      const parts = domain.split('.');
+      if (parts.length >= 2) {
+        const rootDomain = parts.slice(-2).join('.');
+        document.cookie = `googtrans=${cookieVal}${expires}; path=/; domain=.${rootDomain};`;
+      }
+    }
+  }
+
+  const combo = document.querySelector('.goog-te-combo');
+  if (combo) {
+    combo.value = lang.code;
+    combo.dispatchEvent(new Event('change'));
+  } else {
+    window.location.reload();
+  }
  };
 
  // Listen to window scroll position
@@ -175,21 +206,30 @@ export default function Layout({children}) {
           <span className="flex items-center gap-1.5"><Globe size={13}/> Language / भाषा</span>
           <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">{currentLang}</span>
          </label>
+         <input
+          type="text"
+          value={langSearch}
+          onChange={e=>setLangSearch(e.target.value)}
+          placeholder="Search language / भाषा खोजें..."
+          className="mb-2 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-teal-600 focus:outline-none"
+         />
          <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
-          {languages.map((l)=>(
-           <button
-            key={l.code}
-            type="button"
-            onClick={()=>handleLangChange(l.name)}
-            className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
-             currentLang === l.name 
-              ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-semibold' 
-              : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-            }`}
-           >
-            <span>{l.label}</span>
-            {currentLang === l.name && <Check size={14} className="text-teal-600 dark:text-teal-400" />}
-           </button>
+          {languages
+            .filter(l=>!langSearch || l.name.toLowerCase().includes(langSearch.toLowerCase()) || l.label.toLowerCase().includes(langSearch.toLowerCase()))
+            .map((l)=>(
+             <button
+              key={l.code}
+              type="button"
+              onClick={()=>handleLangChange(l)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
+               currentLang === l.name 
+                ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-semibold' 
+                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+             >
+              <span>{l.label}</span>
+              {currentLang === l.name && <Check size={14} className="text-teal-600 dark:text-teal-400" />}
+             </button>
           ))}
          </div>
         </div>
