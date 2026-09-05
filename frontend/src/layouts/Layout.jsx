@@ -138,7 +138,7 @@ export default function Layout({children}) {
    }`}>
     <div className="shell flex min-h-16 items-center justify-between gap-4">
     <Link to="/" className="flex items-center gap-2 py-1" onClick={closeMenu}>
-     <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert drop-shadow-sm" />
+     <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert" />
     </Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
     <div className="flex items-center gap-3">
