@@ -92,16 +92,20 @@ export default function Layout({children}) {
   return () => window.removeEventListener('scroll', handleScroll);
  }, []);
 
- // Click outside to close settings dropdown
+ // Click/Touch outside to close settings dropdown
  useEffect(() => {
   const handleClickOutside = (e) => {
    if (settingsRef.current && !settingsRef.current.contains(e.target)) {
     setSettingsOpen(false);
-   }
-  };
-  document.addEventListener('mousedown', handleClickOutside);
-  return () => document.removeEventListener('mousedown', handleClickOutside);
- }, []);
+    }
+   };
+   document.addEventListener('mousedown', handleClickOutside);
+   document.addEventListener('touchstart', handleClickOutside, { passive: true });
+   return () => {
+    document.removeEventListener('mousedown', handleClickOutside);
+    document.removeEventListener('touchstart', handleClickOutside);
+   };
+  }, []);
 
  useEffect(()=>{
   if(!user){setHasPreviousTrip(false);setHasSavedTours(false);return}
@@ -151,89 +155,97 @@ export default function Layout({children}) {
       </button>
 
       {settingsOpen && (
-       <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-2rem)] rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 z-50 backdrop-blur-md animate-in fade-in zoom-in-95 duration-150">
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-         <div className="flex items-center gap-2">
-          <Settings size={16} className="text-teal-600 dark:text-teal-400" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Settings & Preferences</h3>
-         </div>
-         <button 
-          type="button" 
-          onClick={()=>setSettingsOpen(false)}
-          className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition"
-          aria-label="Close settings"
-         >
-          <X size={16} />
-         </button>
-        </div>
+       <>
+        {/* Mobile Backdrop to prevent unwanted background taps */}
+        <div 
+         className="fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-xs md:hidden" 
+         onClick={()=>setSettingsOpen(false)}
+        />
 
-        {/* Theme Mode Selector */}
-        <div className="mt-3.5">
-         <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
-          Appearance Mode
-         </label>
-         <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl">
-          <button
-           type="button"
-           onClick={()=>theme!=='light'&&toggleTheme()}
-           className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition ${
-            theme === 'light' 
-             ? 'bg-white text-slate-900 shadow-sm' 
-             : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
-           }`}
+        <div className="fixed left-4 right-4 top-20 sm:absolute sm:left-auto sm:right-0 sm:top-full mt-2 sm:w-80 max-h-[82vh] overflow-y-auto rounded-2xl bg-white/98 dark:bg-slate-900/98 border border-slate-200 dark:border-slate-700 shadow-2xl p-4 sm:p-5 z-50 backdrop-blur-md animate-in fade-in zoom-in-95 duration-150">
+         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+           <Settings size={16} className="text-teal-600 dark:text-teal-400" />
+           <h3 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">Settings & Preferences</h3>
+          </div>
+          <button 
+           type="button" 
+           onClick={()=>setSettingsOpen(false)}
+           className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition"
+           aria-label="Close settings"
           >
-           <Sun size={15} className={theme === 'light' ? 'text-amber-500' : ''} />
-           <span>Light</span>
-          </button>
-          <button
-           type="button"
-           onClick={()=>theme!=='dark'&&toggleTheme()}
-           className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition ${
-            theme === 'dark' 
-             ? 'bg-slate-950 text-white shadow-sm' 
-             : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
-           }`}
-          >
-           <Moon size={15} className={theme === 'dark' ? 'text-teal-400' : ''} />
-           <span>Dark</span>
+           <X size={16} />
           </button>
          </div>
-        </div>
 
-        {/* Language Selector */}
-        <div className="mt-4">
-         <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 flex items-center justify-between">
-          <span className="flex items-center gap-1.5"><Globe size={13}/> Language / भाषा</span>
-          <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">{currentLang}</span>
-         </label>
-         <input
-          type="text"
-          value={langSearch}
-          onChange={e=>setLangSearch(e.target.value)}
-          placeholder="Search language / भाषा खोजें..."
-          className="mb-2 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-teal-600 focus:outline-none"
-         />
-         <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
-          {languages
-            .filter(l=>!langSearch || l.name.toLowerCase().includes(langSearch.toLowerCase()) || l.label.toLowerCase().includes(langSearch.toLowerCase()))
-            .map((l)=>(
-             <button
-              key={l.code}
-              type="button"
-              onClick={()=>handleLangChange(l)}
-              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
-               currentLang === l.name 
-                ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-semibold' 
-                : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
-             >
-              <span>{l.label}</span>
-              {currentLang === l.name && <Check size={14} className="text-teal-600 dark:text-teal-400" />}
-             </button>
-          ))}
+         {/* Theme Mode Selector */}
+         <div className="mt-3.5">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 block">
+           Appearance Mode
+          </label>
+          <div className="grid grid-cols-2 gap-2 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl">
+           <button
+            type="button"
+            onClick={()=>theme!=='light'&&toggleTheme()}
+            className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition ${
+             theme === 'light' 
+              ? 'bg-white text-slate-900 shadow-sm' 
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+            }`}
+           >
+            <Sun size={15} className={theme === 'light' ? 'text-amber-500' : ''} />
+            <span>Light</span>
+           </button>
+           <button
+            type="button"
+            onClick={()=>theme!=='dark'&&toggleTheme()}
+            className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-semibold transition ${
+             theme === 'dark' 
+              ? 'bg-slate-950 text-white shadow-sm' 
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
+            }`}
+           >
+            <Moon size={15} className={theme === 'dark' ? 'text-teal-400' : ''} />
+            <span>Dark</span>
+           </button>
+          </div>
+         </div>
+
+         {/* Language Selector */}
+         <div className="mt-4">
+          <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 flex items-center justify-between">
+           <span className="flex items-center gap-1.5"><Globe size={13}/> Language / भाषा</span>
+           <span className="text-[10px] text-teal-600 dark:text-teal-400 font-semibold">{currentLang}</span>
+          </label>
+          <input
+           type="text"
+           value={langSearch}
+           onChange={e=>setLangSearch(e.target.value)}
+           placeholder="Search language / भाषा खोजें..."
+           className="mb-2 w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-teal-600 focus:outline-none"
+          />
+          <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
+           {languages
+             .filter(l=>!langSearch || l.name.toLowerCase().includes(langSearch.toLowerCase()) || l.label.toLowerCase().includes(langSearch.toLowerCase()))
+             .map((l)=>(
+              <button
+               key={l.code}
+               type="button"
+               onClick={()=>handleLangChange(l)}
+               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition text-left ${
+                currentLang === l.name 
+                 ? 'bg-teal-50 dark:bg-teal-950/60 text-teal-800 dark:text-teal-200 font-semibold' 
+                 : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+               }`}
+              >
+               <span>{l.label}</span>
+               {currentLang === l.name && <Check size={14} className="text-teal-600 dark:text-teal-400" />}
+              </button>
+           ))}
+          </div>
          </div>
         </div>
-       </div>
+       </>
       )}
      </div>
 
@@ -248,7 +260,36 @@ export default function Layout({children}) {
      </button>
     </div>
    </div>
-   {menuOpen&&<nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">{user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}{user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}</nav>}
+   {menuOpen&&(
+    <nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">
+     {user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}
+     
+     {/* Quick mobile settings buttons */}
+     <div className="mt-2 flex items-center justify-between border-t border-slate-200/80 dark:border-slate-800 pt-3 text-xs">
+      <span className="font-semibold text-slate-600 dark:text-slate-300">Preferences:</span>
+      <div className="flex items-center gap-2">
+       <button 
+        type="button" 
+        onClick={()=>toggleTheme()} 
+        className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-slate-700 dark:text-slate-200 shadow-xs"
+       >
+        {theme === 'dark' ? <Moon size={13} className="text-teal-400"/> : <Sun size={13} className="text-amber-500"/>}
+        <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>
+       </button>
+       <button 
+        type="button" 
+        onClick={()=>{setSettingsOpen(true);closeMenu()}} 
+        className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-teal-700 dark:text-teal-300 shadow-xs"
+       >
+        <Globe size={13}/>
+        <span>{currentLang}</span>
+       </button>
+      </div>
+     </div>
+
+     {user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300 mt-1" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}
+    </nav>
+   )}
   </header>
   <main className="flex-1">{children}</main>
   <footer className="border-t border-slate-200 bg-stone-100/70 py-10 transition-colors dark:border-slate-800 dark:bg-stone-900/60">

@@ -10,6 +10,16 @@
     <div id="google_translate_element" style="display:none; visibility:hidden;"></div>
     <div id="root"></div>
     <script type="text/javascript">
+      // Sync saved language cookie on startup
+      (function() {
+        var langCode = localStorage.getItem('tourmitra_lang_code');
+        if (langCode && langCode !== 'en') {
+          var date = new Date();
+          date.setTime(date.getTime() + (365*24*60*60*1000));
+          var expires = "; expires=" + date.toUTCString();
+          document.cookie = "googtrans=/en/" + langCode + expires + "; path=/;";
+        }
+      })();
       function googleTranslateElementInit() {
         if (window.google && window.google.translate) {
           new window.google.translate.TranslateElement({
