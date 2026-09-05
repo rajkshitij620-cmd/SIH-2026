@@ -226,12 +226,7 @@ export function Home(){
 
     {/* 2. 3-Step Journey Banner */}
     <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50 p-8 sm:p-12">
-     <div className="text-center max-w-2xl mx-auto">
-      <h2 className="eyebrow">Simple & Seamless</h2>
-      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">How Tourmitra Works in 3 Steps</h2>
-     </div>
-
-     <div className="mt-10 grid gap-8 md:grid-cols-3 relative">
+     <div className="grid gap-8 md:grid-cols-3 relative">
       <div className="flex flex-col items-center text-center p-4">
        <div className="grid h-14 w-14 place-items-center rounded-2xl bg-teal-800 text-white font-bold text-xl shadow-lg shadow-teal-700/20 mb-4">
         1
