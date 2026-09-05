@@ -590,7 +590,7 @@ export function Planner(){
      className="btn w-full !py-3.5 text-base font-bold shadow-lg shadow-teal-700/20" 
      disabled={load}
     >
-     {load ? 'Crafting Your AI Itinerary…' : travelType === 'group' ? 'Generate Group Itinerary & Guide →' : 'Continue to Exploration Options →'}
+     {load ? 'Crafting Your AI Itinerary…' : travelType === 'group' ? 'Tour Guide' : 'Continue to Exploration Options →'}
     </button>
    </form>
   </div>
