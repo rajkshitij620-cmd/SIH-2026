@@ -86,43 +86,43 @@ export function Home(){
     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-300/30 dark:bg-teal-500/15 blur-3xl pointer-events-none"/>
     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-300/20 dark:bg-emerald-500/10 blur-3xl pointer-events-none"/>
 
-    {/* Centered Hero Card (Original Clean Card Component) */}
-    <div className="relative z-10 max-w-4xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/90 via-white/95 to-emerald-50/80 dark:from-slate-800/95 dark:via-slate-800/90 dark:to-teal-950/75 p-6 sm:p-12 lg:p-14 border border-teal-100/90 dark:border-teal-700/40 shadow-2xl shadow-slate-300/60 dark:shadow-slate-950/60 backdrop-blur-md">
-     <div className="max-w-3xl">
-      <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+    {/* Centered Hero Card (Bigger, Grand & Spacious) */}
+    <div className="relative z-10 max-w-5xl mx-auto rounded-3xl bg-gradient-to-br from-teal-50/95 via-white/98 to-emerald-50/90 dark:from-slate-800/95 dark:via-slate-850 dark:to-teal-950/85 p-8 sm:p-14 lg:p-16 border border-teal-100/90 dark:border-teal-700/50 shadow-2xl shadow-slate-950/40 backdrop-blur-md">
+     <div className="max-w-4xl">
+      <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.15]">
        Explore India with AI Precision
       </h1>
-      <p className="mt-2 text-sm sm:text-base text-slate-600 dark:text-slate-200">
-       Smart itineraries, live weather updates & verified TravelMate connections.
+      <p className="mt-3 text-base sm:text-lg text-slate-600 dark:text-slate-200 leading-relaxed max-w-2xl">
+       Smart itineraries, live weather updates & verified TravelMate connections across India.
       </p>
 
-      {/* Search & Quick Planner Bar */}
-      <form onSubmit={handleQuickSearch} className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-2xl sm:rounded-full bg-white dark:bg-slate-700/90 p-2 border border-slate-200 dark:border-slate-600 shadow-lg shadow-slate-200/60 dark:shadow-slate-950/40">
-       <div className="flex flex-1 items-center gap-3 px-4 py-2">
-        <MapPin size={20} className="text-teal-600 dark:text-teal-300 shrink-0"/>
+      {/* Search & Quick Planner Bar (Enlarged) */}
+      <form onSubmit={handleQuickSearch} className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 rounded-2xl sm:rounded-full bg-white dark:bg-slate-700/90 p-2 sm:p-2.5 border border-slate-200 dark:border-slate-600 shadow-xl shadow-slate-300/50 dark:shadow-slate-950/50">
+       <div className="flex flex-1 items-center gap-3 px-4 py-2 sm:py-3">
+        <MapPin size={22} className="text-teal-600 dark:text-teal-300 shrink-0"/>
         <input 
          type="text" 
          value={searchCity}
          onChange={(e)=>setSearchCity(e.target.value)}
          placeholder="Where in India are you travelling? (e.g. Varanasi, Goa, Jaipur, Manali)" 
-         className="w-full bg-transparent text-sm sm:text-base text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-300 outline-none font-medium"
+         className="w-full bg-transparent text-base sm:text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-300 outline-none font-medium"
         />
        </div>
-       <button type="submit" className="btn !bg-gradient-to-r !from-teal-800 !to-teal-900 dark:!from-teal-400 dark:!to-emerald-400 !text-white dark:!text-slate-950 font-bold !rounded-xl sm:!rounded-full px-6 py-3 flex items-center justify-center gap-2 shadow-md shadow-teal-900/10 dark:shadow-teal-400/20 hover:scale-[1.02] active:scale-95 transition-all">
+       <button type="submit" className="btn !bg-gradient-to-r !from-teal-800 !to-teal-900 dark:!from-teal-400 dark:!to-emerald-400 !text-white dark:!text-slate-950 font-bold !rounded-xl sm:!rounded-full px-7 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base flex items-center justify-center gap-2 shadow-md shadow-teal-900/15 dark:shadow-teal-400/25 hover:scale-[1.02] active:scale-95 transition-all">
         <span>{hasPreviousTrip?'Plan New Trip':'Plan My Trip'}</span>
-        <ArrowRight size={16}/>
+        <ArrowRight size={18}/>
        </button>
       </form>
 
-      {/* Popular Chips */}
-      <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+      {/* Popular Destination Chips */}
+      <div className="mt-5 flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
        <span className="font-semibold text-slate-700 dark:text-slate-200">Popular:</span>
        {popularCities.map((city)=>(
         <button 
          key={city} 
          type="button" 
          onClick={()=>nav(`/plan?destination=${encodeURIComponent(city)}`)}
-         className="rounded-full bg-slate-100 hover:bg-teal-50 dark:bg-slate-700/90 dark:hover:bg-teal-900/60 border border-slate-200 dark:border-slate-600 hover:border-teal-300 dark:hover:border-teal-400 px-3 py-1 text-xs text-slate-700 hover:text-teal-800 dark:text-slate-100 dark:hover:text-teal-200 transition shadow-sm"
+         className="rounded-full bg-slate-100 hover:bg-teal-50 dark:bg-slate-700/90 dark:hover:bg-teal-900/60 border border-slate-200 dark:border-slate-600 hover:border-teal-300 dark:hover:border-teal-400 px-3.5 py-1.5 text-xs sm:text-sm text-slate-700 hover:text-teal-800 dark:text-slate-100 dark:hover:text-teal-200 transition shadow-xs"
         >
          {city}
         </button>
