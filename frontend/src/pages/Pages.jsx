@@ -139,18 +139,9 @@ export function Home(){
     <div>
      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-5">
       <div>
-       <div className="flex items-center gap-2">
-        <p className="eyebrow">Dynamic Explorer</p>
-        <span className="inline-flex items-center gap-1 rounded-full bg-teal-100 dark:bg-teal-900/60 px-2 py-0.5 text-[10px] font-bold text-teal-800 dark:text-teal-200">
-         ✨ Updates on every visit
-        </span>
-       </div>
-       <h2 className="mt-1 text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-        Iconic Destinations of India
+       <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
+        Explore India
        </h2>
-       <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-        Handpicked from India's greatest heritage, spiritual, coastal, and mountain wonders.
-       </p>
       </div>
       
       {/* Category Filter Pills & Quick Shuffle Button */}
