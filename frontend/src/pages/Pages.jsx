@@ -434,13 +434,9 @@ export function Planner(){
  return (
   <div className="shell max-w-3xl py-10 sm:py-14">
    <div className="text-center max-w-xl mx-auto">
-    <p className="eyebrow">{hasPreviousTrip?'AI-Powered Trip Engine':'Smart Itinerary Planner'}</p>
-    <h1 className="mt-1 text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+    <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
      {hasPreviousTrip?'Plan Another Journey with AI':'Craft Your Personalized Journey'}
     </h1>
-    <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-     Generate smart day-wise schedules, weather-protected itineraries, and intelligent budget optimization for your Indian adventure.
-    </p>
    </div>
 
    <form onSubmit={submit} className="card mt-8 p-6 sm:p-8 space-y-6">
