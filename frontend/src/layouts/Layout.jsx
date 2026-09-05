@@ -83,7 +83,9 @@ export default function Layout({children}) {
   });
  },[user,pathname]);
 
- const links = isMakeGroupPage
+  const isMakeGroupPage=['/find-travelers','/requests','/groups'].some(p=>pathname===p||pathname.startsWith(p+'/'));
+  const isUnsavedTourView=pathname==='/tour-guide'||pathname.startsWith('/travel-plan/');
+  const links = isMakeGroupPage
   ? [['/','Home'],['/plan','Plan Trip'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
   : hasSavedTours
   ? [['/','Home'],['/plan','Plan Trip'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
