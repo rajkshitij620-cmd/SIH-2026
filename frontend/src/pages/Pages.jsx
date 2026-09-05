@@ -71,7 +71,15 @@ export function Home(){
  return (
   <div className="shell py-8 sm:py-12 space-y-16">
    {/* Hero Section - Light & Fresh Aesthetic for Both Light and Dark Modes */}
-   <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-50/80 via-white to-emerald-50/70 dark:from-slate-800/95 dark:via-slate-800/80 dark:to-teal-950/60 p-6 sm:p-12 lg:p-16 border border-teal-100/90 dark:border-teal-700/40 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-teal-950/30">
+   <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-50/85 via-white/95 to-emerald-50/75 dark:from-slate-800/95 dark:via-slate-800/80 dark:to-teal-950/60 p-6 sm:p-12 lg:p-16 border border-teal-100/90 dark:border-teal-700/40 shadow-xl shadow-slate-200/50 dark:shadow-2xl dark:shadow-teal-950/30">
+    {/* Low-Opacity Travel Scenic Background Image */}
+    <div 
+     className="absolute inset-0 bg-cover bg-center sm:bg-right-bottom opacity-[0.09] dark:opacity-[0.14] pointer-events-none mix-blend-multiply dark:mix-blend-overlay scale-105 transition-transform duration-1000"
+     style={{
+      backgroundImage: `url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=2000&q=80')`
+     }}
+    />
+
     {/* Ambient Soft Glows */}
     <div className="absolute top-0 right-0 -mt-20 -mr-20 h-96 w-96 rounded-full bg-teal-200/35 dark:bg-teal-400/20 blur-3xl pointer-events-none"/>
     <div className="absolute bottom-0 left-0 -mb-20 -ml-20 h-96 w-96 rounded-full bg-emerald-200/25 dark:bg-emerald-400/15 blur-3xl pointer-events-none"/>
