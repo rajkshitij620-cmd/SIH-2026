@@ -224,7 +224,7 @@ export default function Layout({children}) {
       <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-800">Quick Links</h3>
       <ul className="mt-3 space-y-2 text-sm text-slate-600">
        <li><Link to="/" className="hover:text-teal-700">Home</Link></li>
-       <li><Link to="/plan" className="hover:text-teal-700">{planLabel}</Link></li>
+       <li><Link to="/plan" className="hover:text-teal-700">Plan Trip</Link></li>
        <li><Link to="/explore" className="hover:text-teal-700">Explore Destinations</Link></li>
        <li><Link to="/assistant" className="hover:text-teal-700">AI Travel Assistant</Link></li>
       </ul>
