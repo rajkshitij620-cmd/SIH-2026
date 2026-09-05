@@ -38,7 +38,9 @@ export default function Layout({children}) {
  return <div className="flex min-h-screen flex-col">
   <header className="site-header sticky top-0 z-40 border-b border-slate-200 bg-stone-50/95 backdrop-blur">
    <div className="shell flex min-h-16 items-center justify-between gap-4">
-    <Link to="/" className="brand font-serif text-xl font-bold text-slate-900" onClick={closeMenu}>Tourmitra</Link>
+    <Link to="/" className="flex items-center gap-2" onClick={closeMenu}>
+     <img src="/logo.png" alt="Tourmitra" className="h-9 sm:h-11 w-auto max-w-[150px] sm:max-w-[180px] object-contain dark:invert mix-blend-multiply dark:mix-blend-screen" />
+    </Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
     <div className="hidden items-center gap-3 md:flex">
      <button type="button" className="theme-toggle" onClick={toggleTheme} aria-label={`Switch to ${theme==='dark'?'light':'dark'} theme`}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
@@ -52,8 +54,8 @@ export default function Layout({children}) {
   <footer className="border-t border-slate-200 bg-stone-100/70 py-10 transition-colors dark:border-slate-800 dark:bg-stone-900/60">
     <div className="shell grid gap-8 sm:grid-cols-2 md:grid-cols-4">
      <div className="sm:col-span-2">
-      <Link to="/" className="brand font-serif text-xl font-bold text-slate-900">
-       Tourmitra
+      <Link to="/" className="inline-block">
+       <img src="/logo.png" alt="Tourmitra" className="h-10 sm:h-12 w-auto max-w-[160px] sm:max-w-[200px] object-contain dark:invert mix-blend-multiply dark:mix-blend-screen" />
       </Link>
       <p className="mt-3 max-w-sm text-sm text-slate-600">
        Your AI-powered companion for smart, sustainable, and crowd-aware travel planning across India.
