@@ -9,6 +9,8 @@ from app.services.planner import plan, recalculate
 from app.services.weather import get_weather, get_current_weather
 from app.services.maps import directions as live_directions, location_map, static_map
 from app.ai.llm.service import answer_chat, configured as llm_configured
+from app.ai.cities_kb import get_city_knowledge, format_city_guide, INDIAN_CITIES_KB
+import re
 from uuid import uuid4
 from datetime import datetime
 
@@ -327,9 +329,20 @@ def create_group(v:GroupInput,u=Depends(current_user)):
 def chat(v: ChatInput):
     raw_msg = v.message.strip()
     msg_lower = raw_msg.lower()
-    hindi = v.language == 'hi' or any(z in msg_lower for z in ['mujhe', 'karo', 'hai', 'kaise', 'batao', 'kya', 'mausam', 'kaisa', 'namaste', 'bataiye'])
+    hindi = v.language == 'hi' or any(z in msg_lower for z in ['mujhe', 'karo', 'hai', 'kaise', 'batao', 'kya', 'mausam', 'kaisa', 'namaste', 'bataiye', 'prasiddh', 'khana', 'jagah'])
 
-    # 1. Destination context
+    tokens = set(re.findall(r'[a-zA-Z0-9_]+', msg_lower))
+
+    # Check query intent types
+    food_keywords = {'food', 'dish', 'dishes', 'khana', 'cuisine', 'cuisines', 'sweets', 'mithai', 'taste', 'specialty', 'specialties', 'specialities', 'restaurant', 'restaurants', 'eateries', 'delicacies'}
+    places_keywords = {'place', 'places', 'sightseeing', 'ghoomna', 'attraction', 'attractions', 'visit', 'spots', 'monuments', 'mandir', 'temple', 'temples', 'dharohar', 'heritage', 'sthal', 'tourist'}
+    weather_keywords = {'weather', 'temperature', 'temp', 'mausam', 'baarish', 'rain', 'rainfall', 'humidity', 'forecast', 'climate', 'garmi', 'sardi', 'taapman'}
+
+    is_food_inquiry = bool(tokens.intersection(food_keywords)) or 'street food' in msg_lower or 'khana peena' in msg_lower
+    is_places_inquiry = bool(tokens.intersection(places_keywords)) or 'famous places' in msg_lower or 'tourist spot' in msg_lower
+    is_weather_inquiry = bool(tokens.intersection(weather_keywords))
+    # 1. Match Indian Cities from comprehensive Knowledge Base & Destination Store
+    city_kb_data = get_city_knowledge(raw_msg)
     destinations = store.destinations()
     matched_destinations = [
         x for x in destinations
@@ -343,21 +356,21 @@ def chat(v: ChatInput):
             if any(qw in [t.lower() for t in x.get('tags', [])] or qw in x['name'].lower().split() for qw in query_words)
         ][:3]
 
-    # 2. Check for live weather questions
-    weather_keywords = {'weather', 'temperature', 'temp', 'mausam', 'baarish', 'rain', 'humidity', 'forecast', 'climate', 'garmi', 'sardi'}
-    is_weather_inquiry = any(k in msg_lower for k in weather_keywords)
+    # 2. Check for live weather questions strictly
     weather_info = None
     if is_weather_inquiry:
         city_candidate = None
-        for d in destinations:
-            if d['name'].lower() in msg_lower:
-                city_candidate = d['name']
-                break
+        if city_kb_data:
+            city_candidate = city_kb_data['name']
         if not city_candidate:
-            common_cities = ['kolkata', 'mumbai', 'delhi', 'bangalore', 'bengaluru', 'chennai', 'hyderabad', 'jaipur', 'goa', 'darjeeling', 'pune', 'ahmedabad', 'lucknow', 'varanasi', 'manali', 'shimla', 'agra', 'sundarbans', 'shantiniketan', 'bishnupur', 'digha', 'puri']
-            for c in common_cities:
+            for d in matched_destinations or destinations:
+                if d['name'].lower() in msg_lower:
+                    city_candidate = d['name']
+                    break
+        if not city_candidate:
+            for c in INDIAN_CITIES_KB.keys():
                 if c in msg_lower:
-                    city_candidate = c.title()
+                    city_candidate = INDIAN_CITIES_KB[c]['name']
                     break
         if not city_candidate:
             for prep in ['in ', 'of ', 'ka ', 'ke ']:
@@ -373,7 +386,21 @@ def chat(v: ChatInput):
 
     # 3. Context for LLM
     context_payload = []
-    if matched_destinations:
+    if city_kb_data:
+        context_payload.append({
+            'type': 'city_intelligence',
+            'name': city_kb_data['name'],
+            'state': city_kb_data['state'],
+            'description': city_kb_data['description'],
+            'famous_places': city_kb_data['famous_places'],
+            'famous_food': city_kb_data['famous_food'],
+            'temples_spiritual': city_kb_data['temples_spiritual'],
+            'heritage_sites': city_kb_data['heritage_sites'],
+            'budget': city_kb_data['budget'],
+            'best_time': city_kb_data['best_time'],
+            'specialties': city_kb_data['specialties']
+        })
+    elif matched_destinations:
         context_payload.extend([
             {
                 'type': 'destination_info',
@@ -386,7 +413,7 @@ def chat(v: ChatInput):
             }
             for d in matched_destinations
         ])
-    if weather_info:
+    if is_weather_inquiry and weather_info:
         context_payload.append({
             'type': 'live_weather',
             'city': weather_info.get('location'),
@@ -403,24 +430,33 @@ def chat(v: ChatInput):
     if live_answer:
         return {'message': live_answer, 'language': target_lang, 'source': 'TourMitra AI Assistant'}
 
-    # 5. Smart Fallbacks
-    if weather_info:
+    # 5. Smart Deterministic Fallbacks
+    # A. If user asked specifically for weather and we have weather info:
+    if is_weather_inquiry and weather_info:
         loc = weather_info.get('location')
         temp = weather_info.get('temperature_c')
         cond = weather_info.get('condition')
         hum = weather_info.get('humidity')
         wind = weather_info.get('wind_speed_kmh')
         if hindi:
-            msg_text = f"📍 {loc} ka live mausam: Taapman {temp}°C hai, sthiti '{cond}' hai. Humidity {hum}% aur hawa ki gati {wind} km/h hai."
+            msg_text = f"📍 **{loc} Live Weather Report**\n\n• **Taapman**: {temp}°C (Sthiti: {cond})\n• **Aadarta (Humidity)**: {hum}%\n• **Hawa ki Gati**: {wind} km/h\n\n🌤️ *Travel Tip*: Mausam ke anusaar apne kapde aur itinerary plan karein."
         else:
-            msg_text = f"📍 Live Weather in {loc}: Currently {temp}°C with {cond}. Humidity is at {hum}%, and wind speed is {wind} km/h."
-        return {'message': msg_text, 'language': 'hi' if hindi else 'en', 'source': 'Live OpenWeather service'}
+            msg_text = f"📍 **{loc} Live Weather Report**\n\n• **Current Temperature**: {temp}°C ({cond})\n• **Humidity**: {hum}%\n• **Wind Speed**: {wind} km/h\n\n🌤️ *Travel Advice*: Plan your day and outdoor activities considering the current weather conditions."
+        return {'message': msg_text, 'language': 'hi' if hindi else 'en', 'source': 'Live OpenWeather Service'}
 
-    greeting = any(term in msg_lower for term in ('hello', 'hi', 'hey', 'how are you', 'kaise ho', 'namaste'))
-    if greeting:
-        text = 'Namaste! Main TourMitra AI Assistant hoon. Main aapki travel planning, weather updates, sightseeing, aur kisi bhi generic sawaal me madad kar sakta hoon. Aap kya jaanna chahte hain?' if hindi else 'Hello! I am TourMitra AI Assistant. I can assist you with travel planning, live weather, attractions, culture, and any questions you have. How can I help you today?'
+    # B. If user asked greeting:
+    greeting = any(term in msg_lower for term in ('hello', 'hi', 'hey', 'how are you', 'kaise ho', 'namaste', 'pranam'))
+    if greeting and len(msg_lower.split()) <= 4:
+        text = 'Namaste! Main TourMitra AI Assistant hoon. Main Bharat ke kisi bhi sheher ke prasiddh sthal, famous khana, mandir/dharohar, budget, aur mausam ki jaankari de sakta hoon. Aap kis sheher ke baare me jaanna chahte hain?' if hindi else 'Hello! I am TourMitra AI Assistant. I can help you with famous places, iconic foods, spiritual & heritage landmarks, budgets, itineraries, and live weather for any city in India. Which city or destination would you like to explore?'
         return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra Assistant'}
 
+    # C. If City Knowledge Base matched:
+    if city_kb_data:
+        spec_type = 'food' if is_food_inquiry else ('places' if is_places_inquiry else None)
+        text = format_city_guide(city_kb_data, hindi=hindi, specific_type=spec_type)
+        return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra City Intelligence'}
+
+    # D. If Destination Store matched:
     if matched_destinations:
         d = matched_destinations[0]
         places = ', '.join(d.get('famous_places', [])) or d['name']
@@ -430,36 +466,35 @@ def chat(v: ChatInput):
             text = (
                 f"🌟 **{d['name']} Travel Guide**\n\n"
                 f"{d.get('description', '')}\n\n"
-                f"1. 🏛️ **Famous Places**: {places}\n"
-                f"2. 🍛 **Famous Food**: Local street food, traditional regional thali & sweets\n"
-                f"3. 🛕 **Temples & Spiritual Sites**: Famous local temples and sacred heritage spots\n"
-                f"4. 🏰 **Historic & Heritage**: {categories} monuments and cultural landmarks\n"
-                f"5. 💰 **Per-Day Budget**:\n"
-                f"   - Budget: ~₹{cost} – ₹{cost + 500}/day\n"
-                f"   - Mid-Range: ~₹{cost * 2} – ₹{cost * 3}/day\n"
-                f"6. 🗓️ **Best Time to Visit**: October se March tak ghoomne ke liye sabse accha samay hai.\n\n"
-                f"Agar aapko day-wise complete itinerary ya hotel planning chahiye toh batayein!"
+                f"1. 🏛️ **Prasiddh Paryatan Sthal (Famous Places)**: {places}\n"
+                f"2. 🍛 **Prasiddh Khana (Famous Food)**: Local authentic street food, traditional sweets & regional cuisine\n"
+                f"3. 🛕 **Dharmik & Dharohar Sthal (Heritage & Temples)**: {categories} historical monuments, ancient shrines & scenic attractions\n"
+                f"4. 💰 **Per-Day Budget Breakdown**:\n"
+                f"   • Budget: ~₹{cost} – ₹{cost + 500}/din (Stay + Local Food + Transport)\n"
+                f"   • Mid-Range: ~₹{cost * 2} – ₹{cost * 3}/din (Hotel + Restaurants + Cabs)\n"
+                f"5. 🗓️ **Ghoomne Ka Sabse Accha Samay**: October se March\n\n"
+                f"Kya aapko {d['name']} ka day-wise itinerary ya hotel guide chahiye?"
             )
         else:
             text = (
                 f"🌟 **{d['name']} Travel Guide**\n\n"
                 f"{d.get('description', '')}\n\n"
-                f"1. 🏛️ **Famous Places & Attractions**: {places}\n"
-                f"2. 🍛 **Famous Food & Cuisines**: Iconic local dishes, street food & regional sweets\n"
-                f"3. 🛕 **Temples & Spiritual Sites**: Historical temples, shrines and sacred sites\n"
-                f"4. 🏰 **Historic & Heritage Sites**: {categories} monuments and heritage attractions\n"
-                f"5. 💰 **Per-Day Budget Breakdown**:\n"
-                f"   - Budget Traveller: ~₹{cost} – ₹{cost + 500}/day (Stay + Local Food + Transport)\n"
-                f"   - Mid-Range: ~₹{cost * 2} – ₹{cost * 3}/day (Hotel + Restaurants + Cabs)\n"
-                f"6. 🗓️ **Best Time to Visit**: October to March for pleasant weather.\n\n"
-                f"Let me know if you would like a detailed day-wise itinerary!"
+                f"1. 🏛️ **Famous Places & Must-Visit Attractions**: {places}\n"
+                f"2. 🍛 **Famous Food & Signature Delicacies**: Iconic local dishes, street food & regional sweets\n"
+                f"3. 🛕 **Temples & Heritage Landmarks**: {categories} monuments and cultural heritage sites\n"
+                f"4. 💰 **Estimated Per-Day Budget Breakdown**:\n"
+                f"   • Budget Traveller: ~₹{cost} – ₹{cost + 500}/day\n"
+                f"   • Mid-Range Traveller: ~₹{cost * 2} – ₹{cost * 3}/day\n"
+                f"5. 🗓️ **Best Time to Visit**: October to March for pleasant sightseeing weather.\n\n"
+                f"Let me know if you would like a detailed day-wise itinerary for {d['name']}!"
             )
         return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra Knowledge Base'}
 
+    # E. General Fallback query
     if hindi:
-        text = f"Aapka sawaal mila: '{raw_msg}'. Main travel destinations, live weather updates, itineraries, aur general knowledge ke sabhi sawaalon me aapki poori madad kar sakta hoon. Kripya apna specific requirement batayein!"
+        text = f"Aapka sawaal mila: '{raw_msg}'. Main Bharat ke kisi bhi sheher ke prasiddh sthal (famous places), local food, mandir/dharohar, budget aur mausam (weather) ke baare me poori jaankari de sakta hoon. Kripya sheher ka naam ya apna specific sawal batayein!"
     else:
-        text = f"Received your query: '{raw_msg}'. I am here to help you with destination recommendations, real-time weather forecasts, day-wise itineraries, and general knowledge questions. How would you like to proceed?"
+        text = f"Received your query: '{raw_msg}'. I can help you discover top attractions, famous cuisines, spiritual/heritage monuments, budgets, and live weather for any Indian destination. Please mention a city name or your specific travel question!"
     return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra Assistant'}
 @api.post('/ai/rag/search')
 def rag(v:ChatInput): return {'results':[x for x in store.destinations() if any(w in (x['description']+' '+' '.join(x['tags'])).lower() for w in v.message.lower().split())][:3],'source':'Local fallback retrieval'}
