@@ -5,7 +5,7 @@ import {useAuth} from '../context/AuthContext';
 import {useTheme} from '../context/ThemeContext';
 import {api} from '../services/api';
 
-const linkClass=({isActive})=>`nav-link text-sm font-medium transition hover:text-teal-700 ${isActive?'text-teal-800':'text-slate-600'}`;
+const linkClass=({isActive})=>`nav-link text-[15px] sm:text-base font-bold transition-all duration-150 hover:text-teal-700 dark:hover:text-teal-300 ${isActive?'text-teal-950 dark:text-teal-300 font-extrabold':'text-slate-950 dark:text-white'}`;
 
 const languages = [
   { code: 'en', name: 'English', label: 'English' },
@@ -140,7 +140,7 @@ export default function Layout({children}) {
     <Link to="/" className="flex items-center gap-2 py-1" onClick={closeMenu}>
      <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert drop-shadow-sm" />
     </Link>
-    {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
+    <nav className="hidden items-center gap-7 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>
     <div className="flex items-center gap-3">
      {/* Universal Settings Dropdown (Theme & Language) */}
      <div className="relative" ref={settingsRef}>
@@ -250,7 +250,11 @@ export default function Layout({children}) {
 
      {/* Sign in / Sign out button on desktop */}
      <div className="hidden md:flex items-center">
-      {user?<button type="button" className="btn-ghost !px-3 !py-2 !bg-white/80 dark:!bg-slate-800/80 backdrop-blur-sm" onClick={logout}>Sign out</button>:<NavLink to="/login" className={`${linkClass} font-semibold !text-slate-900 dark:!text-white`}>Sign in</NavLink>}
+      {user ? (
+        <button type="button" className="btn-ghost !px-4 !py-2 text-[15px] font-bold !text-slate-900 dark:!text-white !bg-white/90 dark:!bg-slate-800/90 shadow-sm border border-slate-300 dark:border-slate-700" onClick={logout}>Sign out</button>
+      ) : (
+        <NavLink to="/login" className="inline-flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 px-4 py-2 text-[15px] font-bold text-slate-950 dark:text-white shadow-sm hover:border-teal-600 hover:text-teal-700 dark:hover:text-teal-300 transition-all">Sign in</NavLink>
+      )}
      </div>
 
      {/* Mobile hamburger menu toggle */}
