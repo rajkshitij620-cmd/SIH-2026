@@ -136,9 +136,9 @@ export default function Layout({children}) {
          : '!bg-transparent !border-b-0 !border-transparent !shadow-none !backdrop-blur-none' 
        : 'border-b border-slate-200 bg-stone-50/95 backdrop-blur shadow-sm'
    }`}>
-    <div className="shell flex min-h-16 items-center justify-between gap-4">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex min-h-16 items-center justify-between gap-4">
     <Link to="/" className="flex items-center gap-2 py-1" onClick={closeMenu}>
-     <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert" />
+     <img src="/logo.png" alt="Tourmitra" className="h-11 sm:h-14 md:h-16 w-auto object-contain dark:invert drop-shadow-sm" />
     </Link>
     {user&&<nav className="hidden items-center gap-5 md:flex" aria-label="Primary navigation">{links.map(([to,label])=><NavLink key={to} to={to} className={linkClass}>{label}</NavLink>)}</nav>}
     <div className="flex items-center gap-3">
