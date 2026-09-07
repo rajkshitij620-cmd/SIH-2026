@@ -1,30 +1,77 @@
 """Comprehensive Indian Cities Knowledge Base for TourMitra AI Assistant.
-Provides deep, authoritative tourism data for Indian state capitals, heritage centers, and tourist hubs.
+Provides authoritative, dedicated data for Indian destinations across all aspects:
+Food, Places, Temples & Heritage, Budgets, and Best Time to Visit.
 """
 from typing import Optional, Dict, Any
 
 INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
+    "kolkata": {
+        "name": "Kolkata",
+        "state": "West Bengal",
+        "description": "The Cultural Capital of India, city of joy, colonial grand architecture, literature, Nobel laureates, and legendary Bengali sweets and street food.",
+        "famous_places": [
+            "Victoria Memorial & Maidan",
+            "Howrah Bridge (Iconic cantilever bridge on Hooghly)",
+            "Dakshineswar Kali Temple & Belur Math",
+            "Indian Museum (Oldest museum in Asia)",
+            "Park Street & Princep Ghat (Riverfront promenade)",
+            "St. Paul Cathedral & Marble Palace",
+            "Kumartuli (Artisan idol-makers quarter)",
+            "Science City & Eco Park (Rajarhat)",
+            "Alipore Zoo & National Library"
+        ],
+        "famous_food": [
+            "Kolkata Biryani with Aloo & Boiled Egg (Arsalan / Shiraz / Royal Indian Hotel)",
+            "Kolkata Kathi Rolls (Nizam origin at New Market / Kusum Rolls)",
+            "Kolkata Phuchka (Spicy potato & tangy tamarind water at Vivekananda Park)",
+            "Iconic Bengali Sweets: Spongy Rasgulla (K.C. Das), Sandesh (Balaram Mullick), and Mishti Doi",
+            "Traditional Bengali Cuisine: Kosha Mangsho with hot Luchi, Ilish Macher Jhol, Chingri Malai Curry",
+            "Park Street Heritage: Peter Cat Chelo Kebab & Flurys English Breakfast / Pastries",
+            "Popular Street Snacks: Jhalmuri, Churmur, Telebhaja, and Singara"
+        ],
+        "temples_spiritual": [
+            "Dakshineswar Kali Temple (Bhavatarini Kali & Sri Ramakrishna room)",
+            "Kalighat Kali Temple (One of the 51 Shaktipeeths)",
+            "Belur Math (World headquarters of Ramakrishna Math & Mission)",
+            "St. Paul Cathedral & St. John Church",
+            "Nakhoda Mosque (Chitpur)",
+            "Pareshnath Jain Temple (Shitalnath Mandir)"
+        ],
+        "heritage_sites": [
+            "Victoria Memorial Hall (White Makrana marble masterpiece)",
+            "Marble Palace (1835 neoclassical mansion & Victorian art)",
+            "Jorasanko Thakur Bari (Ancestral mansion of Rabindranath Tagore)",
+            "Writers Building, Raj Bhavan & General Post Office (GPO)"
+        ],
+        "budget": {
+            "budget": "₹1,000 – ₹1,500/day (Sudder street budget stays + Tram/Metro + Phuchka/Rolls)",
+            "mid": "₹2,500 – ₹4,000/day (Heritage homestay/Hotel + Yellow taxi/Uber + Park Street dining)",
+            "luxury": "₹6,000+/day (The Oberoi Grand / ITC Royal Bengal + Fine dining)"
+        },
+        "best_time": "October to March (Durga Puja festival in Autumn, winter book fairs & soothing pleasant weather)",
+        "specialties": "Tant & Jamdani cotton sarees, Terracotta handicrafts, Dokra brass art, Darjeeling tea, Nolen Gur Sandesh."
+    },
     "patna": {
         "name": "Patna",
         "state": "Bihar",
         "description": "Ancient historic capital on the banks of Ganga (historic Pataliputra), world-famous for sacred Sikh heritage, Mauryan history, museums, and rich culture.",
         "famous_places": [
-            "Golghar (Historic granary with Ganga view)",
+            "Golghar (Historic granary with panoramic Ganga view)",
             "Takht Sri Patna Sahib (Birthplace of Guru Gobind Singh Ji)",
-            "Bihar Museum & Patna Museum (World-class art & Yakshi statue)",
+            "Bihar Museum & Patna Museum (World-class art & Didarganj Yakshi statue)",
             "Buddha Smriti Park & Karuna Stupa",
             "Mahavir Mandir (One of the holiest Hanuman shrines)",
-            "Kumhrar (Ancient Mauryan 80-pillared hall ruins)",
-            "Sabhyata Dwar & Marine Drive Ganga Riverfront"
+            "Kumhrar (Ancient Mauryan 80-pillared hall archaeological excavations)",
+            "Sabhyata Dwar & Marine Drive Ganga Riverfront promenade"
         ],
         "famous_food": [
-            "Litti Chokha with Desi Ghee & Baingan Bharta",
-            "Silao Khaja & Chandrakala",
-            "Gaya Tilkut & Anarsa",
-            "Dal Pitha (Traditional steamed rice dumplings)",
-            "Sattu Sharbat & Kachori Jalebi",
-            "Bihari Mutton Kebab & Champaran Handi Meat",
-            "Chana Ghugni with Poha"
+            "Litti Chokha roasted with Desi Ghee & Baingan Bharta (Maurya Lok / Station road)",
+            "Silao Khaja & Chandrakala (Crispy multi-layered sweet)",
+            "Gaya Tilkut, Anarsa & Balushahi",
+            "Dal Pitha (Traditional steamed rice dumplings filled with spiced lentils)",
+            "Sattu Sharbat (Refreshing roasted gram flour drink) & Kachori Jalebi",
+            "Champaran Handi Mutton & Bihari Kebab",
+            "Chana Ghugni with Poha / Murhi"
         ],
         "temples_spiritual": [
             "Takht Sri Patna Sahib (5 Takhts of Sikhism)",
@@ -62,13 +109,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Clock Tower (Ghanta Ghar) & Picture Gallery"
         ],
         "famous_food": [
-            "Tunday Kababi Galawati Kebabs with Roomali Roti",
-            "Awadhi Mutton Dum Biryani & Kakori Kebabs",
-            "Prakash ki Kulfi (Aminabad)",
-            "Makhan Malai / Nimish (Winter saffron dessert)",
-            "Tokri Chaat (Royal Café, Hazratganj)",
-            "Sheermal & Mughlai Kulcha Nihari (Rahim’s, Chowk)",
-            "Malai Paan & Raja Thandai"
+            "Tunday Kababi Galawati Kebabs with Roomali Roti (Aminabad & Chowk)",
+            "Awadhi Mutton Dum Biryani, Kakori Kebabs & Boti Kebab",
+            "Prakash ki Kulfi (Aminabad falooda kulfi)",
+            "Makhan Malai / Nimish (Winter morning saffron froth dessert)",
+            "Royal Cafe Basket Chaat (Tokri Chaat, Hazratganj)",
+            "Sheermal & Mughlai Kulcha Nihari (Rahim in Chowk)",
+            "Malai Paan, Raja Thandai & Kashmiri Chai"
         ],
         "temples_spiritual": [
             "Bara Imambara & Asfi Mosque",
@@ -107,13 +154,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Hauz Khas Village & Lodhi Garden"
         ],
         "famous_food": [
-            "Old Delhi Chhole Bhature (Sita Ram Diwan Chand)",
-            "Paranthe Wali Gali (Stuffed fried parathas)",
-            "Karim & Al Jawahar Mutton Korma and Kebabs",
-            "Butter Chicken & Dal Makhani (Moti Mahal origin)",
-            "Dahi Bhalla (Natraj, Chandni Chowk)",
-            "Kuremal Mohan Lal Kulfi (Stuffed real-fruit kulfi)",
-            "Momos & Tibetan Delicacies (Majnu Ka Tilla)"
+            "Old Delhi Chhole Bhature (Sita Ram Diwan Chand / Chache Di Hatti)",
+            "Paranthe Wali Gali (Stuffed crispy parathas in Chandni Chowk)",
+            "Karim & Al Jawahar Mutton Korma, Nihari and Seekh Kebabs (Jama Masjid)",
+            "Butter Chicken & Dal Makhani (Moti Mahal origin in Daryaganj)",
+            "Dahi Bhalla & Aloo Tikki (Natraj & Bittoo Tikki Wala)",
+            "Kuremal Mohan Lal Kulfi (Stuffed real-fruit kulfi in Chawri Bazaar)",
+            "Momos, Thukpa & Laphing (Majnu Ka Tilla Tibetan Colony)"
         ],
         "temples_spiritual": [
             "Swaminarayan Akshardham Temple",
@@ -154,13 +201,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Juhu Beach & Sanjay Gandhi National Park"
         ],
         "famous_food": [
-            "Vada Pav & Pav Bhaji (Sardar / Cannon)",
-            "Misal Pav & Kanda Poha",
-            "Bombay Duck (Bombil Fry) & Malvani Coastal Seafood",
-            "Bun Maska & Irani Chai (Kyani & Co. / Britannia)",
-            "Bhel Puri & Sev Puri (Girgaon Chowpatty)",
-            "Frankie & Falooda (Badshah, Crawford Market)",
-            "Parsi Dhansak & Berry Pulao"
+            "Vada Pav & Pav Bhaji (Ashok Vada Pav, Sardar Pav Bhaji, Cannon)",
+            "Misal Pav & Kanda Poha (Aaswad / Prakash Shakahari)",
+            "Bombay Duck (Bombil Fry) & Malvani Coastal Seafood (Gajalee / Mahesh Lunch Home)",
+            "Bun Maska & Irani Chai (Kyani & Co. / Britannia & Co. / Cafe Mondegar)",
+            "Bhel Puri & Sev Puri (Girgaon Chowpatty & Juhu Beach)",
+            "Frankie & Falooda (Badshah at Crawford Market)",
+            "Parsi Berry Pulao & Dhansak"
         ],
         "temples_spiritual": [
             "Shree Siddhivinayak Temple (Prabhadevi)",
@@ -184,51 +231,6 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
         "best_time": "November to February (Pleasant coastal breezes with low humidity)",
         "specialties": "Colaba street fashion, Bollywood memorabilia, Kolhapuri chappals, Mangalorean spices."
     },
-    "kolkata": {
-        "name": "Kolkata",
-        "state": "West Bengal",
-        "description": "The Cultural Capital of India, city of joy, colonial grand architecture, literature, Nobel laureates, and legendary Bengali sweets and street food.",
-        "famous_places": [
-            "Victoria Memorial & Maidan",
-            "Howrah Bridge (Iconic cantilever bridge on Hooghly)",
-            "Dakshineswar Kali Temple & Belur Math",
-            "Indian Museum (Oldest museum in Asia)",
-            "Park Street & Princep Ghat (Riverfront promenade)",
-            "St. Paul Cathedral & Marble Palace",
-            "Kumartuli (Artisan idol-makers quarter)",
-            "Science City & Eco Park (Rajarhat)"
-        ],
-        "famous_food": [
-            "Kolkata Biryani with Aloo & Boiled Egg (Arsalan/Shiraz)",
-            "Kathi Roll (Nizam origin at New Market)",
-            "Kolkata Phuchka (Tamarind & spicy potato water pani puri)",
-            "Rasgulla (Nobin Chandra Das), Sandesh & Mishti Doi",
-            "Ilish Macher Jhol, Kosha Mangsho with Luchi",
-            "Chelo Kebab & Flurys English Breakfast (Park Street)",
-            "Churmur, Singara & Telebhaja"
-        ],
-        "temples_spiritual": [
-            "Dakshineswar Kali Temple (Bhavatarini Kali & Sri Ramakrishna room)",
-            "Kalighat Kali Temple (51 Shaktipeeth)",
-            "Belur Math (Headquarters of Ramakrishna Math & Mission)",
-            "St. Paul Cathedral & St. John Church",
-            "Nakhoda Mosque (Chitpur)",
-            "Pareshnath Jain Temple"
-        ],
-        "heritage_sites": [
-            "Victoria Memorial Hall (White Makrana marble masterpiece)",
-            "Marble Palace (1835 neoclassical mansion & art collection)",
-            "National Library & Writers Building",
-            "Jorasanko Thakur Bari (Ancestral home of Rabindranath Tagore)"
-        ],
-        "budget": {
-            "budget": "₹1,000 – ₹1,500/day (Sudder street budget stays + Tram/Metro + Phuchka/Rolls)",
-            "mid": "₹2,500 – ₹4,000/day (Heritage homestay/Hotel + Yellow taxi/Uber + Park Street dining)",
-            "luxury": "₹6,000+/day (The Oberoi Grand / ITC Royal Bengal + Fine dining)"
-        },
-        "best_time": "October to March (Durga Puja festival in Autumn, winter book fairs & soothing weather)",
-        "specialties": "Tant & Jamdani cotton sarees, Terracotta handicrafts, Dokra brass art, Darjeeling tea, Sandesh."
-    },
     "varanasi": {
         "name": "Varanasi (Banaras / Kashi)",
         "state": "Uttar Pradesh",
@@ -244,13 +246,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Tulsi Manas Mandir & Sankat Mochan Hanuman Temple"
         ],
         "famous_food": [
-            "Banarasi Paan (Maghai / Meetha Paan)",
-            "Kachori Sabzi & Jalebi (Morning Ram Bhandar / Chachi ki Kachori)",
-            "Banarasi Tamatar Chaat (Kashi Chaat Bhandar)",
-            "Malaiyo / Makhan Malai (Winter saffron froth sweet)",
-            "Blue Lassi / Pehalwan Lassi (Kulhad Lassi)",
+            "Banarasi Paan (Maghai & Meetha Paan at Keshav Tambool)",
+            "Kachori Sabzi & Jalebi (Morning at Ram Bhandar / Chachi ki Kachori)",
+            "Banarasi Tamatar Chaat & Palak Chaat (Kashi Chaat Bhandar)",
+            "Malaiyo / Makhan Malai (Winter saffron froth sweet served in kulhads)",
+            "Blue Lassi / Pehalwan Lassi (Thick lassi with fresh fruit toppings)",
             "Baati Chokha & Chena Dahi Vada",
-            "Laal Peda & Rabri Jalebi"
+            "Laal Peda, Rabri Jalebi & Thandai with Kesar"
         ],
         "temples_spiritual": [
             "Kashi Vishwanath Jyotirlinga Temple",
@@ -289,13 +291,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Patrika Gate & Chokhi Dhani (Ethnic village resort)"
         ],
         "famous_food": [
-            "Dal Baati Churma with Ghee & Garlic Chutney",
-            "Pyaaz Kachori (Rawat Mishthan Bhandar)",
+            "Dal Baati Churma with Pure Desi Ghee & Garlic Chutney (LMB / 1135 AD)",
+            "Pyaaz Kachori & Mawa Kachori (Rawat Mishthan Bhandar)",
             "Ghevar (Malai / Mawa Ghevar from LMB Johari Bazaar)",
-            "Laal Maas (Royal spicy Rajasthani mutton)",
+            "Laal Maas (Royal spicy Rajasthani mutton curry with mathania chillies)",
             "Ker Sangri & Gatte ki Sabzi",
-            "Lassi at Lassiwala (MI Road since 1944)",
-            "Mawa Kachori & Mirchi Vada"
+            "Lassi at Lassiwala (MI Road since 1944 in earthen kulhad)",
+            "Mirchi Vada & Gulab Sakri"
         ],
         "temples_spiritual": [
             "Govind Dev Ji Temple (Inside City Palace complex)",
@@ -332,12 +334,12 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Kinari Bazaar & Sadar Bazaar"
         ],
         "famous_food": [
-            "Agra ka Petha (Angoori, Kesar, Paan, Chocolate Petha - Panchhi Petha)",
-            "Bedmi Puri with Aloo Sabzi & Jalebi (Deviram Sweets)",
-            "Mughlai Biryani, Chicken Tikka & Seekh Kebabs",
-            "Dalmoth (Spicy crispy lentil namkeen)",
-            "Bhalla Chaat (Sadar Bazaar)",
-            "Tandoori Naan with Paneer Butter Masala"
+            "Agra ka Petha: Angoori, Kesar, Paan, Chocolate & Gulab Petha (Panchhi Petha)",
+            "Bedmi Puri with spicy Aloo Sabzi & crispy Jalebi (Deviram Sweets)",
+            "Mughlai Biryani, Chicken Tikka & Seekh Kebabs (Pinch of Spice)",
+            "Dalmoth (Spicy crispy lentil and cashew namkeen)",
+            "Bhalla Chaat (Agra special potato patty chaat at Sadar Bazaar)",
+            "Tandoori Mughlai Kulcha & Shawarma"
         ],
         "temples_spiritual": [
             "Balkeshwar Temple (Ancient Shiva temple on Yamuna banks)",
@@ -359,356 +361,6 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
         "best_time": "October to March (Pleasant winter sunshine; Taj Mahotsav festival in February)",
         "specialties": "Marble inlay handicraft (Pietra Dura), Leather shoes and bags, Zari embroidery, Authentic Panchhi Petha."
     },
-    "bengaluru": {
-        "name": "Bengaluru (Bangalore)",
-        "state": "Karnataka",
-        "description": "The Silicon Valley of India & Garden City, renowned for pleasant year-round weather, sprawling parks, microbreweries, and legendary South Indian breakfast hubs.",
-        "famous_places": [
-            "Lalbagh Botanical Garden & Glass House",
-            "Cubbon Park & Vidhana Soudha (Neo-Dravidian legislative seat)",
-            "Bangalore Palace (Tudor-style royal estate)",
-            "Tipu Sultan Summer Palace & Bangalore Fort",
-            "Bannerghatta National Park & Biological Reserve",
-            "UB City & Brigade Road / MG Road",
-            "ISKCON Temple Bangalore (Rajajinagar hillock)",
-            "Nandi Hills (Famous sunrise viewpoint 60km away)"
-        ],
-        "famous_food": [
-            "Crispy Benne Masala Dosa (CTR Malleshwaram / Vidyarthi Bhavan)",
-            "Rava Idli & Filter Coffee (MTR - Mavalli Tiffin Room)",
-            "Bisi Bele Bath & Khara Bath",
-            "Mysore Pak (Ghee sweet)",
-            "Mangalore Buns & Neer Dosa",
-            "Karnataka Donne Biryani (Shivaji Military Hotel)",
-            "Craft Beer & Wood-fired Pizzas (Indiranagar & Koramangala)"
-        ],
-        "temples_spiritual": [
-            "Sri Radha Krishna ISKCON Temple (Rajajinagar)",
-            "Bull Temple (Nandi Temple, Basavanagudi)",
-            "Dodda Ganapathi Temple",
-            "St. Mary Basilica (Shivajinagar)",
-            "Someshwara Temple (Halasuru - Chola era)"
-        ],
-        "heritage_sites": [
-            "Bangalore Palace (1878 royal palace inspired by Windsor Castle)",
-            "Tipu Sultan Summer Palace (Teakwood Indo-Islamic structure)",
-            "Vidhana Soudha (Magnificent granite architectural monument)",
-            "Devanahalli Fort (Birthplace of Tipu Sultan)"
-        ],
-        "budget": {
-            "budget": "₹1,300 – ₹1,900/day (Hostels in Indiranagar/Koramangala + Metro pass + Darshini breakfast)",
-            "mid": "₹3,000 – ₹5,000/day (Business hotel + Uber/Auto + Microbrewery/cafes)",
-            "luxury": "₹7,500+/day (The Leela Palace / Taj West End + Fine dining)"
-        },
-        "best_time": "September to March (Pleasant, moderate climate throughout the year)",
-        "specialties": "Mysore Silk sarees, Sandalwood soaps and carvings, Channapatna wooden lacquer toys, Filter coffee powder."
-    },
-    "hyderabad": {
-        "name": "Hyderabad",
-        "state": "Telangana",
-        "description": "City of Pearls and Nizams, renowned worldwide for world-famous Dum Biryani, historic Charminar, Golconda Fort, and booming Cyberabad IT hub.",
-        "famous_places": [
-            "Charminar & Makkah Masjid",
-            "Golconda Fort & Sound and Light Show",
-            "Chowmahalla Palace (Nizam opulent palace)",
-            "Qutb Shahi Tombs & Seven Tombs Park",
-            "Hussain Sagar Lake & Giant Buddha Statue",
-            "Ramoji Film City (World largest film studio complex)",
-            "Salar Jung Museum (Veiled Rebecca & Musical Clock)",
-            "Birla Mandir & Statue of Equality"
-        ],
-        "famous_food": [
-            "Hyderabadi Mutton Dum Biryani (Paradise / Bawarchi / Shadab)",
-            "Haleem (Pista House - during Ramzan season)",
-            "Mirchi Ka Salan & Double Ka Meetha",
-            "Osmania Biscuits & Irani Chai (Nimrah Cafe beside Charminar)",
-            "Boti Kebab, Pathar Ka Gosht & Marag soup",
-            "Qubani Ka Meetha with Custard/Ice-cream",
-            "Andhra Meals with Gongura Pachadi"
-        ],
-        "temples_spiritual": [
-            "Birla Mandir (White Rajasthani marble atop Naubat Pahad)",
-            "Chilkur Balaji Temple (Visa Balaji)",
-            "Jagannath Temple (Banjara Hills)",
-            "Makkah Masjid (Built with bricks from Mecca soil)",
-            "Statue of Equality (1000th birth anniversary of Ramanujacharya)"
-        ],
-        "heritage_sites": [
-            "Charminar (1591 AD landmark with 4 grand arches)",
-            "Golconda Fort (Famous acoustic clap system & Koh-i-Noor diamond origin)",
-            "Chowmahalla Palace (Coronation hall & vintage car collection)",
-            "Salar Jung Museum (One man rare antique collection)"
-        ],
-        "budget": {
-            "budget": "₹1,200 – ₹1,800/day (Guesthouse + Metro/Auto + Biryani & Irani cafe)",
-            "mid": "₹2,800 – ₹4,500/day (3-4 star hotel + Cabs + Historic tours & Ramoji)",
-            "luxury": "₹8,000+/day (Taj Falaknuma Palace - Live like a Nizam)"
-        },
-        "best_time": "October to March (Cool, pleasant weather; ideal for walking through old bazaars)",
-        "specialties": "Basra Natural Pearls, Lac bangles (Laad Bazaar), Pochampally & Gadwal handloom sarees, Bidri metalware."
-    },
-    "chennai": {
-        "name": "Chennai",
-        "state": "Tamil Nadu",
-        "description": "Gateway to South India, cultural capital of Carnatic music and Bharatanatyam, home to ancient Dravidian temples and the world 2nd longest natural urban beach.",
-        "famous_places": [
-            "Marina Beach (World 2nd longest urban beach)",
-            "Kapaleeshwarar Temple (Mylapore Dravidian architecture)",
-            "San Thome Cathedral Basilica (Apostle St. Thomas tomb)",
-            "Fort St. George & Museum (1644 British stronghold)",
-            "Government Museum & Bronze Gallery (Egmore)",
-            "Guindy National Park & Snake Park",
-            "DakshinaChitra Heritage Village (ECR)",
-            "Mahabalipuram Shore Temples (1 hr drive UNESCO site)"
-        ],
-        "famous_food": [
-            "Crispy Ghee Podi Dosa & Idli-Vada Sambar (Murugan Idli / Ratna Cafe)",
-            "Authentic South Indian Filter Kaapi (Degree Coffee)",
-            "Chettinad Chicken Curry & Meen Varuval (Fish Fry)",
-            "Pongal with Coconut Chutney & Medu Vada",
-            "Jigarthanda & Sundal (Beachside snack)",
-            "Kothu Parotta & Parotta Salna",
-            "Mysore Pak (Grand Sweets / Sri Krishna Sweets)"
-        ],
-        "temples_spiritual": [
-            "Kapaleeshwarar Temple (Mylapore - Lord Shiva & Goddess Karpagambal)",
-            "Parthasarathy Temple (8th-century temple in Triplicane)",
-            "San Thome Basilica (Built over tomb of Apostle St. Thomas)",
-            "Ashtalakshmi Temple (Besant Nagar Beach)",
-            "Vadapalani Murugan Temple"
-        ],
-        "heritage_sites": [
-            "Fort St. George (First English fortress in India)",
-            "Ripon Building & Victoria Public Hall (Indo-Saracenic)",
-            "Vivekanandar Illam (Vivekananda House Ice House)",
-            "Mahabalipuram Pancha Rathas & Shore Temple (Nearby)"
-        ],
-        "budget": {
-            "budget": "₹1,100 – ₹1,700/day (Budget stay + Metro/Local suburban train + Tiffin)",
-            "mid": "₹2,600 – ₹4,200/day (3-star hotel + Cabs + Chettinad & seafood restaurants)",
-            "luxury": "₹6,500+/day (ITC Grand Chola / Taj Coromandel + Carnatic music experience)"
-        },
-        "best_time": "November to February (Mild winter pleasant coastal weather; Margazhi Music Season in Dec-Jan)",
-        "specialties": "Kanchipuram pure silk sarees, Tanjore gold foil paintings, Bronze Nataraja idols, Filter coffee sets."
-    },
-    "amritsar": {
-        "name": "Amritsar",
-        "state": "Punjab",
-        "description": "The Golden Heart of Punjab, supreme spiritual seat of Sikhism, land of patriotism, hospitality, and mouth-watering Punjabi gastronomy.",
-        "famous_places": [
-            "Sri Harmandir Sahib (Golden Temple)",
-            "Jallianwala Bagh Memorial & Eternal Flame",
-            "Attari-Wagah Border Beating Retreat Ceremony",
-            "Partition Museum (Town Hall)",
-            "Gobindgarh Fort & Whispering Walls Light Show",
-            "Durgiana Temple (Silver Temple)",
-            "Ram Tirath Ashram (Valmiki Ashram)",
-            "Hall Bazaar & Katra Jaimal Singh Market"
-        ],
-        "famous_food": [
-            "Amritsari Kulcha with Chhole & Imli Chutney (Bhai Kulwant Singh / Monu)",
-            "Guru Ka Langar (24/7 world largest community kitchen at Golden Temple)",
-            "Amritsari Machhi (Fried Fish at Makhan Fish / Pehalwan)",
-            "Ahuja Milk Center Kesar Lassi (Malai topped lassi)",
-            "Beera Spiced Tandoori Chicken & Mutton Chaap",
-            "Kanha Sweets Poori Chhole with Halwa",
-            "Jalebi from Gurdas Ram Jalebiwala (Katrawala)"
-        ],
-        "temples_spiritual": [
-            "Sri Harmandir Sahib (Golden Temple - Akal Takht)",
-            "Durgiana Mandir (Dedicated to Goddess Durga & Lakshmi Narayan)",
-            "Gurudwara Baba Atal Rai (9-storey octagonal tower)",
-            "Gurudwara Chheharta Sahib",
-            "Ram Tirath Temple (Birthplace of Luv & Kush)"
-        ],
-        "heritage_sites": [
-            "Jallianwala Bagh (Preserved bullet marks & Martyr Well from 1919)",
-            "Gobindgarh Fort (Built by Maharaja Ranjit Singh)",
-            "Partition Museum (First museum dedicated to 1947 Partition)",
-            "Khalsa College (Grand Victorian-Sikh architectural marvel)"
-        ],
-        "budget": {
-            "budget": "₹900 – ₹1,400/day (Golden Temple Sarai/Budget hotel + Shared e-rickshaws + Langar/Street food)",
-            "mid": "₹2,200 – ₹3,800/day (Heritage hotel + AC taxi to Wagah + Dhabas)",
-            "luxury": "₹5,500+/day (Taj Swarna / Hyatt Regency + Luxury Wagah VIP tour)"
-        },
-        "best_time": "October to March (Crisp winter weather; festive atmosphere during Gurpurab and Baisakhi)",
-        "specialties": "Phulkari dupattas and suits, Amritsari Papad & Wadian, Punjabi Juttis, Brass Kada."
-    },
-    "indore": {
-        "name": "Indore",
-        "state": "Madhya Pradesh",
-        "description": "India cleanest city for 7 consecutive years, commercial capital of MP, home to Holkar royal heritage and India greatest night street food market Sarafa Bazaar.",
-        "famous_places": [
-            "Rajwada Palace (7-storey Holkar dynasty palace)",
-            "Sarafa Bazaar (Jewellery market by day, night street food capital by night)",
-            "Chappan Dukan (56 Food Stalls street)",
-            "Lal Bagh Palace (Opulent palace modelled after Versailles)",
-            "Kanch Mandir (Glass Jain Temple)",
-            "Annapurna Temple & Khajrana Ganesh Mandir",
-            "Patalpani Waterfall & Ralamandal Wildlife Sanctuary",
-            "Mahakaleshwar Jyotirlinga Ujjain (55km easy day-trip)"
-        ],
-        "famous_food": [
-            "Indori Poha with Sev & Jeeravan Masala (Prashant / Apna Sweets)",
-            "Bhutte Ka Kees (Grated spicy spiced corn sweet & savory dish)",
-            "Garadu (Deep fried spiced winter yam)",
-            "Joshi Ji Ka Dahi Vada (Famous flying dahi vada at Sarafa)",
-            "Khopra Patties (Vijay Chaat House)",
-            "Mawa Bati, Rabdi Malpua & Gulab Jamun",
-            "Indori Sev, Ratlami Sev & Khatta Meetha Namkeen"
-        ],
-        "temples_spiritual": [
-            "Khajrana Ganesh Mandir (Built by Rani Ahilyabai Holkar)",
-            "Kanch Mandir (Entire temple interior intricately inlaid with glass & mirrors)",
-            "Annapurna Mandir (Grand elephant gateway)",
-            "Gomatgiri Jain Tirth",
-            "Bada Ganpati Mandir"
-        ],
-        "heritage_sites": [
-            "Rajwada Palace (Indo-Saracenic & Maratha wooden architecture)",
-            "Lal Bagh Palace (European interiors, Italian marble & Belgium glass)",
-            "Krishnapura Chhatris (Holkar dynasty cenotaphs on Kahn river)"
-        ],
-        "budget": {
-            "budget": "₹900 – ₹1,400/day (Budget stay + iBus city bus/auto + Chappan & Sarafa street food)",
-            "mid": "₹2,200 – ₹3,600/day (Comfort hotel + Cab + Ujjain excursion)",
-            "luxury": "₹5,500+/day (Sayaji Hotel / Radisson Blu + Fine dining)"
-        },
-        "best_time": "October to March (Pleasant, breezy weather ideal for night food explorations)",
-        "specialties": "Chanderi & Maheshwari handloom sarees, Indori Sev & Namkeen boxes, Leather toys, Block print fabrics."
-    },
-    "bhopal": {
-        "name": "Bhopal",
-        "state": "Madhya Pradesh",
-        "description": "The City of Lakes, capital of Madhya Pradesh, blend of grand Begum-era mosques, scenic Upper & Lower lakes, and UNESCO World Heritage prehistoric rock caves.",
-        "famous_places": [
-            "Upper Lake (Bhojtal) & Boat Club / VIP Road",
-            "Taj-ul-Masajid (One of Asia largest and grandest pink stone mosques)",
-            "Sanchi Stupa (UNESCO World Heritage Site 45km away)",
-            "Bhimbetka Rock Shelters (UNESCO 10,000-year-old prehistoric rock art)",
-            "Van Vihar National Park (Open zoo along the lake)",
-            "Bharat Bhavan (Multi-arts complex & Tribal Museum)",
-            "Shaukat Mahal & Gohar Mahal (Begum architecture)",
-            "Bhojeshwar Temple at Bhojpur (Giant monolithic Shiva Lingam)"
-        ],
-        "famous_food": [
-            "Bhopali Gosht Korma & Rizala",
-            "Bhopali Poha Jalebi with Sev & Sulaimani Chai",
-            "Chatori Gali Street Food (Nalli Nihari & Seekh Kebabs)",
-            "Pawa / Biryani & Bhopali Paan",
-            "Mawa Bati & Shahi Tukda",
-            "Bhopali Keema Pav"
-        ],
-        "temples_spiritual": [
-            "Taj-ul-Masajid (Crown of Mosques)",
-            "Bhojpur Shiva Temple (World tallest monolithic Shivling 7.5 ft)",
-            "Birla Mandir (Laxmi Narayan Temple with lake view)",
-            "Gufa Mandir (Cave Temple)",
-            "Moti Masjid"
-        ],
-        "heritage_sites": [
-            "Sanchi Stupa (3rd Century BCE Buddhist monuments built by Emperor Ashoka)",
-            "Bhimbetka Caves (Paleolithic and Mesolithic rock art)",
-            "Gohar Mahal (Built by Qudsia Begum in 1820)",
-            "Tribal Museum (Celebrated anthropological display)"
-        ],
-        "budget": {
-            "budget": "₹1,000 – ₹1,500/day (Guesthouse + City transport + Street food)",
-            "mid": "₹2,400 – ₹3,800/day (Lakeview hotel + Cabs to Sanchi/Bhimbetka)",
-            "luxury": "₹6,000+/day (Jehan Numa Palace / Courtyard by Marriott)"
-        },
-        "best_time": "October to March (Cool, green post-monsoon weather and pleasant winters)",
-        "specialties": "Bhopali Zardozi work, Batua purses, Chanderi sarees, Bell metal tribal crafts, Gond tribal art paintings."
-    },
-    "srinagar": {
-        "name": "Srinagar",
-        "state": "Jammu & Kashmir",
-        "description": "Heaven on Earth, nestled in the Kashmir Valley along the Jhelum river and Dal Lake, famous for Houseboats, Shikaras, Mughal gardens, and snow-capped peaks.",
-        "famous_places": [
-            "Dal Lake & Nigeen Lake (Shikara ride & Floating Vegetable Market)",
-            "Mughal Gardens (Shalimar Bagh, Nishat Bagh & Chashme Shahi)",
-            "Indira Gandhi Memorial Tulip Garden (Asia largest tulip garden in spring)",
-            "Shankaracharya Hilltop Temple",
-            "Pari Mahal (Palace of Fairies with Dal Lake panorama)",
-            "Hazratbal Shrine (White marble mosque by Dal Lake)",
-            "Old City (Downtown Srinagar, Jamia Masjid & Wooden Bridges)",
-            "Day trips to Gulmarg (Gondola cable car) & Pahalgam (Betaab Valley)"
-        ],
-        "famous_food": [
-            "Authentic Kashmiri Wazwan (Rogan Josh, Rista, Gushtaba, Tabak Maaz)",
-            "Kashmiri Kehwa with Saffron, Almonds & Cardamom",
-            "Noon Chai (Pink Salted Tea) with Kashmiri Bakarkhani / Girda bread",
-            "Dum Aloo & Kashmiri Haak Saag",
-            "Nadru Yakhni (Lotus stem in creamy yogurt gravy)",
-            "Modur Pulao (Sweet saffron rice with dry fruits)",
-            "Tujji (Kashmiri street-style charcoal barbecue mutton kebabs)"
-        ],
-        "temples_spiritual": [
-            "Shankaracharya Temple (9th-century temple dedicated to Lord Shiva on Gopadari Hill)",
-            "Hazratbal Shrine (Houses holy relic Moi-e-Muqqadas)",
-            "Jamia Masjid (Historic wooden Indo-Saracenic mosque with 378 Deodar pillars)",
-            "Kheer Bhawani Temple (Tulmulla - sacred shrine of Goddess Ragnya)",
-            "Khanqah-e-Moula (Historic wooden shrine on Jhelum river)"
-        ],
-        "heritage_sites": [
-            "Hari Parbat Fort (Durrani Fort)",
-            "Pari Mahal (Mughal observatory & astrological school built by Dara Shikoh)",
-            "Shalimar Bagh (Built by Emperor Jahangir for Empress Nur Jahan in 1619)",
-            "Zero Bridge & Historic Wooden Kadals of Srinagar"
-        ],
-        "budget": {
-            "budget": "₹1,500 – ₹2,200/day (Guesthouse/homestay + Shared taxi + Kehwa & street food)",
-            "mid": "₹3,500 – ₹5,500/day (Heritage Houseboat on Dal Lake + Shikara tours + Wazwan dinner)",
-            "luxury": "₹9,000+/day (The Lalit Grand Palace / Vivanta Dal View + Private helicopter/cabs)"
-        },
-        "best_time": "March to October for lush greenery, tulips & pleasant weather; December to February for magical snowfall and skiing in Gulmarg",
-        "specialties": "Pure Kashmiri Pashmina & Shahtoosh shawls, Kashmiri Saffron (Kesar), Walnuts, Paper-mâché art, Hand-knotted silk carpets, Walnut wood carvings."
-    },
-    "kochi": {
-        "name": "Kochi (Cochin)",
-        "state": "Kerala",
-        "description": "The Queen of the Arabian Sea, historic port where Portuguese, Dutch, British, and Chinese maritime traditions blend with Kerala backwaters and spice trade.",
-        "famous_places": [
-            "Fort Kochi & Iconic Chinese Fishing Nets (Cheena Vala)",
-            "Mattancherry Palace (Dutch Palace & Ramayana Murals)",
-            "Paradesi Jewish Synagogue & Jew Town Antique Street",
-            "St. Francis Church (Oldest European church in India)",
-            "Marine Drive Kochi & Backwater Ferry Cruise",
-            "Kerala Kathakali Centre (Traditional dance & martial arts)",
-            "Lulu Mall (One of India largest shopping malls)",
-            "Cherai Beach & Vypeen Island"
-        ],
-        "famous_food": [
-            "Kerala Sadya on Banana Leaf (Avial, Sambar, Payasam, Thoran)",
-            "Karimeen Pollichathu (Pearl spot fish baked in banana leaf)",
-            "Kerala Puttu with Kadala Curry",
-            "Appam with Creamy Vegetable or Chicken Stew",
-            "Malabar Parotta with Beef/Mutton Roast",
-            "Thattu Dosa & Pazham Pori (Crispy ripe banana fritters)",
-            "Tender Coconut Ice Cream & Spiced Sulaimani Tea"
-        ],
-        "temples_spiritual": [
-            "Chottanikkara Bhagavathy Temple (Renowned healing temple)",
-            "Ernakulathappan Shiva Temple",
-            "Paradesi Synagogue (1568 AD Jew Town)",
-            "Santa Cruz Cathedral Basilica",
-            "St. Francis Church (Where Vasco da Gama was originally buried)"
-        ],
-        "heritage_sites": [
-            "Mattancherry Dutch Palace (Preserved mythological murals)",
-            "Fort Emmanuel & Bastion Bungalow",
-            "Hill Palace Museum (Tripunithura - Kerala largest archaeological palace)",
-            "Bolgatty Palace (1744 Dutch palace on island)"
-        ],
-        "budget": {
-            "budget": "₹1,100 – ₹1,700/day (Fort Kochi guesthouse + Ferry boats + Local cafes)",
-            "mid": "₹2,800 – ₹4,500/day (Heritage colonial boutique stay + Kathakali show + Seafood)",
-            "luxury": "₹7,000+/day (Brunton Boatyard / Grand Hyatt Kochi Bolgatty)"
-        },
-        "best_time": "October to March (Pleasant coastal breezes; ideal for backwater cruises and Biennale)",
-        "specialties": "Kerala Spices (Cardamom, Black Pepper, Cinnamon, Cloves), Kasavu Gold Zari Sarees, Coir handicrafts, Coconut shell artefacts, Banana chips in coconut oil."
-    },
     "goa": {
         "name": "Goa",
         "state": "Goa",
@@ -724,13 +376,13 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Fontainhas (Latin Quarter in Panaji with colourful Portuguese villas)"
         ],
         "famous_food": [
-            "Goan Fish Curry Thali with Kingfish / Pomfret",
-            "Pork / Chicken Vindaloo & Sorpotel",
-            "Goan Pao with Ross Omelette",
-            "Prawn Balchão & Crab Xec Xec",
-            "Bebinca (Traditional 7-layered Goan coconut dessert)",
-            "Feni (Traditional Cashew / Palm spirit)",
-            "Sannas & Poi (Goan crusty bread)"
+            "Goan Fish Curry Thali with Kingfish / Pomfret (Fisherman Wharf / Ritz Classic)",
+            "Pork / Chicken Vindaloo & Sorpotel with Sannas",
+            "Goan Pao with Ross Omelette (Street carts in Panaji / Margao)",
+            "Prawn Balchão, Crab Xec Xec & Butter Garlic Calamari",
+            "Bebinca (Traditional 7-layered Goan coconut milk dessert)",
+            "Feni (Traditional Cashew & Palm spirit) & Port Wine",
+            "Goan Poi bread with Chorizo sausage"
         ],
         "temples_spiritual": [
             "Basilica of Bom Jesus (Old Goa)",
@@ -753,6 +405,45 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
         "best_time": "November to February (Perfect beach weather, festivals, Christmas & New Year celebrations)",
         "specialties": "Cashew nuts & Feni, Goan Port Wine, Spices from Sahakari Spice Farm, Azulejos ceramic painted tiles, Beach bohemian clothing."
     },
+    "manali": {
+        "name": "Manali",
+        "state": "Himachal Pradesh",
+        "description": "High-altitude Himalayan valley with pine forests, snowy passes, waterfalls, and adventure sports.",
+        "famous_places": [
+            "Solang Valley (Skiing, Zorbing, Paragliding)",
+            "Rohtang Pass & Atal Tunnel (Snow points)",
+            "Hadimba Devi Temple (Ancient cedar forest temple)",
+            "Jogini Waterfall & Vashisht Hot Springs",
+            "Old Manali Village & Manu Temple",
+            "Mall Road & Van Vihar"
+        ],
+        "famous_food": [
+            "Himachali Dham (Traditional festive meal: Madra, Chana Khatta, Babru)",
+            "Fresh Himalayan Rainbow Trout Fish (Pan-fried with lemon butter)",
+            "Siddu with Desi Ghee (Himachali steamed wheat bread with walnut stuffing)",
+            "Wood-fired Thin Crust Pizzas & Pasta (Cafe 1947 / Lazy Dog in Old Manali)",
+            "Tibetan Thukpa, Momos & Thenthuk",
+            "Apple Cider, Fresh Apple Pies & Rhododendron Juice"
+        ],
+        "temples_spiritual": [
+            "Hadimba Devi Temple (1553 AD pagoda-style wooden temple)",
+            "Vashisht Temple & Natural Sulphur Hot Springs",
+            "Manu Temple (Old Manali - only temple dedicated to Sage Manu in India)",
+            "Gadhan Thekchhokling Gompa (Tibetan Buddhist Monastery)"
+        ],
+        "heritage_sites": [
+            "Naggar Castle (Wood & stone medieval palace of Kullu Rajas - 20km)",
+            "Museum of Himachal Culture and Folk Art",
+            "Roerich Art Gallery (Naggar)"
+        ],
+        "budget": {
+            "budget": "₹1,200 – ₹1,800/day (Old Manali hostel/homestay + Local bus + Siddu & Thukpa)",
+            "mid": "₹2,800 – ₹4,800/day (Mountain view resort + Private cab to Rohtang/Solang + Cafes)",
+            "luxury": "₹7,000+/day (The Himalayan Resort / Span Resort + Luxury mountain spa)"
+        },
+        "best_time": "October to June (March-June for pleasant summer; Dec-Feb for snowfall & winter sports)",
+        "specialties": "Kullu Woolen Shawls & Caps, Himachali Apple & Pear jams, Apricot oil, Hand-knitted socks, Pine nuts (Chilgoza)."
+    },
     "puri": {
         "name": "Puri",
         "state": "Odisha",
@@ -771,9 +462,9 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
             "Jagannath Temple Mahaprasad / Abadha (56 Bhog cooked in earthen pots)",
             "Puri Khaja (Crispy layered sweet delicacy from Lord offerings)",
             "Chhena Poda (Caramelized baked cottage cheese sweet)",
-            "Rasabali & Chhena Gaja",
-            "Dalma with Rice (Traditional lentil and vegetable dish)",
-            "Fresh Bay of Bengal Fish Fry, Crab & Prawn Curry (Swargadwar)",
+            "Rasabali, Chhena Gaja & Khira Gaja",
+            "Dalma with Rice (Traditional Odia lentil and vegetable dish)",
+            "Fresh Bay of Bengal Fish Fry, Crab & Prawn Curry (Swargadwar stalls)",
             "Pakhala Bhata (Fermented rice with fried fish and saag)"
         ],
         "temples_spiritual": [
@@ -796,178 +487,47 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
         "best_time": "October to March (Pleasant ocean breeze; June-July for the world-famous Rath Yatra chariot festival)",
         "specialties": "Pattachitra cloth paintings, Palm leaf engravings, Sambalpuri and Ikkat handloom sarees, Pipili Applique craft, Puri Khaja boxes."
     },
-    "rishikesh": {
-        "name": "Rishikesh",
-        "state": "Uttarakhand",
-        "description": "The Yoga Capital of the World & Gateway to Garhwal Himalayas, nestled along the emerald Ganga with thrilling river rafting, iconic suspension bridges, and evening Ganga Aarti.",
+    "gangtok": {
+        "name": "Gangtok",
+        "state": "Sikkim",
+        "description": "Clean mountain city with sweeping Kanchenjunga views, Buddhist monasteries, and alpine lakes.",
         "famous_places": [
-            "Ram Jhula & Laxman Jhula (Iconic suspension bridges across Ganga)",
-            "Triveni Ghat (Grand Maha Ganga Aarti at dusk)",
-            "Beatles Ashram (Chaurasi Kutia - Maharishi Mahesh Yogi Ashram)",
-            "Neelkanth Mahadev Temple (Hilltop Shiva temple surrounded by valleys)",
-            "Shivpuri (Famous starting point for White Water River Rafting)",
-            "Parmarth Niketan & Geeta Bhawan",
-            "Neer Garh & Patna Waterfalls",
-            "Kunjapuri Devi Temple (Spectacular Himalayan sunrise viewpoint)"
+            "MG Marg (Clean pedestrian promenade with cafes)",
+            "Tsomgo Lake (Changu Lake at 12,310 ft) & Baba Mandir",
+            "Nathula Pass (Indo-China Border on Old Silk Route)",
+            "Rumtek Monastery (Dharma Chakra Centre)",
+            "Banjhakri Falls & Energy Park",
+            "Tashi Viewpoint & Ganesh Tok (Kanchenjunga panoramas)",
+            "Namgyal Institute of Tibetology & Do Drul Chorten"
         ],
         "famous_food": [
-            "Ayurvedic Herbal Teas & Organic Vegan Smoothie Bowls",
-            "Aloo Poori & Kachori with Jalebi (Chotiwala Restaurant since 1958)",
-            "Garhwali Thali (Kafuli, Phaanu, Chainsoo, Jhangora Ki Kheer)",
-            "Fresh Wood-fired Thin Crust Pizzas (Little Buddha Cafe / Freedom Cafe)",
-            "Falafel Platters & Israeli Shakshuka (Tapovan cafes)",
-            "Kulhad Masala Chai with Bun Maska on Ganga Ghats"
+            "Authentic Steamed Sikkimese Momos with spicy Dalle Khursani chili sauce",
+            "Thukpa & Gyathuk (Tibetan warm noodle broth soups)",
+            "Phagshapa (Pork belly stew with radishes and dried chillies)",
+            "Sha Phaley (Crispy deep-fried bread stuffed with seasoned meat or cabbage)",
+            "Chhurpi Soup & Chhurpi Ningro Curry (Wild fern with yak cheese)",
+            "Sel Roti with Aloo Dum (Traditional festival ring-shaped bread)",
+            "Tongba (Traditional warm fermented millet drink served in bamboo cup)"
         ],
         "temples_spiritual": [
-            "Triveni Ghat (Sacred confluence of Ganga, Yamuna & Saraswati)",
-            "Neelkanth Mahadev Mandir (Where Lord Shiva consumed Halahala poison)",
-            "Bharat Mandir (Oldest temple in Rishikesh established by Adi Shankaracharya)",
-            "Parmarth Niketan Ashram & Veda Niketan",
-            "Shatrughna & Lakshman Temples"
+            "Rumtek Monastery (Largest monastery in Sikkim)",
+            "Enchey Monastery (200-year-old Nyingma order shrine)",
+            "Do Drul Chorten Stupa (108 prayer wheels)",
+            "Lingdum Monastery (Ranka)",
+            "Hanuman Tok (Hilltop temple managed by Indian Army)"
         ],
         "heritage_sites": [
-            "Beatles Ashram / Chaurasi Kutia (Graffiti art & meditation domes from 1968)",
-            "Ram Jhula & Janki Setu (Engineering marvels over Ganga)",
-            "Old Geeta Press Book Depots & Heritage Ashrams"
+            "Namgyal Institute of Tibetology (Rare Mahayana Buddhist relics & manuscripts)",
+            "Old Silk Route passes",
+            "Ganesh Tok & Tashi Viewpoint historical viewpoints"
         ],
         "budget": {
-            "budget": "₹900 – ₹1,500/day (Hostels in Tapovan/Lakshman Jhula + Shared auto + Ashram food)",
-            "mid": "₹2,500 – ₹4,200/day (Ganga riverview boutique stay + Rafting & Bungee pass + Cafes)",
-            "luxury": "₹7,500+/day (Ananda in the Himalayas / Aloha on the Ganges + Luxury spa retreats)"
+            "budget": "₹1,300 – ₹1,900/day (MG Marg homestay + Shared sumo jeeps + Momos & Thukpa)",
+            "mid": "₹3,000 – ₹5,000/day (Mountain view hotel + Reserved cab to Tsomgo/Nathula)",
+            "luxury": "₹7,500+/day (Mayfair Spa Resort / Elgin Nor-Khill)"
         },
-        "best_time": "September to November & February to May (Ideal for rafting, trekking, camping, and yoga retreats)",
-        "specialties": "Yoga & meditation teacher training certifications, Rudraksha beads, Crystal Sphatik malas, Garhwali handwoven woolen shawls, Organic Himalayan honey and essential oils."
-    },
-    "ayodhya": {
-        "name": "Ayodhya",
-        "state": "Uttar Pradesh",
-        "description": "The sacred birthplace of Lord Rama (Ram Janmabhoomi), ancient spiritual epicenter on the banks of Saryu river, famous for grand temple architecture and Deepotsav festival.",
-        "famous_places": [
-            "Shri Ram Janmabhoomi Mandir (Grand Nagara-style Temple)",
-            "Hanuman Garhi (Fortress-temple of Lord Hanuman on 76 steps)",
-            "Kanak Bhawan (Palace gifted to Sita by Kaikeyi)",
-            "Ram Ki Paidi & Saryu Riverfront (Evening Aarti & Laser Show)",
-            "Nageshwarnath Temple (Built by Kush, son of Lord Rama)",
-            "Gulab Bari & Mani Parbat",
-            "Dashrath Mahal & Sita Ki Rasoi",
-            "Surya Stambh Dharma Path"
-        ],
-        "famous_food": [
-            "Ayodhya special Bedmi Poori & spicy Hing Aloo Sabzi",
-            "Rabri Malpua & Desi Ghee Jalebi",
-            "Ramdana Ladoo & Mawa Peda (Prasad)",
-            "Samosa Chaat & Dahi Jalebi (Chowk area)",
-            "Awadhi Vegetarian Thali & Kadhi Chawal",
-            "Kulhad Chai with Makhan Toast"
-        ],
-        "temples_spiritual": [
-            "Shri Ram Janmabhoomi Mandir",
-            "Hanuman Garhi Mandir",
-            "Kanak Bhawan (Sita-Ram Golden Palace)",
-            "Nageshwarnath Mandir",
-            "Treta Ke Thakur Mandir",
-            "Chhoti Devkali & Badi Devkali Temple"
-        ],
-        "heritage_sites": [
-            "Ram Ki Paidi Ghats along Holy Saryu",
-            "Gulab Bari (Mausoleum of Nawab Shuja-ud-Daula with rose gardens)",
-            "Mani Parbat (Historic Buddhist and Ramayana era mound)"
-        ],
-        "budget": {
-            "budget": "₹800 – ₹1,300/day (Dharamshala/Ashram stay + E-rickshaw + Satvik food)",
-            "mid": "₹2,000 – ₹3,500/day (Comfort hotel + Dedicated darshan cabs + Family dining)",
-            "luxury": "₹5,000+/day (Boutique heritage stay / Park Inn by Radisson)"
-        },
-        "best_time": "October to March (Pleasant weather; Deepotsav during Diwali with millions of diyas is world-record spectacular)",
-        "specialties": "Ram Darbar idols, Tulsi malas, Brass puja articles, Saryu Jal containers, Khadau wooden footwear."
-    },
-    "ahmedabad": {
-        "name": "Ahmedabad",
-        "state": "Gujarat",
-        "description": "India first UNESCO World Heritage City, Manchester of the East, home to Sabarmati Ashram, intricate stepwells, exquisite Gujarati Thali, and vibrant Navratri Garba.",
-        "famous_places": [
-            "Sabarmati Ashram (Mahatma Gandhi’s Hriday Kunj)",
-            "Adalaj Stepwell (5-storey intricate 15th-century stepwell)",
-            "Atal Pedestrian Bridge & Sabarmati Riverfront",
-            "Sidi Saiyyed Mosque (World-famous Tree of Life stone jali)",
-            "Hutheesing Jain Temple (Carved white marble)",
-            "Akshardham Temple (Gandhinagar - 25km)",
-            "Manek Chowk (Jewellery market turning into bustling midnight street food)",
-            "Science City & Auto World Vintage Car Museum"
-        ],
-        "famous_food": [
-            "Unlimited Gujarati Thali (Agashiye / Toran / Sasumaa)",
-            "Khamman Dhokla, Khandvi & Fafda Jalebi (Das Khaman / Chandravilas)",
-            "Manek Chowk Midnight Snacks (Gwalior Dosa, Chocolate Sandwich, Kulfi)",
-            "Sev Khamani, Dabeli & Locho",
-            "Undhiyu with Puri & Shrikhand (Winter festival specialty)",
-            "Dalvada & Handvo",
-            "Ghughra & Mohanthal Sweet"
-        ],
-        "temples_spiritual": [
-            "Hutheesing Jain Temple (Dedicated to 15th Tirthankara Lord Dharmanatha)",
-            "Akshardham Gandhinagar (Grand pink sandstone temple complex)",
-            "Sidi Saiyyed Mosque & Jama Masjid Ahmedabad",
-            "Bhadra Kali Temple (Inside historic Bhadra Fort)",
-            "ISCKON Temple (SG Highway)"
-        ],
-        "heritage_sites": [
-            "Adalaj Stepwell (Indo-Islamic architectural stepwell masterpiece)",
-            "Sabarmati Ashram (Epicenter of India freedom struggle & Dandi March)",
-            "Sidi Saiyyed Mosque (Intricate marble filigree window work)",
-            "Pols of Old Ahmedabad (UNESCO preserved wooden architecture neighborhood)"
-        ],
-        "budget": {
-            "budget": "₹1,000 – ₹1,600/day (Budget stay + BRTS / Metro + Fafda-Dhokla breakfast)",
-            "mid": "₹2,600 – ₹4,200/day (Heritage haveli stay in Pols + Cabs + Thali feasts)",
-            "luxury": "₹6,500+/day (The House of MG / ITC Narmada + Fine Gujarati royal dining)"
-        },
-        "best_time": "October to March (Warm pleasant days; October for World Longest Dance Festival - Navratri Garba; January for International Kite Festival)",
-        "specialties": "Patola silk sarees, Bandhani tie-dye dupattas, Gujarati mirror-work embroidery, Khadi fabrics from Sabarmati Ashram, Namkeens and Farsan."
-    },
-    "pune": {
-        "name": "Pune",
-        "state": "Maharashtra",
-        "description": "Oxford of the East & Cultural capital of Maharashtra, city of Peshwas, historical Maratha forts, educational institutions, IT parks, and Misal culture.",
-        "famous_places": [
-            "Shaniwar Wada (18th-century Peshwa fortified palace)",
-            "Aga Khan Palace (Historic memorial where Mahatma Gandhi was interned)",
-            "Sinhagad Fort (Hilltop fortress of Tanaji Malusare bravery)",
-            "Dagdusheth Halwai Ganpati Temple",
-            "Osho International Meditation Resort (Koregaon Park)",
-            "Raja Dinkar Kelkar Museum (3-storey traditional artifact collection)",
-            "Parvati Hill (Hilltop temples and Peshwa museum)",
-            "Lonavala & Khandala (Scenic Western Ghats 60km away)"
-        ],
-        "famous_food": [
-            "Puneri Misal Pav (Kata Kirr / Bedekar Tea Stall)",
-            "Bakharwadi & Mango Barfi (Chitale Bandhu Mithaiwale)",
-            "Puneri Poha & Sabudana Vada",
-            "Mastani Drink (Thick flavoured ice-cream milkshake from Sujata Mastani)",
-            "Pithla Bhakri & Thecha (At Sinhagad Fort summit)",
-            "Bun Maska & Irani Chai (Goodluck Cafe, FC Road)",
-            "Kayani Bakery Shrewsbury Biscuits (Camp area)"
-        ],
-        "temples_spiritual": [
-            "Shrimant Dagdusheth Halwai Ganpati Temple",
-            "Parvati Temple Complex (Oldest heritage structures in Pune)",
-            "Chaturshringi Temple (Senapati Bapat Road hillock)",
-            "Trishundha Ganpati Temple (Somwar Peth)",
-            "Alandi (Sant Dnyaneshwar Samadhi - 20km)"
-        ],
-        "heritage_sites": [
-            "Shaniwar Wada (Seat of Peshwa rulers of Maratha Empire)",
-            "Aga Khan Palace (Italian arches and spacious lawns where Kasturba Gandhi passed away)",
-            "Sinhagad Fort (Historical Maratha battle fortress)",
-            "Vishrambaug Wada (Peshwa Bajirao II mansion with teak pillars)"
-        ],
-        "budget": {
-            "budget": "₹1,100 – ₹1,600/day (Hostel/Guesthouse + PMPML Bus/Auto + Misal & Street food)",
-            "mid": "₹2,500 – ₹4,200/day (3-star hotel + Cab hire + FC Road / KP dining)",
-            "luxury": "₹6,000+/day (JW Marriott Pune / Conrad Pune + Luxury Western Ghats tours)"
-        },
-        "best_time": "July to February (Monsoons make Western Ghats lush green with waterfalls; winters are crisp and cool)",
-        "specialties": "Chitale Bakharwadi, Shrewsbury Biscuits, Paithani Silk Sarees, Maharashtrian Kolhapuri Chappals, Brassware from Tambat Ali."
+        "best_time": "March to June (Blooming Rhododendrons & pleasant weather) and September to December (Crystal-clear views of Himalayan snow peaks)",
+        "specialties": "Sikkim Temi Tea, Tibetan Hand-knotted Carpets, Choktse carved wooden tables, Dalle Khursani pickles, Prayer wheels."
     },
     "darjeeling": {
         "name": "Darjeeling",
@@ -1012,6 +572,194 @@ INDIAN_CITIES_KB: Dict[str, Dict[str, Any]] = {
         },
         "best_time": "March to May (Spring blooms with Rhododendrons) and October to December (Crystal-clear views of Kanchenjunga peaks)",
         "specialties": "Darjeeling Tea (First Flush / Muscatel), Tibetan prayer flags, Hand-knitted Himalayan woolens, Hand-carved wooden masks, Dalle Khursani pickles."
+    },
+    "bishnupur": {
+        "name": "Bishnupur",
+        "state": "West Bengal",
+        "description": "Terracotta temples, Baluchari weaving, Malla royal history, and quiet Bengal cultural heritage.",
+        "famous_places": [
+            "Rasmancha (Oldest terracotta brick structure in Bengal - 1600 AD)",
+            "Jor Bangla Temple (Twin hut terracotta temple)",
+            "Shyamrai Temple (Pancharatna temple with Krishna murals)",
+            "Madan Mohan Temple & Dalmadal Kaman Cannon",
+            "Baluchari Silk Weaving Studios",
+            "Acharya Jogesh Chandra Purakriti Bhawan (Archaeological Museum)"
+        ],
+        "famous_food": [
+            "Bishnupur Posto Bora (Fried poppy seed patties)",
+            "Authentic Bengal Thali with Shorshe Ilish, Katla Kalia & Chholar Dal",
+            "Mecha Sandesh & Motichoor Ladoo (Heritage sweets of Bishnupur)",
+            "Langcha, Pantua & Rosogolla",
+            "Khichuri Bhog at Madan Mohan Temple"
+        ],
+        "temples_spiritual": [
+            "Rasmancha (Unique pyramidal terracotta stage)",
+            "Shyamrai Temple (Exquisite Raslila terracotta carvings)",
+            "Jor Bangla Temple (Keshta Raya)",
+            "Madan Mohan Temple (Active living temple)",
+            "Radha Shyam Temple"
+        ],
+        "heritage_sites": [
+            "Malla Dynasty Fort ruins & Stone Gates (Garh Darwaza)",
+            "Dalmadal Cannon (Historic royal royal iron cannon)",
+            "Gumgarh & Lalbandh lakes"
+        ],
+        "budget": {
+            "budget": "₹900 – ₹1,300/day (Heritage lodge/homestay + Cycle-rickshaw + Bengali thali)",
+            "mid": "₹2,000 – ₹3,200/day (Tourist lodge + Private auto tour + Baluchari shopping)",
+            "luxury": "₹4,500+/day (Bishnupur Heritage Resort + Guided artisan tours)"
+        },
+        "best_time": "October to February (Pleasant winter months; Bishnupur Mela festival in December)",
+        "specialties": "Baluchari & Swarnachari pure silk sarees (depicting Mahabharata motifs), Terracotta horse figurines (Bankura Horse), Dokra metal art, Dashavatar playing cards (Ganjifa)."
+    },
+    "shantiniketan": {
+        "name": "Shantiniketan (Bolpur)",
+        "state": "West Bengal",
+        "description": "A calm cultural town shaped by Nobel laureate Rabindranath Tagore, red soil, Baul music, open-air learning, and artisanal crafts.",
+        "famous_places": [
+            "Visva-Bharati University Campus & Prayer Hall (Upasana Griha made of Belgian glass)",
+            "Rabindra Bhavana (Tagore Museum & Uttarayan Complex)",
+            "Khoai Sonajhuri Forest & Saturday Haat (Handicraft Fair)",
+            "Amar Kutir (Craft Society & Leather Work)",
+            "Kala Bhavana (Murals by Nandalal Bose & Ramkinkar Baij)",
+            "Kankalitala Temple (51 Shaktipeeth on Kopai river)",
+            "Prakriti Bhavan (Nature Art Museum)"
+        ],
+        "famous_food": [
+            "Shantiniketan Traditional Bengali Thali: Bhaat, Shukto, Posto, Macher Jhol, Payesh",
+            "Seasonal Kancha Aam / Tomato Chutney with Papad",
+            "Poush Mela Special Pithe-Puli, Patishapta & Gokul Pithe (Winter date palm jaggery sweets)",
+            "Baul Tea Stalls: Kulhad Chai with Ginger and biscuits in Sonajhuri forest",
+            "Chanar Jilipi & Pantua from Bolpur sweet shops"
+        ],
+        "temples_spiritual": [
+            "Upasana Griha (Glass Mandir for silent meditation)",
+            "Kankalitala Temple (One of 51 Shaktipeeths on Kopai River)",
+            "Chhatimtala (Meditation spot of Maharshi Debendranath Tagore)"
+        ],
+        "heritage_sites": [
+            "Uttarayan Complex: Udayan, Konarka, Shyamali, Punascha, and Udichi (Tagore residences)",
+            "Kala Bhavana & Sangeet Bhavana heritage art pavilions",
+            "Santiniketan Griha (Oldest building 1863)"
+        ],
+        "budget": {
+            "budget": "₹1,000 – ₹1,500/day (Homestay/Guest house near Khoai + E-rickshaw + Local canteen)",
+            "mid": "₹2,400 – ₹3,800/day (Boutique eco-resort + Cab + Heritage dining)",
+            "luxury": "₹5,500+/day (Mark & Meadows / Mohor Kutir Resort)"
+        },
+        "best_time": "November to March (Poush Mela in late December, Basanta Utsav during Holi, and pleasant winter days)",
+        "specialties": "Kantha stitch sarees and kurtas, Shantiniketan embossed leather bags & wallets, Batik print textiles, Ektara musical instruments, Dokra jewellery."
+    },
+    "sundarbans": {
+        "name": "Sundarbans",
+        "state": "West Bengal",
+        "description": "The world largest mangrove forest and delta, UNESCO World Heritage Site, home to the Royal Bengal Tiger, estuarine crocodiles, and peaceful village waterways.",
+        "famous_places": [
+            "Sajnekhali Watch Tower & Mangrove Interpretation Centre",
+            "Dobanki Watch Tower & Canopy Walk (Half-km elevated walkway)",
+            "Sudhanyakhali Watch Tower (Sweet water pond for tiger/deer spotting)",
+            "Pakhiralay & Godkhali Boat Ghats",
+            "Netidhopani Watch Tower (400-year-old temple ruins)",
+            "Jharkhali Tiger Rescue Centre & Butterfly Garden",
+            "Burir Dabri Watch Tower & Mudwalk"
+        ],
+        "famous_food": [
+            "Fresh Village Mangrove Fish: Parshe, Bhetki, Pabda & Chingri (Prawn) Curry",
+            "Sundarbans Pure Raw Wild Mangrove Honey (Moule Honey)",
+            "Desi Kankra (Fresh Mud Crab Roast / Curry)",
+            "Steamed Rice with Shorshe Ilish & Moong Dal",
+            "Traditional Bengali sweets & Nolen Gur Sandesh served on boat tours"
+        ],
+        "temples_spiritual": [
+            "Bonbibi Temples & Shrines (Guardian deity of Sundarbans forests worshipped by all communities)",
+            "Netidhopani Temple Ruins (Mythological Behula-Lakhinder site)",
+            "Kapilmuni Ashram (Gangasagar - 70km)"
+        ],
+        "heritage_sites": [
+            "UNESCO World Heritage Sundarbans Biosphere Reserve",
+            "Sajnekhali Bird Sanctuary & Crocodile Breeding Centre",
+            "Traditional Mangrove Wooden Houseboats"
+        ],
+        "budget": {
+            "budget": "₹1,800 – ₹2,500/day (Pakhiralay eco-homestay + Shared boat tour + Village meals)",
+            "mid": "₹3,500 – ₹5,500/day (All-inclusive 2D/1N package with private motorboat, meals, forest permits & guide)",
+            "luxury": "₹8,000+/day (Sundarban Tiger Camp / Waxpol Wildlife Resort)"
+        },
+        "best_time": "November to February (Mild, misty winter weather with optimal wildlife and bird spotting)",
+        "specialties": "Pure Wild Sundarbans Mangrove Honey, Wooden tiger handicrafts, Bonbibi terracotta masks, Mangrove plant herbal extracts."
+    },
+    "digha": {
+        "name": "Digha",
+        "state": "West Bengal",
+        "description": "Popular seaside getaway on the Bay of Bengal with gentle beaches, casuarina groves, and fresh seafood.",
+        "famous_places": [
+            "New Digha Beach (Paved promenade with sea views)",
+            "Old Digha Beach & Sea Wall",
+            "Udaipur Beach & Talsari Beach (Quiet casuarina stretches)",
+            "Marine Aquarium and Regional Centre (MARC)",
+            "Digha Science Centre & Planetarium",
+            "Amravati Park & Toy Train / Boating Lake",
+            "Chandaneswar Shiva Temple (Border of Odisha - 8km)"
+        ],
+        "famous_food": [
+            "Fresh Bay of Bengal Fried Fish: Pomfret, Hilsa, Bhetki, Tiger Prawns, Crab (Beach shacks)",
+            "Fish Thali with Rice, Dal, Jhuri Aloo Bhaja, and Macher Kalia",
+            "Digha Kaju Barfi (Cashew sweets from local cashew processing units)",
+            "Fresh Tender Green Coconut on the beach",
+            "Chhena Gaja & Khaja sweets"
+        ],
+        "temples_spiritual": [
+            "Chandaneswar Shiva Temple (Famous pilgrimage shrine across Odisha border)",
+            "Bhusandeswar Temple (One of Asia largest Shiva Lingams - 15km)",
+            "Jagannath Temple at Digha"
+        ],
+        "heritage_sites": [
+            "Old Digha colonial sea wall constructed by Warren Hastings era memories",
+            "Marine Aquarium scientific center"
+        ],
+        "budget": {
+            "budget": "₹900 – ₹1,400/day (Budget hotel near Old/New Digha + Shared auto + Beach fish fry)",
+            "mid": "₹2,200 – ₹3,500/day (Sea-facing resort + AC cab + Seafood restaurants)",
+            "luxury": "₹5,000+/day (Hotel Sea Hawk / Digha Tourist Lodge)"
+        },
+        "best_time": "October to March (Pleasant coastal breezes with low humidity and clear blue skies)",
+        "specialties": "Seashell ornaments & home decors, Cashew nuts (Kaju), Handwoven mats (Madur), Conch shell bangles (Shakha)."
+    },
+    "motihari": {
+        "name": "Motihari",
+        "state": "Bihar",
+        "description": "Historic headquarters of East Champaran, land of Mahatma Gandhi 1917 Champaran Satyagraha, and birthplace of George Orwell.",
+        "famous_places": [
+            "Gandhi Smarak Sangrahalaya (Gandhi Memorial Pillar & Museum)",
+            "Kesaria Buddhist Stupa (World tallest ancient Buddhist stupa - 104 ft, 45km away)",
+            "George Orwell Birthplace Memorial & Museum",
+            "Moti Jheel (Scenic lake dividing the town with sunset embankment)",
+            "Someshwar Nath Temple at Areraj (Ancient Shiva temple - 28km)"
+        ],
+        "famous_food": [
+            "Champaran Ahuna Handi Mutton (Slow cooked in sealed earthen pot with garlic pods)",
+            "Bihari Litti Chokha with Desi Ghee",
+            "Dal Pitha & Sattu Paratha",
+            "Tilkut, Anarsa & Khaja",
+            "Chana Ghugni with Kachori"
+        ],
+        "temples_spiritual": [
+            "Someshwar Nath Mandir at Areraj (Swayambhu Shivling)",
+            "Kesaria Buddhist Stupa & Monastic remains",
+            "Bada Ram Mandir (Main town)"
+        ],
+        "heritage_sites": [
+            "Gandhi Memorial (Where Gandhiji launched Champaran Satyagraha)",
+            "George Orwell Birthplace Cottage",
+            "Kesaria Archaeological excavation site (ASI Protected)"
+        ],
+        "budget": {
+            "budget": "₹800 – ₹1,200/day (Town hotel + E-rickshaw + Handi meat/Litti)",
+            "mid": "₹1,800 – ₹3,000/day (Comfort hotel + Cab to Kesaria & Areraj)",
+            "luxury": "₹4,500+/day (Hotel Ramson / Boutique stay)"
+        },
+        "best_time": "October to March (Pleasant winter weather ideal for exploring historical monuments)",
+        "specialties": "Champaran Handi clay pots, Sikki grass handicraft baskets, Madhubani art pieces, Organic jaggery."
     }
 }
 
@@ -1021,7 +769,9 @@ def get_city_knowledge(query: str) -> Optional[Dict[str, Any]]:
     for key, data in INDIAN_CITIES_KB.items():
         if key in q or data["name"].lower() in q:
             return data
-        # Handle aliases
+        # Aliases
+        if key == "kolkata" and ("calcutta" in q or "kolkata" in q):
+            return data
         if key == "bengaluru" and "bangalore" in q:
             return data
         if key == "varanasi" and any(alias in q for alias in ["banaras", "benares", "kashi"]):
@@ -1034,10 +784,12 @@ def get_city_knowledge(query: str) -> Optional[Dict[str, Any]]:
             return data
         if key == "amritsar" and "golden temple" in q:
             return data
+        if key == "shantiniketan" and "bolpur" in q:
+            return data
     return None
 
 def format_city_guide(city_data: Dict[str, Any], hindi: bool = False, specific_type: Optional[str] = None) -> str:
-    """Formats a city into an authentic, highly detailed response matching user preference."""
+    """Formats city information strictly based on user intent."""
     name = city_data["name"]
     state = city_data["state"]
     desc = city_data["description"]
@@ -1053,45 +805,98 @@ def format_city_guide(city_data: Dict[str, Any], hindi: bool = False, specific_t
     best_time = city_data["best_time"]
     specialties = city_data["specialties"]
 
+    # 1. FOOD ONLY
     if specific_type == "food":
         if hindi:
             return (
                 f"🍛 **{name} ({state}) ke Prasiddh Vyanjan & Food Guide**\n\n"
-                f"{name} ka swaad aur khana behad anokha aur prasiddh hai:\n\n"
+                f"{name} ka swaad aur khana behad anokha aur prasiddh hai. Yahan ke famous dishes aur street food:\n\n"
                 f"{food_str}\n\n"
-                f"🛍️ **Khareedari & Souvenirs**: {specialties}\n\n"
-                f"Kya aapko {name} ke specific restaurants ya food streets ke baare me jaanna hai?"
+                f"🛍️ **Prasiddh Mithai & Souvenirs**: {specialties}\n\n"
+                f"Agar aapko {name} ke specific restaurants ya iconic food stalls ki location chahiye toh batayein!"
             )
         else:
             return (
                 f"🍛 **{name} ({state}) Famous Food & Culinary Delights**\n\n"
-                f"{name} is renowned for its iconic traditional cuisines and vibrant street food culture:\n\n"
+                f"{name} is renowned for its iconic traditional cuisines, signature dishes, and vibrant street food culture:\n\n"
                 f"{food_str}\n\n"
-                f"🛍️ **Local Specialties & Gifts**: {specialties}\n\n"
-                f"Would you like recommendations for the best iconic eateries or food streets in {name}?"
+                f"🛍️ **Local Food Specialties & Gifts**: {specialties}\n\n"
+                f"Let me know if you would like recommendations for specific iconic eateries or food streets in {name}!"
             )
 
+    # 2. PLACES & SIGHTSEEING ONLY
     if specific_type == "places":
         if hindi:
             return (
-                f"🏛️ **{name} ({state}) ke Pramukh Paryatan Sthal**\n\n"
+                f"🏛️ **{name} ({state}) ke Pramukh Paryatan Sthal (Sightseeing Attractions)**\n\n"
                 f"{desc}\n\n"
-                f"**Top Attractions & Famous Places:**\n{places_str}\n\n"
-                f"🏰 **Dharohar & Historical Sites:**\n{heritage_str}\n\n"
-                f"🗓️ **Ghoomne Ka Sabse Accha Samay**: {best_time}\n\n"
-                f"Kya aapko {name} ka day-wise complete travel plan chahiye?"
+                f"**Top Must-Visit Attractions:**\n{places_str}\n\n"
+                f"🏰 **Aitihasik Dharohar (Heritage Landmarks):**\n{heritage_str}\n\n"
+                f"🗓️ **Ghoomne Ka Best Samay**: {best_time}\n\n"
+                f"Kya aapko {name} ke sightseeing ke liye customized day-wise plan chahiye?"
             )
         else:
             return (
                 f"🏛️ **Top Attractions & Sightseeing in {name} ({state})**\n\n"
                 f"{desc}\n\n"
                 f"**Must-Visit Attractions:**\n{places_str}\n\n"
-                f"🏰 **Heritage & Historic Landmarks:**\n{heritage_str}\n\n"
+                f"🏰 **Heritage & Historical Landmarks:**\n{heritage_str}\n\n"
                 f"🗓️ **Best Time to Visit**: {best_time}\n\n"
-                f"Would you like a day-by-day customized itinerary for {name}?"
+                f"Would you like a day-by-day customized sightseeing itinerary for {name}?"
             )
 
-    # Complete Travel & Famous Things Guide
+    # 3. TEMPLES & SPIRITUAL ONLY
+    if specific_type == "temples":
+        if hindi:
+            return (
+                f"🛕 **{name} ({state}) ke Prasiddh Mandir & Dharmik Sthal**\n\n"
+                f"{name} ke sabse prasiddh mandir, aashram aur spiritual sthal:\n\n"
+                f"{temples_str}\n\n"
+                f"Aapko kisi specific mandir ke darshan timing ya aarti ke baare me jaanna hai?"
+            )
+        else:
+            return (
+                f"🛕 **Temples & Spiritual Sanctuaries in {name} ({state})**\n\n"
+                f"Here are the prominent historical temples, shrines, and sacred sites in {name}:\n\n"
+                f"{temples_str}\n\n"
+                f"Would you like details on Darshan timings or Aarti rituals for any specific temple?"
+            )
+
+    # 4. BUDGET ONLY
+    if specific_type == "budget":
+        if hindi:
+            return (
+                f"💰 **{name} ({state}) Trip Budget Breakdown (Per Day Per Person)**\n\n"
+                f"• **Budget Traveller**: {b_low}\n"
+                f"• **Mid-Range Traveller**: {b_mid}\n"
+                f"• **Luxury Traveller**: {b_lux}\n\n"
+                f"💡 *Budget Tip*: Dharamshala ya budget homestays aur public transport / e-rickshaw use karke kharcha kafi kam ho jata hai."
+            )
+        else:
+            return (
+                f"💰 **Estimated Per-Day Budget Breakdown for {name} ({state})**\n\n"
+                f"• **Budget Traveller**: {b_low}\n"
+                f"• **Mid-Range Traveller**: {b_mid}\n"
+                f"• **Luxury Traveller**: {b_lux}\n\n"
+                f"💡 *Savings Tip*: Booking trains/buses in advance and enjoying local street delicacies keeps costs affordable!"
+            )
+
+    # 5. BEST TIME ONLY
+    if specific_type == "best_time":
+        if hindi:
+            return (
+                f"🗓️ **{name} ({state}) Ghoomne Ka Sahi Samay (Best Time to Visit)**\n\n"
+                f"• **Ideal Season / Months**: {best_time}\n\n"
+                f"Iss samay mausam suhana rehta hai aur sightseeing me koi pareshani nahi hoti."
+            )
+        else:
+            return (
+                f"🗓️ **Best Time to Visit {name} ({state})**\n\n"
+                f"• **Optimal Months & Season**: {best_time}\n\n"
+                f"During these months, weather conditions are most pleasant and ideal for sightseeing and outdoor exploring."
+            )
+
+    # 6. COMPLETE 360 GUIDE
     if hindi:
         return (
             f"🌟 **{name} ({state}) – Sampoorna Travel & Heritage Guide**\n\n"

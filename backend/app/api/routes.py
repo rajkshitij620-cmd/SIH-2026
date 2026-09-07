@@ -334,13 +334,32 @@ def chat(v: ChatInput):
     tokens = set(re.findall(r'[a-zA-Z0-9_]+', msg_lower))
 
     # Check query intent types
-    food_keywords = {'food', 'dish', 'dishes', 'khana', 'cuisine', 'cuisines', 'sweets', 'mithai', 'taste', 'specialty', 'specialties', 'specialities', 'restaurant', 'restaurants', 'eateries', 'delicacies'}
-    places_keywords = {'place', 'places', 'sightseeing', 'ghoomna', 'attraction', 'attractions', 'visit', 'spots', 'monuments', 'mandir', 'temple', 'temples', 'dharohar', 'heritage', 'sthal', 'tourist'}
+    food_keywords = {'food', 'dish', 'dishes', 'khana', 'cuisine', 'cuisines', 'sweets', 'mithai', 'taste', 'specialty', 'specialties', 'specialities', 'restaurant', 'restaurants', 'eateries', 'delicacies', 'snack', 'snacks', 'chaat', 'breakfast', 'lunch', 'dinner'}
+    places_keywords = {'place', 'places', 'sightseeing', 'ghoomna', 'attraction', 'attractions', 'spots', 'monuments', 'dharohar', 'heritage', 'sthal', 'tourist', 'viewpoint', 'viewpoints'}
+    temple_keywords = {'mandir', 'temple', 'temples', 'spiritual', 'dharmik', 'gurudwara', 'ashram', 'ghat', 'ghats', 'aarti', 'puja', 'darshan', 'masjid', 'church'}
+    budget_keywords = {'budget', 'cost', 'kharcha', 'expense', 'expenses', 'price', 'rates', 'cheap', 'expensive'}
+    time_keywords = {'season', 'months', 'timing', 'timings'}
     weather_keywords = {'weather', 'temperature', 'temp', 'mausam', 'baarish', 'rain', 'rainfall', 'humidity', 'forecast', 'climate', 'garmi', 'sardi', 'taapman'}
 
-    is_food_inquiry = bool(tokens.intersection(food_keywords)) or 'street food' in msg_lower or 'khana peena' in msg_lower
-    is_places_inquiry = bool(tokens.intersection(places_keywords)) or 'famous places' in msg_lower or 'tourist spot' in msg_lower
+    is_food_inquiry = bool(tokens.intersection(food_keywords)) or any(k in msg_lower for k in ['street food', 'khana peena', 'famous food', 'kya khaye', 'kya khayein'])
+    is_temple_inquiry = bool(tokens.intersection(temple_keywords)) or any(k in msg_lower for k in ['famous temple', 'famous mandir', 'puja timing', 'darshan timing'])
+    is_budget_inquiry = bool(tokens.intersection(budget_keywords)) or any(k in msg_lower for k in ['how much', 'kitna kharcha', 'kitna lagega', 'per day budget', 'trip cost'])
+    is_best_time_inquiry = bool(tokens.intersection(time_keywords)) or any(k in msg_lower for k in ['best time', 'when to visit', 'kab jayein', 'kab jana', 'right time', 'sahi samay'])
+    is_places_inquiry = bool(tokens.intersection(places_keywords)) or any(k in msg_lower for k in ['famous places', 'tourist spot', 'ghoomne ki jagah', 'kahan ghume', 'kahan ghoomein', 'places to visit'])
     is_weather_inquiry = bool(tokens.intersection(weather_keywords))
+
+    spec_type = None
+    if is_food_inquiry:
+        spec_type = 'food'
+    elif is_best_time_inquiry:
+        spec_type = 'best_time'
+    elif is_budget_inquiry:
+        spec_type = 'budget'
+    elif is_temple_inquiry:
+        spec_type = 'temples'
+    elif is_places_inquiry:
+        spec_type = 'places'
+
     # 1. Match Indian Cities from comprehensive Knowledge Base & Destination Store
     city_kb_data = get_city_knowledge(raw_msg)
     destinations = store.destinations()
@@ -398,7 +417,8 @@ def chat(v: ChatInput):
             'heritage_sites': city_kb_data['heritage_sites'],
             'budget': city_kb_data['budget'],
             'best_time': city_kb_data['best_time'],
-            'specialties': city_kb_data['specialties']
+            'specialties': city_kb_data['specialties'],
+            'user_intent': spec_type or 'general_overview'
         })
     elif matched_destinations:
         context_payload.extend([
@@ -409,7 +429,8 @@ def chat(v: ChatInput):
                 'categories': d.get('categories'),
                 'average_cost': d.get('average_cost'),
                 'tags': d.get('tags'),
-                'famous_places': d.get('famous_places')
+                'famous_places': d.get('famous_places'),
+                'user_intent': spec_type or 'general_overview'
             }
             for d in matched_destinations
         ])
@@ -452,7 +473,6 @@ def chat(v: ChatInput):
 
     # C. If City Knowledge Base matched:
     if city_kb_data:
-        spec_type = 'food' if is_food_inquiry else ('places' if is_places_inquiry else None)
         text = format_city_guide(city_kb_data, hindi=hindi, specific_type=spec_type)
         return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra City Intelligence'}
 
@@ -462,32 +482,91 @@ def chat(v: ChatInput):
         places = ', '.join(d.get('famous_places', [])) or d['name']
         cost = d.get('average_cost', 1500)
         categories = ', '.join(d.get('categories', ['Heritage', 'Sightseeing']))
-        if hindi:
-            text = (
-                f"🌟 **{d['name']} Travel Guide**\n\n"
-                f"{d.get('description', '')}\n\n"
-                f"1. 🏛️ **Prasiddh Paryatan Sthal (Famous Places)**: {places}\n"
-                f"2. 🍛 **Prasiddh Khana (Famous Food)**: Local authentic street food, traditional sweets & regional cuisine\n"
-                f"3. 🛕 **Dharmik & Dharohar Sthal (Heritage & Temples)**: {categories} historical monuments, ancient shrines & scenic attractions\n"
-                f"4. 💰 **Per-Day Budget Breakdown**:\n"
-                f"   • Budget: ~₹{cost} – ₹{cost + 500}/din (Stay + Local Food + Transport)\n"
-                f"   • Mid-Range: ~₹{cost * 2} – ₹{cost * 3}/din (Hotel + Restaurants + Cabs)\n"
-                f"5. 🗓️ **Ghoomne Ka Sabse Accha Samay**: October se March\n\n"
-                f"Kya aapko {d['name']} ka day-wise itinerary ya hotel guide chahiye?"
-            )
+
+        if spec_type == 'food':
+            if hindi:
+                text = (
+                    f"🍛 **{d['name']} ke Prasiddh Vyanjan & Food Guide**\n\n"
+                    f"{d['name']} apne lazeez regional khane aur street food ke liye jana jata hai.\n\n"
+                    f"• Traditional regional thali & iconic local dishes\n"
+                    f"• Authentic street food stalls and famous local sweets\n"
+                    f"• Local snacks & tea culture\n\n"
+                    f"Kya aapko {d['name']} ke specific restaurants ya food streets ke baare me jaanna hai?"
+                )
+            else:
+                text = (
+                    f"🍛 **Famous Food & Cuisines in {d['name']}**\n\n"
+                    f"{d['name']} is famous for its signature traditional cuisines and vibrant street food:\n\n"
+                    f"• Authentic regional delicacies & traditional thali meals\n"
+                    f"• Signature local street foods and sweets\n"
+                    f"• Popular food lanes and heritage tea stalls\n\n"
+                    f"Let me know if you would like iconic eatery recommendations in {d['name']}!"
+                )
+        elif spec_type == 'places':
+            if hindi:
+                text = (
+                    f"🏛️ **{d['name']} ke Pramukh Paryatan Sthal (Famous Places)**\n\n"
+                    f"{d.get('description', '')}\n\n"
+                    f"**Must-Visit Attractions:**\n"
+                    f"{chr(10).join(['• ' + p for p in d.get('famous_places', [d['name']])])}\n\n"
+                    f"Kya aapko {d['name']} ka day-wise sightseeing plan chahiye?"
+                )
+            else:
+                text = (
+                    f"🏛️ **Top Attractions & Sightseeing in {d['name']}**\n\n"
+                    f"{d.get('description', '')}\n\n"
+                    f"**Must-Visit Attractions:**\n"
+                    f"{chr(10).join(['• ' + p for p in d.get('famous_places', [d['name']])])}\n\n"
+                    f"Would you like a day-by-day customized itinerary for {d['name']}?"
+                )
+        elif spec_type == 'budget':
+            if hindi:
+                text = (
+                    f"💰 **{d['name']} Trip Budget Breakdown (Per Day Per Person)**\n\n"
+                    f"• **Budget Traveller**: ~₹{cost} – ₹{cost + 500}/din (Dharamshala/Hostel + Local Transport + Street Food)\n"
+                    f"• **Mid-Range Traveller**: ~₹{cost * 2} – ₹{cost * 3}/din (Hotel + Restaurants + Auto/Cabs)\n"
+                    f"• **Luxury Traveller**: ~₹{cost * 4}+/din (Resorts + Private Cabs + Fine Dining)"
+                )
+            else:
+                text = (
+                    f"💰 **Estimated Per-Day Budget Breakdown for {d['name']}**\n\n"
+                    f"• **Budget Traveller**: ~₹{cost} – ₹{cost + 500}/day (Budget stay + Local transport + Meals)\n"
+                    f"• **Mid-Range Traveller**: ~₹{cost * 2} – ₹{cost * 3}/day (Hotel + Restaurants + Cabs)\n"
+                    f"• **Luxury Traveller**: ~₹{cost * 4}+/day (Luxury stays + Private tours + Fine dining)"
+                )
+        elif spec_type == 'best_time':
+            btime = ', '.join(d.get('best_time', ['October to March']))
+            if hindi:
+                text = f"🗓️ **{d['name']} Ghoomne Ka Sahi Samay**: {btime}.\n\nIss dauran mausam suhana aur sightseeing ke liye anukool hota hai."
+            else:
+                text = f"🗓️ **Best Time to Visit {d['name']}**: {btime}.\n\nDuring this period, the weather is pleasant and ideal for sightseeing."
         else:
-            text = (
-                f"🌟 **{d['name']} Travel Guide**\n\n"
-                f"{d.get('description', '')}\n\n"
-                f"1. 🏛️ **Famous Places & Must-Visit Attractions**: {places}\n"
-                f"2. 🍛 **Famous Food & Signature Delicacies**: Iconic local dishes, street food & regional sweets\n"
-                f"3. 🛕 **Temples & Heritage Landmarks**: {categories} monuments and cultural heritage sites\n"
-                f"4. 💰 **Estimated Per-Day Budget Breakdown**:\n"
-                f"   • Budget Traveller: ~₹{cost} – ₹{cost + 500}/day\n"
-                f"   • Mid-Range Traveller: ~₹{cost * 2} – ₹{cost * 3}/day\n"
-                f"5. 🗓️ **Best Time to Visit**: October to March for pleasant sightseeing weather.\n\n"
-                f"Let me know if you would like a detailed day-wise itinerary for {d['name']}!"
-            )
+            if hindi:
+                text = (
+                    f"🌟 **{d['name']} Travel Guide**\n\n"
+                    f"{d.get('description', '')}\n\n"
+                    f"1. 🏛️ **Prasiddh Paryatan Sthal (Famous Places)**: {places}\n"
+                    f"2. 🍛 **Prasiddh Khana (Famous Food)**: Local authentic street food, traditional sweets & regional cuisine\n"
+                    f"3. 🛕 **Dharmik & Dharohar Sthal (Heritage & Temples)**: {categories} historical monuments, ancient shrines & scenic attractions\n"
+                    f"4. 💰 **Per-Day Budget Breakdown**:\n"
+                    f"   • Budget: ~₹{cost} – ₹{cost + 500}/din (Stay + Local Food + Transport)\n"
+                    f"   • Mid-Range: ~₹{cost * 2} – ₹{cost * 3}/din (Hotel + Restaurants + Cabs)\n"
+                    f"5. 🗓️ **Ghoomne Ka Sabse Accha Samay**: October se March\n\n"
+                    f"Kya aapko {d['name']} ka day-wise itinerary ya hotel guide chahiye?"
+                )
+            else:
+                text = (
+                    f"🌟 **{d['name']} Travel Guide**\n\n"
+                    f"{d.get('description', '')}\n\n"
+                    f"1. 🏛️ **Famous Places & Must-Visit Attractions**: {places}\n"
+                    f"2. 🍛 **Famous Food & Signature Delicacies**: Iconic local dishes, street food & regional sweets\n"
+                    f"3. 🛕 **Temples & Heritage Landmarks**: {categories} monuments and cultural heritage sites\n"
+                    f"4. 💰 **Estimated Per-Day Budget Breakdown**:\n"
+                    f"   • Budget Traveller: ~₹{cost} – ₹{cost + 500}/day\n"
+                    f"   • Mid-Range Traveller: ~₹{cost * 2} – ₹{cost * 3}/day\n"
+                    f"5. 🗓️ **Best Time to Visit**: October to March for pleasant sightseeing weather.\n\n"
+                    f"Let me know if you would like a detailed day-wise itinerary for {d['name']}!"
+                )
         return {'message': text, 'language': 'hi' if hindi else 'en', 'source': 'TourMitra Knowledge Base'}
 
     # E. General Fallback query
