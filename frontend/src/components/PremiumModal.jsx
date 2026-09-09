@@ -26,13 +26,13 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
             {
               id: 'pro_monthly',
               name: 'TourMitra Pro Monthly',
-              price: 199,
-              original_price: 299,
-              billing: 'per month',
+              price: 0,
+              original_price: 199,
+              billing: '₹0 (Free Offer)',
               period: 'monthly',
-              badge: 'Popular Choice',
+              badge: 'Free Special Offer',
               popular: true,
-              description: 'Unlock same-city TravelMate matchmaking & VIP group features',
+              description: 'Unlock same-city TravelMate matchmaking & VIP group features for ₹0',
               features: [
                 'Same Current City to Destination TravelMate Matching',
                 'AI Compatibility Score & Mutual Match Connections',
@@ -45,16 +45,16 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
             {
               id: 'pro_annual',
               name: 'TourMitra Pro Annual',
-              price: 1499,
-              original_price: 2388,
-              billing: 'per year (Save 37%)',
+              price: 0,
+              original_price: 1499,
+              billing: '₹0 (Free Offer)',
               period: 'annual',
-              badge: 'Best Value',
+              badge: '100% Free VIP',
               popular: false,
-              description: 'Best for frequent explorers seeking the ultimate VIP experience',
+              description: 'Full VIP access unlocked for all SIH participants & judges for ₹0',
               features: [
                 'All Pro Monthly Features Included',
-                '37% Discount (Just ₹125/month)',
+                '100% Free Special Access (₹0)',
                 'Verified Annual Pro 👑 Badge',
                 'Unlimited Trip Replans & AI Rerouting',
                 'Exclusive Live Festival & Crowd Alerts',
@@ -71,7 +71,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
   const currentPlanObj = plans.find(p => p.id === selectedPlan) || plans[0] || {
     id: 'pro_monthly',
     name: 'TourMitra Pro Monthly',
-    price: 199
+    price: 0
   };
 
   const handleActivate = async (method = paymentMethod) => {
@@ -230,7 +230,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                   className="btn w-full !py-3.5 !bg-gradient-to-r !from-amber-600 !via-amber-500 !to-yellow-500 text-white font-extrabold text-base shadow-lg shadow-amber-500/25 flex items-center justify-center gap-2 hover:scale-[1.01] transition"
                 >
                   <Crown size={18} />
-                  <span>Upgrade to {currentPlanObj.name} (₹{currentPlanObj.price})</span>
+                  <span>Upgrade to {currentPlanObj.name} ({currentPlanObj.price === 0 ? 'Free · ₹0' : `₹${currentPlanObj.price}`})</span>
                   <ArrowRight size={16} />
                 </button>
 
@@ -242,7 +242,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                   className="w-full py-2.5 px-4 rounded-xl border border-teal-200 dark:border-teal-800/80 bg-teal-50/70 dark:bg-teal-950/40 text-teal-800 dark:text-teal-300 text-xs font-bold hover:bg-teal-100 dark:hover:bg-teal-900/60 transition flex items-center justify-center gap-1.5"
                 >
                   <Sparkles size={14} />
-                  <span>⚡ 1-Click Instant Upgrade (SIH Judge Demo Mode)</span>
+                  <span>⚡ 1-Click Free Upgrade (SIH Judge Demo Mode)</span>
                 </button>
               </div>
             </>
@@ -253,7 +253,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
               <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
                 <div>
                   <h3 className="font-bold text-lg text-slate-900 dark:text-white">{currentPlanObj.name}</h3>
-                  <p className="text-xs text-slate-500">Total payable: <b className="text-slate-900 dark:text-white">₹{currentPlanObj.price}</b> (Inclusive of taxes)</p>
+                  <p className="text-xs text-slate-500">Total payable: <b className="text-emerald-700 dark:text-emerald-400 font-extrabold">{currentPlanObj.price === 0 ? '₹0 (100% Free Special Offer)' : `₹${currentPlanObj.price}`}</b></p>
                 </div>
                 <button
                   type="button"
@@ -266,7 +266,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
 
               {/* Payment Methods */}
               <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Select Payment Method</label>
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Select Payment / Activation Method</label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
@@ -280,7 +280,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                     <QrCode size={20} className={paymentMethod === 'upi' ? 'text-amber-600' : 'text-slate-400'} />
                     <div>
                       <p className="text-xs font-bold text-slate-900 dark:text-white">UPI / QR Code</p>
-                      <p className="text-[10px] text-slate-500">GPay, PhonePe, Paytm</p>
+                      <p className="text-[10px] text-slate-500">GPay, PhonePe, Paytm (₹0)</p>
                     </div>
                   </button>
 
@@ -295,8 +295,8 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                   >
                     <CreditCard size={20} className={paymentMethod === 'card' ? 'text-amber-600' : 'text-slate-400'} />
                     <div>
-                      <p className="text-xs font-bold text-slate-900 dark:text-white">Card / NetBanking</p>
-                      <p className="text-[10px] text-slate-500">Visa, Master, RuPay</p>
+                      <p className="text-xs font-bold text-slate-900 dark:text-white">Instant / Card</p>
+                      <p className="text-[10px] text-slate-500">Zero-fee Activation</p>
                     </div>
                   </button>
                 </div>
@@ -313,7 +313,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                     />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Scan & Pay ₹{currentPlanObj.price}</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-slate-200">Scan & Activate (Payable: ₹{currentPlanObj.price})</p>
                     <p className="text-[11px] text-slate-500">UPI ID: <span className="font-mono font-semibold text-teal-600">tourmitra@upi</span></p>
                   </div>
                 </div>
@@ -344,7 +344,7 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
                   disabled={loading}
                   className="btn flex-2 !bg-gradient-to-r !from-amber-600 !to-yellow-500 text-white font-bold"
                 >
-                  {loading ? 'Processing Payment…' : `Pay ₹${currentPlanObj.price} & Activate Pro 👑`}
+                  {loading ? 'Activating Pro…' : currentPlanObj.price === 0 ? 'Activate Pro Membership Free (₹0) 👑' : `Pay ₹${currentPlanObj.price} & Activate Pro 👑`}
                 </button>
               </div>
 
@@ -377,3 +377,4 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
     </div>
   );
 }
+
