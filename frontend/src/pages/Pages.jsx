@@ -1,7 +1,8 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link,useLocation,useNavigate,useParams} from 'react-router-dom';
-import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw} from 'lucide-react';
+import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw,Crown} from 'lucide-react';
 import {api} from '../services/api'; import {useAuth} from '../context/AuthContext'; import DestinationCard from '../components/DestinationCard';
+import PremiumModal from '../components/PremiumModal';
 export function LatestGroupTravelPlan(){const nav=useNavigate(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{if(!groups.length)throw new Error('No connected travel group yet. Connect with a TravelMate first.');nav(`/travel-plan/${groups[0].id}`,{replace:true})}).catch(x=>setErr(x.message))},[nav]);return <div className="shell py-12">{err?<section className="card max-w-xl"><p className="text-slate-700">{err}</p><Link className="btn mt-5" to="/plan">Plan a group trip</Link></section>:<p>Opening your group travel plan…</p>}</div>}
 export function GroupTravelPlan(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{const group=groups.find(item=>item.id===id);if(!group)throw new Error('Travel group not found');return api.get('/trips/'+group.trip_id).then(trip=>setData({group,trip}))}).catch(x=>setErr(x.message))},[id]);if(err)return <div className="shell py-12 text-red-600">{err}</div>;if(!data)return <div className="shell py-12">Loading your shared travel plan…</div>;const {group,trip}=data,guide=trip.travel_guide;const save=async(tripId)=>{try{const saved=await api.post(`/trips/${tripId}/save`);setData(d=>({...d,trip:saved}));nav('/saved-tours')}catch(x){setErr(x.message)}};return <div className="shell py-10"><div className="flex flex-wrap items-center justify-between gap-3"><p className="eyebrow">Your group travel plan</p><div className="flex items-center gap-2"><button onClick={()=>save(trip.id)} className="btn !py-1.5 !px-3 text-xs"><Save size={14}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost !py-1.5 !px-3 text-xs" to="/groups">Open group chat</Link></div></div><section className="card mt-4 border-teal-200 bg-teal-50"><h1 className="text-3xl font-bold">{trip.destination.name} · {trip.input.days} days</h1><p className="mt-2 text-slate-600">{group.member_ids.length} connected travellers · {formatDate(group.start_date)} – {formatDate(group.end_date)}</p><p className="mt-2 text-sm text-teal-900">This shared plan is designed to stay within the total group budget of ₹{trip.input.budget.toLocaleString()}.</p></section><DayWisePlacesChart trip={trip}/>{guide&&<GuideHighlights guide={guide}/>}<section className="mt-6"><aside className="card max-w-md"><p className="eyebrow">Group budget</p><p className="mt-2 text-xl font-semibold">₹{trip.input.budget.toLocaleString()} total</p>{trip.budget_breakdown&&Object.entries(trip.budget_breakdown).map(([name,value])=><p className="mt-3 flex justify-between" key={name}><span className="capitalize">{name}</span><b>₹{Math.round(value)}</b></p>)}</aside></section><div className="mt-6 flex gap-3"><button onClick={()=>save(trip.id)} className="btn"><Save size={16}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost" to="/groups">Open group chat</Link></div></div>}
 const Field=({n,label,type='text',d='',autoComplete})=><div className="mt-4"><label className="label" htmlFor={n}>{label}</label><input className="input" id={n} name={n} type={type} defaultValue={d} autoComplete={autoComplete} required/></div>;
@@ -406,7 +407,15 @@ export function Auth({register=false}){
     </div>
   );
 }
-const Avatar=({user,size='h-12 w-12'})=>user?.avatar_url?<img className={`${size} rounded-full object-cover`} src={user.avatar_url} alt="Profile"/>:<div className={`${size} grid place-items-center rounded-full bg-teal-800 font-semibold text-white`}>{(user?.name||'T').split(' ').map(x=>x[0]).join('').slice(0,2)}</div>;
+const Avatar=({user,size='h-12 w-12'})=>{
+  const isPro = Boolean(user?.is_premium || user?.premium_tier === 'pro_monthly' || user?.premium_tier === 'pro_annual');
+  return (
+    <div className="relative inline-block shrink-0">
+      {user?.avatar_url?<img className={`${size} rounded-full object-cover ring-2 ${isPro?'ring-amber-400 dark:ring-amber-500':'ring-transparent'}`} src={user.avatar_url} alt="Profile"/>:<div className={`${size} grid place-items-center rounded-full bg-teal-800 font-semibold text-white ring-2 ${isPro?'ring-amber-400 dark:ring-amber-500':'ring-transparent'}`}>{(user?.name||'T').split(' ').map(x=>x[0]).join('').slice(0,2)}</div>}
+      {isPro&&<span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 text-amber-950 shadow-xs ring-1 ring-white dark:ring-slate-900" title="TourMitra VIP Pro Member"><Crown size={10} className="fill-amber-950"/></span>}
+    </div>
+  );
+};
 const PhotoSource=({photo,onGallery,onCamera,onRemove})=><section className="trip-photo-panel mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white sm:col-span-2"><div className="border-b border-slate-100 px-4 py-3"><p className="font-semibold text-slate-800">Trip photo <span className="text-red-600">*</span></p><p className="mt-1 text-sm text-slate-500">Required · JPEG, JPG or PNG · maximum 4 MB</p></div><details className="group border-b border-slate-100"><summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 font-medium text-slate-700"><span className="flex items-center gap-2"><ImageUp size={18} className="text-teal-700"/>Upload from gallery</span><ChevronDown size={18} className="transition group-open:rotate-180"/></summary><div className="px-4 pb-4"><button type="button" className="btn-ghost" onClick={onGallery}>Choose a photo</button></div></details><details className="group"><summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-4 font-medium text-slate-700"><span className="flex items-center gap-2"><Camera size={18} className="text-teal-700"/>Take a live photo</span><ChevronDown size={18} className="transition group-open:rotate-180"/></summary><div className="px-4 pb-4"><button type="button" className="btn-ghost" onClick={onCamera}>Open camera</button></div></details>{photo&&<div className="flex items-center gap-3 border-t border-slate-100 px-4 py-3"><img className="h-16 w-16 rounded-lg object-cover" src={photo} alt="Selected trip"/><span className="text-sm text-teal-800">Photo selected</span><button type="button" className="ml-auto text-sm font-medium text-red-600" onClick={onRemove}>Remove</button></div>}</section>;
 const LiveCamera=({onCapture,onClose})=>{const videoRef=useRef(),[error,setError]=useState('');useEffect(()=>{let stream;const start=async()=>{try{if(!navigator.mediaDevices?.getUserMedia)throw new Error('Camera is not supported by this browser.');stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'user'}},audio:false});if(videoRef.current){videoRef.current.srcObject=stream;await videoRef.current.play()}}catch(x){setError(x.message||'Camera access was not available.')}};start();return()=>stream?.getTracks().forEach(track=>track.stop())},[]);const capture=()=>{const video=videoRef.current;if(!video?.videoWidth)return;const canvas=document.createElement('canvas');canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext('2d').drawImage(video,0,0);onCapture(canvas.toDataURL('image/jpeg',0.9))};return <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/75 p-4" role="dialog" aria-modal="true" aria-label="Take live photo"><section className="card w-full max-w-lg"><h2 className="text-xl font-semibold">Take live photo</h2>{error?<><p className="mt-3 text-red-600">{error}</p><button className="btn-ghost mt-5" type="button" onClick={onClose}>Close</button></>:<><video className="mt-4 aspect-video w-full rounded-lg bg-slate-900 object-cover" ref={videoRef} muted playsInline/><div className="mt-4 flex justify-end gap-2"><button className="btn-ghost" type="button" onClick={onClose}>Cancel</button><button className="btn" type="button" onClick={capture}>Capture photo</button></div></>}</section></div>};
 const formatDate=(value)=>value?new Intl.DateTimeFormat('en-IN',{day:'numeric',month:'short',year:'numeric'}).format(new Date(`${value}T00:00:00`)):'';
@@ -416,7 +425,7 @@ const DayWisePlacesChart=({trip})=>{if(!trip?.days?.length)return null;const des
 
 export function Planner(){
  const {user}=useAuth(),nav=useNavigate(),locationRoute=useLocation(),searchParams=new URLSearchParams(locationRoute.search),prefilledDest=searchParams.get('destination')||'';
- const [travelType,setTravelType]=useState('single'),[destinationInput,setDestinationInput]=useState(prefilledDest),[budgetInput,setBudgetInput]=useState('15000'),[location,setLocation]=useState(''),[coords,setCoords]=useState({}),[photo,setPhoto]=useState(''),[age,setAge]=useState(''),[cameraTarget,setCameraTarget]=useState(null),[draft,setDraft]=useState(null),[makingGroup,setMakingGroup]=useState(false),[load,setLoad]=useState(false),[err,setErr]=useState(''),[hasPreviousTrip,setHasPreviousTrip]=useState(false),galleryRef=useRef(),cameraRef=useRef();
+ const [travelType,setTravelType]=useState('single'),[destinationInput,setDestinationInput]=useState(prefilledDest),[budgetInput,setBudgetInput]=useState('15000'),[location,setLocation]=useState(''),[coords,setCoords]=useState({}),[photo,setPhoto]=useState(''),[age,setAge]=useState(''),[cameraTarget,setCameraTarget]=useState(null),[draft,setDraft]=useState(null),[makingGroup,setMakingGroup]=useState(false),[showPremiumModal,setShowPremiumModal]=useState(false),[load,setLoad]=useState(false),[err,setErr]=useState(''),[hasPreviousTrip,setHasPreviousTrip]=useState(false),galleryRef=useRef(),cameraRef=useRef();
 
  useEffect(()=>{api.get('/trips/history').then(trips=>setHasPreviousTrip(trips.length>0)).catch(()=>setHasPreviousTrip(false))},[]);
  useEffect(()=>{if(prefilledDest)setDestinationInput(prefilledDest)},[prefilledDest]);
@@ -437,7 +446,7 @@ export function Planner(){
     <p className="eyebrow mt-4">Single Travel Selection</p>
     <h1 className="text-2xl sm:text-3xl font-bold mt-1">How would you like to explore {draft.destination}?</h1>
     <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-     Get a tailored day-wise Solo Tour Guide, or match with verified TravelMates travelling to the same destination on similar dates.
+     Get a tailored day-wise Solo Tour Guide (Free), or match with verified TravelMates from your same city heading to {draft.destination} (TourMitra Pro).
     </p>
     
     <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -448,19 +457,42 @@ export function Planner(){
       disabled={load}
      >
       <User size={20}/>
-      <span className="font-bold text-sm">{load?'Building guide…':'Solo Tour Guide'}</span>
+      <div className="flex items-center gap-1">
+        <span className="font-bold text-sm">{load?'Building guide…':'Solo Tour Guide'}</span>
+        <span className="text-[10px] uppercase font-bold text-emerald-300 bg-emerald-950/60 px-1.5 py-0.5 rounded">Free</span>
+      </div>
       <span className="text-[11px] font-normal text-teal-200">Personalized day schedule</span>
      </button>
 
      <button 
       type="button"
-      className="btn !bg-gradient-to-r !from-purple-800 !to-indigo-900 !py-4 flex flex-col items-center justify-center gap-1.5 hover:scale-[1.02] transition shadow-md" 
-      onClick={()=>{setErr('');setMakingGroup(true)}} 
+      className="btn !bg-gradient-to-r !from-purple-800 !via-indigo-900 !to-purple-950 !py-4 flex flex-col items-center justify-center gap-1.5 hover:scale-[1.02] transition shadow-md group relative" 
+      onClick={()=>{
+        setErr('');
+        if(user&&!user.is_premium){
+          setShowPremiumModal(true);
+        }else{
+          setMakingGroup(true);
+        }
+      }} 
       disabled={load}
      >
-      <Users size={20}/>
-      <span className="font-bold text-sm">Make Group</span>
-      <span className="text-[11px] font-normal text-purple-200">Match with TravelMates</span>
+      <div className="flex items-center gap-1.5">
+       <Users size={20}/>
+       <span className="font-bold text-sm">Make Group</span>
+       {user?.is_premium ? (
+        <span className="inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide">
+         <Crown size={10} className="fill-amber-950"/> VIP
+        </span>
+       ) : (
+        <span className="inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide shadow-sm">
+         <Crown size={10} className="fill-amber-950"/> PRO
+        </span>
+       )}
+      </div>
+      <span className="text-[11px] font-normal text-purple-200">
+       {user?.is_premium ? 'Match with same-city TravelMates' : 'Same-City TravelMate Match (Pro)'}
+      </span>
      </button>
     </div>
 
@@ -469,13 +501,31 @@ export function Planner(){
     </button>
     {err&&<p className="mt-4 text-sm text-red-600 dark:text-red-400" role="alert">{err}</p>}
    </section>
+
+   <PremiumModal
+    isOpen={showPremiumModal}
+    onClose={()=>setShowPremiumModal(false)}
+    onSuccess={()=>{
+      setShowPremiumModal(false);
+      setMakingGroup(true);
+    }}
+    initialReason={`Connecting with TravelMates from your same current location heading to ${draft?.destination || 'the same destination'} is a TourMitra Pro feature. Upgrade to unlock verified matchmaking, VIP badge & group room!`}
+   />
   </div>
  );
 
  if(draft&&makingGroup)return (
   <div className="shell max-w-xl py-12 sm:py-16">
    <form onSubmit={submitGroup} className="card p-6 sm:p-8">
-    <p className="eyebrow">TravelMates Matchmaking</p>
+    <div className="flex items-center justify-between">
+      <p className="eyebrow">TravelMates Matchmaking</p>
+      {user?.is_premium && (
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 px-3 py-1 text-xs font-bold text-amber-800 dark:text-amber-200">
+          <Crown size={12} className="text-amber-500" />
+          <span>Pro Matchmaking Active</span>
+        </span>
+      )}
+    </div>
     <h1 className="mt-1 text-2xl sm:text-3xl font-bold">Add Group Finder Profile</h1>
     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
      A trip photo, your age and current location help AI calculate compatibility scores with fellow travellers heading to {draft.destination}.
@@ -680,8 +730,8 @@ export function Planner(){
  );
 }
 
-export function FindTravelers(){const nav=useNavigate(),location=useLocation(),queryTrip=new URLSearchParams(location.search).get('trip'),[selectedTripId,setSelectedTripId]=useState(queryTrip||''),[data,setData]=useState(),[load,setLoad]=useState(true),[err,setErr]=useState('');const fetchMatches=(tripId='')=>{setLoad(true);setErr('');const param=tripId?`?trip_id=${encodeURIComponent(tripId)}`:'';api.get(`/travelers/matches${param}`).then(res=>{setData(res);if(res.trip?.id)setSelectedTripId(res.trip.id)}).catch(x=>setErr(x.message)).finally(()=>setLoad(false))};useEffect(()=>{fetchMatches(queryTrip||selectedTripId)},[queryTrip]);const connect=async(travellerId,tripId)=>{try{await api.post(`/connections/${travellerId}?trip_id=${encodeURIComponent(tripId||selectedTripId||'')}`);fetchMatches(selectedTripId)}catch(x){alert(x.message)}};if(err)return <div className="shell py-12"><p className="text-red-600">{err}</p><button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button></div>;if(load&&!data)return <div className="shell py-12">Finding TravelMates…</div>;const currentTrip=data?.trip,matches=data?.matches||[],sameDest=data?.same_destination_travelers||[],allTravelers=[...matches,...sameDest.filter(s=>!matches.some(m=>m.traveller.id===s.traveller.id))];return <div className="shell max-w-5xl py-8">{allTravelers.length>0?<div className="grid gap-4 md:grid-cols-2">{allTravelers.map(m=><article className="card" key={m.traveller.id}><div className="flex items-center gap-3"><Avatar user={m.traveller}/><div><h2 className="font-semibold">{m.traveller.name}</h2><p className="text-sm text-slate-500">{m.trip.current_location_city}{m.trip.gender?` · ${m.trip.gender.charAt(0).toUpperCase()+m.trip.gender.slice(1)}`:''}{m.trip.age?` · ${m.trip.age} yrs`:''}</p></div>{m.match_percentage?<b className="ml-auto text-teal-800">{m.match_percentage}% Match</b>:<span className="ml-auto rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800">{m.trip.destination}</span>}</div><div className="mt-4 space-y-1 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {m.trip.destination}</p><p>📅 <b>Dates:</b> {formatDate(m.trip.start_date)} – {formatDate(m.trip.end_date)} · 💰 ₹{m.trip.budget?.toLocaleString()}</p></div><div className="mt-5">{m.connection_status==='pending'?<button className="btn w-full opacity-70 cursor-not-allowed" disabled>Request Sent</button>:<button className="btn w-full" onClick={()=>connect(m.traveller.id,currentTrip?.id||m.trip.id)}>Connect</button>}</div></article>)}</div>:<section className="card mt-6 py-10 text-center"><h2 className="text-lg font-semibold">No TravelMates found yet</h2><p className="mt-2 text-slate-600">Be the first to connect with other travellers.</p><button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button></section>}</div>}
-export function TravellerProfile(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState(''),trip=new URLSearchParams(window.location.search).get('trip');useEffect(()=>{api.get(`/travelers/${id}/public-profile?trip_id=${encodeURIComponent(trip||'')}`).then(setData).catch(x=>setErr(x.message))},[id,trip]);if(err)return <div className="shell py-12">{err}</div>;if(!data)return <div className="shell py-12">Loading traveller profile…</div>;return <div className="shell max-w-xl py-12"><section className="card"><Avatar user={data.profile} size="h-20 w-20"/><h1 className="mt-4 text-3xl font-bold">{data.profile.name}</h1><p className="mt-2 text-slate-600">{data.profile.bio||'Travel enthusiast'}</p><p className="mt-4 text-sm"><b>Interests:</b> {data.profile.interests?.join(', ')||'Travel and local experiences'}</p>{data.trip&&<div className="mt-4 space-y-1.5 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {data.trip.destination} · {formatDate(data.trip.start_date)} – {formatDate(data.trip.end_date)}</p>{data.trip.current_location_city&&<p>📍 <b>Location:</b> {data.trip.current_location_city}</p>}{data.trip.gender&&<p>👤 <b>Gender:</b> <span className="capitalize">{data.trip.gender}</span></p>}{data.trip.age&&<p>🎂 <b>Age:</b> {data.trip.age} years</p>}<p className="mt-2 text-teal-800 font-semibold">{data.match_percentage}% Match</p></div>}<button className="btn-ghost mt-6" onClick={()=>nav(-1)}>Back to TravelMates</button></section></div>}
+export function FindTravelers(){const nav=useNavigate(),location=useLocation(),queryTrip=new URLSearchParams(location.search).get('trip'),[selectedTripId,setSelectedTripId]=useState(queryTrip||''),[data,setData]=useState(),[load,setLoad]=useState(true),[err,setErr]=useState('');const fetchMatches=(tripId='')=>{setLoad(true);setErr('');const param=tripId?`?trip_id=${encodeURIComponent(tripId)}`:'';api.get(`/travelers/matches${param}`).then(res=>{setData(res);if(res.trip?.id)setSelectedTripId(res.trip.id)}).catch(x=>setErr(x.message)).finally(()=>setLoad(false))};useEffect(()=>{fetchMatches(queryTrip||selectedTripId)},[queryTrip]);const connect=async(travellerId,tripId)=>{try{await api.post(`/connections/${travellerId}?trip_id=${encodeURIComponent(tripId||selectedTripId||'')}`);fetchMatches(selectedTripId)}catch(x){alert(x.message)}};if(err)return <div className="shell py-12"><p className="text-red-600">{err}</p><button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button></div>;if(load&&!data)return <div className="shell py-12">Finding TravelMates…</div>;const currentTrip=data?.trip,matches=data?.matches||[],sameDest=data?.same_destination_travelers||[],allTravelers=[...matches,...sameDest.filter(s=>!matches.some(m=>m.traveller.id===s.traveller.id))];return <div className="shell max-w-5xl py-8">{allTravelers.length>0?<div className="grid gap-4 md:grid-cols-2">{allTravelers.map(m=><article className="card" key={m.traveller.id}><div className="flex items-center gap-3"><Avatar user={m.traveller}/><div><h2 className="font-semibold flex items-center gap-1.5">{m.traveller.name}{m.traveller.is_premium&&<span className="inline-flex items-center gap-0.5 rounded-full bg-amber-400 text-amber-950 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-tight shadow-xs"><Crown size={9} className="fill-amber-950"/> PRO</span>}</h2><p className="text-sm text-slate-500">{m.trip.current_location_city}{m.trip.gender?` · ${m.trip.gender.charAt(0).toUpperCase()+m.trip.gender.slice(1)}`:''}{m.trip.age?` · ${m.trip.age} yrs`:''}</p></div>{m.match_percentage?<b className="ml-auto text-teal-800">{m.match_percentage}% Match</b>:<span className="ml-auto rounded-full bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800">{m.trip.destination}</span>}</div><div className="mt-4 space-y-1 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {m.trip.destination}</p><p>📅 <b>Dates:</b> {formatDate(m.trip.start_date)} – {formatDate(m.trip.end_date)} · 💰 ₹{m.trip.budget?.toLocaleString()}</p></div><div className="mt-5">{m.connection_status==='pending'?<button className="btn w-full opacity-70 cursor-not-allowed" disabled>Request Sent</button>:<button className="btn w-full" onClick={()=>connect(m.traveller.id,currentTrip?.id||m.trip.id)}>Connect</button>}</div></article>)}</div>:<section className="card mt-6 py-10 text-center"><h2 className="text-lg font-semibold">No TravelMates found yet</h2><p className="mt-2 text-slate-600">Be the first to connect with other travellers.</p><button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button></section>}</div>}
+export function TravellerProfile(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState(''),trip=new URLSearchParams(window.location.search).get('trip');useEffect(()=>{api.get(`/travelers/${id}/public-profile?trip_id=${encodeURIComponent(trip||'')}`).then(setData).catch(x=>setErr(x.message))},[id,trip]);if(err)return <div className="shell py-12">{err}</div>;if(!data)return <div className="shell py-12">Loading traveller profile…</div>;return <div className="shell max-w-xl py-12"><section className="card"><Avatar user={data.profile} size="h-20 w-20"/><h1 className="mt-4 text-3xl font-bold flex items-center gap-2">{data.profile.name}{data.profile.is_premium&&<span className="inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wide"><Crown size={12} className="fill-amber-950"/> VIP PRO</span>}</h1><p className="mt-2 text-slate-600">{data.profile.bio||'Travel enthusiast'}</p><p className="mt-4 text-sm"><b>Interests:</b> {data.profile.interests?.join(', ')||'Travel and local experiences'}</p>{data.trip&&<div className="mt-4 space-y-1.5 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {data.trip.destination} · {formatDate(data.trip.start_date)} – {formatDate(data.trip.end_date)}</p>{data.trip.current_location_city&&<p>📍 <b>Location:</b> {data.trip.current_location_city}</p>}{data.trip.gender&&<p>👤 <b>Gender:</b> <span className="capitalize">{data.trip.gender}</span></p>}{data.trip.age&&<p>🎂 <b>Age:</b> {data.trip.age} years</p>}<p className="mt-2 text-teal-800 font-semibold">{data.match_percentage}% Match</p></div>}<button className="btn-ghost mt-6" onClick={()=>nav(-1)}>Back to TravelMates</button></section></div>}
 function LiveMap({location,trip}){const [map,setMap]=useState(null),[mapError,setMapError]=useState('');useEffect(()=>{let active=true;setMapError('');api.get('/maps/location?location='+encodeURIComponent(location)).then(data=>{if(active)setMap(data.available?data:null)}).catch(()=>active&&setMap(null));return()=>{active=false}},[location]);const openStreetMap=map?`https://www.openstreetmap.org/?mlat=${map.latitude}&mlon=${map.longitude}#map=12/${map.latitude}/${map.longitude}`:'';return <>{trip&&<DayWisePlacesChart trip={trip}/>} {trip?.travel_guide&&<GuideHighlights guide={trip.travel_guide}/>} {map&&<section className="card mt-6"><p className="eyebrow">Live location map</p>{!mapError?<img onError={()=>setMapError('Map preview is unavailable for this MapTiler key.')} className="mt-3 h-64 w-full rounded-lg object-cover" src={api.url('/maps/static?location='+encodeURIComponent(location))} alt={`Map of ${location}`}/>:<p className="mt-3 text-sm text-slate-600">{mapError}</p>}<a className="mt-3 inline-block text-sm font-medium text-teal-700 underline" href={openStreetMap} target="_blank" rel="noreferrer">Open {location} in OpenStreetMap</a><p className="mt-2 text-xs text-slate-500">Location found via MapTiler.</p></section>}</>}
 function Listing({url,title}){const [data,setData]=useState([]);useEffect(()=>{api.get(url).then(setData)},[url]);return <div className="shell py-12"><p className="eyebrow">Destination discovery</p><h1 className="mt-2 text-3xl font-bold">{title}</h1><div className="mt-8 grid gap-5 md:grid-cols-3">{data.map(x=><DestinationCard key={x.id} x={x}/>)}</div></div>};export const Explore=()=> <Listing url="/recommendations" title="Explore destinations"/>;
 export function Discover(){const [data,setData]=useState([]);useEffect(()=>{api.get('/businesses').then(setData)},[]);return <div className="shell py-12"><p className="eyebrow">Local discovery</p><h1 className="mt-2 text-3xl font-bold">Meet the people behind the place.</h1><div className="mt-8 grid gap-4 md:grid-cols-2">{data.map(x=><article className="card" key={x.id}><p className="eyebrow">{x.category}</p><h2 className="mt-1 text-lg font-semibold">{x.name}</h2><p className="mt-3 text-slate-600">{x.description}</p><p className="mt-4 text-sm">{x.location} · ₹{x.price} · ★ {x.rating} · Verified</p></article>)}</div></div>}

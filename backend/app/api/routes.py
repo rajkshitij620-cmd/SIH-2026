@@ -15,7 +15,7 @@ from uuid import uuid4
 from datetime import datetime
 
 def public_profile(user):
- return {'id':user['id'],'name':user['name'],'avatar_url':user.get('avatar_url'),'bio':user.get('bio',''),'interests':user.get('interests',[]),'travel_style':user.get('travel_style','Balanced')}
+ return {'id':user['id'],'name':user['name'],'avatar_url':user.get('avatar_url'),'bio':user.get('bio',''),'interests':user.get('interests',[]),'travel_style':user.get('travel_style','Balanced'),'is_premium':bool(user.get('is_premium',False)),'premium_tier':user.get('premium_tier','free')}
 
 def safe_trip(trip):
  """Never expose another traveller's precise location."""
@@ -35,32 +35,105 @@ def health(): return {'status':'ok','mode':'mongodb' if store.mongo is not None 
 @api.post('/auth/register')
 def register(v:RegisterInput):
  if store.user_by_email(v.email.lower()): raise HTTPException(409,'Email is already registered')
- uid=str(uuid4()); u={'id':uid,'name':v.name,'email':v.email.lower(),'password_hash':hash_password(v.password),'language':'en','interests':[],'avatar_url':None,'bio':'','travel_style':'Balanced'}
+ uid=str(uuid4()); u={'id':uid,'name':v.name,'email':v.email.lower(),'password_hash':hash_password(v.password),'language':'en','interests':[],'avatar_url':None,'bio':'','travel_style':'Balanced','is_premium':False,'premium_tier':'free'}
  try: store.create_user(u)
  except DuplicateKeyError: raise HTTPException(409,'Email is already registered')
- return {'access_token':create_token(uid),'token_type':'bearer','user':{k:u[k] for k in ('id','name','email','language','interests','avatar_url')}}
+ return {'access_token':create_token(uid),'token_type':'bearer','user':{k:u.get(k) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}}
 @api.post('/auth/login')
 def login(v:LoginInput):
  u=store.user_by_email(v.email.lower())
  if not u or not verify_password(v.password,u['password_hash']): raise HTTPException(401,'Invalid email or password')
  if password_needs_rehash(u['password_hash']):
   u=store.update_user(u['id'], {'password_hash':hash_password(v.password)})
- return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k) for k in ('id','name','email','language','interests','avatar_url')}}
+ return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}}
 @api.post('/auth/reset-password')
 def reset_password(v:ResetPasswordInput):
  u=store.user_by_email(v.email.lower())
  if not u: raise HTTPException(404,'No account found with this email')
  store.update_user(u['id'], {'password_hash':hash_password(v.new_password)})
- return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k) for k in ('id','name','email','language','interests','avatar_url')},'message':'Password updated successfully'}
+ return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')},'message':'Password updated successfully'}
 @api.get('/auth/me')
-def me(u=Depends(current_user)): return {k:u.get(k) for k in ('id','name','email','language','interests','avatar_url')}
+def me(u=Depends(current_user)): return {k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}
 @api.get('/auth/session')
 def session(authorization:str=Header(default='')):
  if not authorization.startswith('Bearer '): return {'authenticated':False}
  try: user=store.user_by_id(decode_token(authorization[7:]))
  except HTTPException: user=None
  if not user: return {'authenticated':False}
- return {'authenticated':True,'user':{k:user[k] for k in ('id','name','email','language','interests')}}
+ return {'authenticated':True,'user':{k:user.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}}
+@api.get('/premium/plans')
+def premium_plans():
+ return {
+  'plans': [
+   {
+    'id': 'free',
+    'name': 'Free Explorer',
+    'price': 0,
+    'billing': 'Free Forever',
+    'description': 'Ideal for solo adventures with smart AI itinerary creation',
+    'badge': 'Standard',
+    'features': [
+     'Personalized Day-Wise AI Itinerary',
+     'Famous Places & Budget Breakdown',
+     'Live Weather Tracking',
+     'Solo Tour Guide'
+    ]
+   },
+   {
+    'id': 'pro_monthly',
+    'name': 'TourMitra Pro Monthly',
+    'price': 199,
+    'original_price': 299,
+    'billing': 'per month',
+    'period': 'monthly',
+    'badge': 'Popular Choice',
+    'popular': True,
+    'description': 'Unlock same-city TravelMate matchmaking & VIP group features',
+    'features': [
+     'Same Current City to Destination TravelMate Matching',
+     'AI Compatibility Score & Mutual Match Connections',
+     'Dedicated Group Room Chat & Shared Live Itinerary',
+     'Golden VIP 👑 Profile Crown Badge',
+     'Offline PDF Travel Itinerary Download',
+     'High-Priority 24/7 Safety SOS & Support'
+    ]
+   },
+   {
+    'id': 'pro_annual',
+    'name': 'TourMitra Pro Annual',
+    'price': 1499,
+    'original_price': 2388,
+    'billing': 'per year (Save 37%)',
+    'period': 'annual',
+    'badge': 'Best Value',
+    'popular': False,
+    'description': 'Best for frequent explorers seeking the ultimate VIP experience',
+    'features': [
+     'All Pro Monthly Features Included',
+     '37% Discount (Just ₹125/month)',
+     'Verified Annual Pro 👑 Badge',
+     'Unlimited Trip Replans & AI Rerouting',
+     'Exclusive Live Festival & Crowd Alerts',
+     'Priority Smart Emergency Response'
+    ]
+   }
+  ]
+ }
+@api.post('/premium/upgrade')
+def upgrade_premium(payload: dict, u=Depends(current_user)):
+ plan_id = payload.get('plan_id', 'pro_monthly')
+ updated = store.update_user(u['id'], {
+  'is_premium': True,
+  'premium_tier': plan_id,
+  'premium_since': datetime.utcnow().isoformat()
+ })
+ if not updated:
+  raise HTTPException(500, 'Failed to activate premium')
+ return {
+  'success': True,
+  'message': 'Successfully activated TourMitra Pro membership! 👑',
+  'user': {k: updated.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id', 'name', 'email', 'language', 'interests', 'avatar_url', 'is_premium', 'premium_tier')}
+ }
 @api.get('/destinations')
 def destinations(q:str=''):
  data=store.destinations(); return [x for x in data if q.lower() in (x['name']+' '+x['description']+' '+' '.join(x['tags'])).lower()]

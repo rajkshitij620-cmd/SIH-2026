@@ -1,9 +1,10 @@
 import {Link, NavLink, useLocation} from 'react-router-dom';
-import {Check, Globe, Menu, Moon, Search, Settings, Sun, X} from 'lucide-react';
+import {Check, Globe, Menu, Moon, Search, Settings, Sun, X, Crown} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import {useAuth} from '../context/AuthContext';
 import {useTheme} from '../context/ThemeContext';
 import {api} from '../services/api';
+import PremiumModal from '../components/PremiumModal';
 
 const linkClass=({isActive})=>`nav-link text-[15px] sm:text-base font-bold transition-all duration-150 hover:text-teal-700 dark:hover:text-teal-300 ${isActive?'text-teal-950 dark:text-teal-300 font-extrabold':'text-slate-950 dark:text-white'}`;
 
@@ -39,6 +40,7 @@ export default function Layout({children}) {
  const {pathname}=useLocation();
  const [menuOpen,setMenuOpen]=useState(false),[hasPreviousTrip,setHasPreviousTrip]=useState(false),[hasSavedTours,setHasSavedTours]=useState(false);
  const [settingsOpen, setSettingsOpen] = useState(false);
+ const [premiumModalOpen, setPremiumModalOpen] = useState(false);
  const [currentLang, setCurrentLang] = useState(() => localStorage.getItem('tourmitra_lang') || 'English');
  const [langSearch, setLangSearch] = useState('');
  const [scrolled, setScrolled] = useState(false);
@@ -248,53 +250,98 @@ export default function Layout({children}) {
       )}
      </div>
 
-     {/* Sign in / Sign out button on desktop */}
-     <div className="hidden md:flex items-center">
-      {user ? (
-        <button type="button" className="btn-ghost !px-4 !py-2 text-[15px] font-bold !text-slate-900 dark:!text-white !bg-white/90 dark:!bg-slate-800/90 shadow-sm border border-slate-300 dark:border-slate-700" onClick={logout}>Sign out</button>
-      ) : (
-        <NavLink to="/login" className="inline-flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 px-4 py-2 text-[15px] font-bold text-slate-950 dark:text-white shadow-sm hover:border-teal-600 hover:text-teal-700 dark:hover:text-teal-300 transition-all">Sign in</NavLink>
+      {/* Pro Membership / Upgrade Badge */}
+      {user && (
+        user.is_premium ? (
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 border border-amber-300 dark:border-amber-600/50 shadow-xs" title="TourMitra VIP Pro Active">
+            <Crown size={14} className="text-amber-500 fill-amber-500 animate-pulse" />
+            <span className="text-xs font-extrabold uppercase tracking-wide text-amber-900 dark:text-amber-200">PRO</span>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPremiumModalOpen(true)}
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/20 hover:scale-[1.03] transition"
+            title="Unlock Same-City TravelMate Group Matching"
+          >
+            <Crown size={14} className="fill-white" />
+            <span>Go Pro</span>
+          </button>
+        )
       )}
-     </div>
 
-     {/* Mobile hamburger menu toggle */}
-     <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm md:hidden" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
-      {menuOpen?<X size={19}/>:<Menu size={19}/>}
-     </button>
-    </div>
-   </div>
-   {menuOpen&&(
-    <nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">
-     {user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}
-     
-     {/* Quick mobile settings buttons */}
-     <div className="mt-2 flex items-center justify-between border-t border-slate-200/80 dark:border-slate-800 pt-3 text-xs">
-      <span className="font-semibold text-slate-600 dark:text-slate-300">Preferences:</span>
-      <div className="flex items-center gap-2">
-       <button 
-        type="button" 
-        onClick={()=>toggleTheme()} 
-        className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-slate-700 dark:text-slate-200 shadow-xs"
-       >
-        {theme === 'dark' ? <Moon size={13} className="text-teal-400"/> : <Sun size={13} className="text-amber-500"/>}
-        <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>
-       </button>
-       <button 
-        type="button" 
-        onClick={()=>{setSettingsOpen(true);closeMenu()}} 
-        className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-teal-700 dark:text-teal-300 shadow-xs"
-       >
-        <Globe size={13}/>
-        <span>{currentLang}</span>
-       </button>
+      {/* Sign in / Sign out button on desktop */}
+      <div className="hidden md:flex items-center">
+       {user ? (
+         <button type="button" className="btn-ghost !px-4 !py-2 text-[15px] font-bold !text-slate-900 dark:!text-white !bg-white/90 dark:!bg-slate-800/90 shadow-sm border border-slate-300 dark:border-slate-700" onClick={logout}>Sign out</button>
+       ) : (
+         <NavLink to="/login" className="inline-flex items-center justify-center rounded-xl bg-white/90 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 px-4 py-2 text-[15px] font-bold text-slate-950 dark:text-white shadow-sm hover:border-teal-600 hover:text-teal-700 dark:hover:text-teal-300 transition-all">Sign in</NavLink>
+       )}
       </div>
-     </div>
 
-     {user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300 mt-1" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}
-    </nav>
-   )}
-  </header>
-  <main className="flex-1">{children}</main>
+      {/* Mobile hamburger menu toggle */}
+      <button type="button" className="theme-toggle !bg-white/60 dark:!bg-slate-800/60 backdrop-blur-sm md:hidden" onClick={()=>setMenuOpen(open=>!open)} aria-label="Toggle navigation" aria-expanded={menuOpen}>
+       {menuOpen?<X size={19}/>:<Menu size={19}/>}
+      </button>
+     </div>
+    </div>
+    {menuOpen&&(
+     <nav className="shell flex flex-col gap-3 border-t border-slate-200/60 dark:border-slate-800/60 py-4 md:hidden bg-stone-50/95 dark:bg-slate-900/95 backdrop-blur-md rounded-b-2xl shadow-xl" aria-label="Mobile navigation">
+      {user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}
+      
+      {/* Mobile Pro Upgrade / Status button */}
+      {user && (
+        user.is_premium ? (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-xs font-bold text-amber-800 dark:text-amber-200">
+            <Crown size={14} className="text-amber-500 fill-amber-500" />
+            <span>TourMitra VIP Pro Active 👑</span>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
+            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-bold text-white shadow-sm"
+          >
+            <Crown size={14} className="fill-white" />
+            <span>Upgrade to TourMitra Pro 👑</span>
+          </button>
+        )
+      )}
+
+      {/* Quick mobile settings buttons */}
+      <div className="mt-2 flex items-center justify-between border-t border-slate-200/80 dark:border-slate-800 pt-3 text-xs">
+       <span className="font-semibold text-slate-600 dark:text-slate-300">Preferences:</span>
+       <div className="flex items-center gap-2">
+        <button 
+         type="button" 
+         onClick={()=>toggleTheme()} 
+         className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-slate-700 dark:text-slate-200 shadow-xs"
+        >
+         {theme === 'dark' ? <Moon size={13} className="text-teal-400"/> : <Sun size={13} className="text-amber-500"/>}
+         <span>{theme === 'dark' ? 'Dark' : 'Light'}</span>
+        </button>
+        <button 
+         type="button" 
+         onClick={()=>{setSettingsOpen(true);closeMenu()}} 
+         className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1 font-semibold text-teal-700 dark:text-teal-300 shadow-xs"
+        >
+         <Globe size={13}/>
+         <span>{currentLang}</span>
+        </button>
+       </div>
+      </div>
+
+      {user?<button type="button" className="text-left text-sm font-medium text-slate-600 dark:text-slate-300 mt-1" onClick={()=>{logout();closeMenu()}}>Sign out</button>:<NavLink to="/login" className={linkClass} onClick={closeMenu}>Sign in</NavLink>}
+     </nav>
+    )}
+   </header>
+   <PremiumModal
+     isOpen={premiumModalOpen}
+     onClose={()=>setPremiumModalOpen(false)}
+     onSuccess={()=>setPremiumModalOpen(false)}
+     initialReason="Upgrade to TourMitra Pro to access exclusive same-city TravelMate matching, group rooms, VIP crown badges and priority safety."
+   />
+   <main className="flex-1">{children}</main>
   <footer className="border-t border-slate-200 bg-stone-100/70 py-10 transition-colors dark:border-slate-800 dark:bg-stone-900/60">
     <div className="shell grid gap-8 sm:grid-cols-2 md:grid-cols-4">
      <div className="sm:col-span-2">
