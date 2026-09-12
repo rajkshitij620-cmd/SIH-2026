@@ -619,10 +619,31 @@ export function Planner(){
 
  const getUserCurrentLocation=()=>{setErr('');if(!navigator.geolocation){setErr('Location is unavailable on this device. Enter your city manually.');return}navigator.geolocation.getCurrentPosition(p=>{setCoords({current_location_latitude:p.coords.latitude,current_location_longitude:p.coords.longitude});setLocation('Near your current location')},()=>setErr('Location permission is required for Single Travel. Enter your city manually.'))};
  const readImage=(file,onLoad)=>{setErr('');if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){setErr('Upload a JPEG, JPG, or PNG photo only.');return}if(file.size>4*1024*1024){setErr('Each photo must be 4 MB or smaller.');return}const reader=new FileReader();reader.onload=()=>onLoad(reader.result);reader.readAsDataURL(file)};
- const selectPhoto=file=>readImage(file,setPhoto);
- const createTrip=async(data)=>{setLoad(true);setErr('');try{const t=await api.post('/trips/plan',data);sessionStorage.setItem('trip',JSON.stringify(t));sessionStorage.setItem('latest_trip_id',t.id);nav(data.connection_option==='connect_people'?`/find-travelers?trip=${t.id}`:`/tour-guide?trip=${t.id}`)}catch(x){setErr(x.message)}finally{setLoad(false)}};
+ const cleanTripPayload=(payload)=>{
+  const res={
+   destination:(payload.destination||'').trim(),
+   budget:Number(payload.budget)||15000,
+   travellers:payload.travel_type==='group'?Math.max(2,Number(payload.travellers)||2):1,
+   start_date:payload.start_date,
+   end_date:payload.end_date,
+   travel_type:payload.travel_type||'single',
+   days:1,
+   interests:payload.interests||['culture','food'],
+   preferences:payload.preferences||['balanced']
+  };
+  if(payload.gender) res.gender=payload.gender;
+  if(payload.age&&Number(payload.age)) res.age=Number(payload.age);
+  if(payload.connection_option) res.connection_option=payload.connection_option;
+  if(payload.trip_photo) res.trip_photo=payload.trip_photo;
+  if(payload.current_location_city) res.current_location_city=payload.current_location_city;
+  if(payload.current_location_latitude) res.current_location_latitude=payload.current_location_latitude;
+  if(payload.current_location_longitude) res.current_location_longitude=payload.current_location_longitude;
+  return res;
+ };
+ const createTrip=async(data)=>{setLoad(true);setErr('');try{const clean=cleanTripPayload(data);const t=await api.post('/trips/plan',clean);sessionStorage.setItem('trip',JSON.stringify(t));sessionStorage.setItem('latest_trip_id',t.id);nav(clean.connection_option==='connect_people'?`/find-travelers?trip=${t.id}`:`/tour-guide?trip=${t.id}`)}catch(x){setErr(x.message)}finally{setLoad(false)}};
  const submit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target));const data={...f,destination:destinationInput.trim(),budget:Number(budgetInput)||15000,travellers:travelType==='group'?Math.max(2,Number(f.travellers)||2):1,days:1,interests:['culture','food'],preferences:['balanced'],travel_type:travelType};if(travelType==='group')delete data.gender;setErr('');if(travelType==='single')setDraft(data);else createTrip(data)};
  const submitGroup=e=>{e.preventDefault();if(!photo){setErr('A trip photo is required. Upload a JPEG, JPG, or PNG photo.');return}if(!location){setErr('Location is required to make a group. Use your current location or enter your city manually.');return}if(age&&(Number(age)<18||Number(age)>120)){setErr('Please enter a valid age (18 to 120).');return}createTrip({...draft,connection_option:'connect_people',trip_photo:photo,current_location_city:location,age:Number(age)||undefined,...coords})};
+
 
  if(draft&&!makingGroup)return (
   <div className="shell max-w-xl py-12 sm:py-16">
