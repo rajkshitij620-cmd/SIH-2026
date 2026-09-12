@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, Response, Header
 from pymongo.errors import DuplicateKeyError
-from app.schemas.core import RegisterInput, LoginInput, ResetPasswordInput, TripInput, ChatInput, ConnectionDecision, GroupInput, GroupMessageInput
+from app.schemas.core import RegisterInput, LoginInput, ResetPasswordInput, GoogleAuthInput, TripInput, ChatInput, ConnectionDecision, GroupInput, GroupMessageInput
 from app.auth.security import hash_password, verify_password, password_needs_rehash, create_token, decode_token
 from app.auth.dependencies import current_user
 from app.database.store import store
@@ -52,6 +52,31 @@ def reset_password(v:ResetPasswordInput):
  if not u: raise HTTPException(404,'No account found with this email')
  store.update_user(u['id'], {'password_hash':hash_password(v.new_password)})
  return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')},'message':'Password updated successfully'}
+@api.post('/auth/google')
+def google_auth(v:GoogleAuthInput):
+ email=v.email.lower().strip()
+ u=store.user_by_email(email)
+ if not u:
+  uid=str(uuid4())
+  u={
+   'id':uid,
+   'name':v.name or 'Google Explorer',
+   'email':email,
+   'password_hash':hash_password(str(uuid4())),
+   'language':'en',
+   'interests':[],
+   'avatar_url':v.avatar_url or 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80',
+   'bio':'Traveler via Google Account',
+   'travel_style':'Balanced',
+   'is_premium':False,
+   'premium_tier':'free'
+  }
+  try: store.create_user(u)
+  except DuplicateKeyError: u=store.user_by_email(email)
+ else:
+  if v.avatar_url and not u.get('avatar_url'):
+   u=store.update_user(u['id'], {'avatar_url':v.avatar_url})
+ return {'access_token':create_token(u['id']),'token_type':'bearer','user':{k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}}
 @api.get('/auth/me')
 def me(u=Depends(current_user)): return {k:u.get(k, False if k=='is_premium' else 'free' if k=='premium_tier' else None) for k in ('id','name','email','language','interests','avatar_url','is_premium','premium_tier')}
 @api.get('/auth/session')

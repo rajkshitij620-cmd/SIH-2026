@@ -14,6 +14,12 @@ class ResetPasswordInput(BaseModel):
     email: EmailStr
     new_password: str = Field(min_length=6, max_length=72)
 
+class GoogleAuthInput(BaseModel):
+    email: EmailStr
+    name: Optional[str] = 'Google Explorer'
+    avatar_url: Optional[str] = None
+    token: Optional[str] = None
+
 class TripInput(BaseModel):
     destination: str = Field(min_length=2)
     budget: int = Field(ge=1000, le=1000000)
