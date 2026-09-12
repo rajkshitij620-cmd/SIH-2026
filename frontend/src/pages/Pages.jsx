@@ -340,7 +340,16 @@ export function Auth({register=false}){
   [googleLoading,setGoogleLoading]=useState(false),
   [showGoogleModal,setShowGoogleModal]=useState(false),
   [customGoogleEmail,setCustomGoogleEmail]=useState(''),
-  [customGoogleName,setCustomGoogleName]=useState('');
+  [customGoogleName,setCustomGoogleName]=useState(''),
+  [showUseAnother,setShowUseAnother]=useState(false),
+  [savedGoogleAccounts,setSavedGoogleAccounts]=useState(()=>{
+    try{
+      const stored = localStorage.getItem('tourmitra_google_accounts');
+      return stored ? JSON.parse(stored) : [];
+    }catch{
+      return [];
+    }
+  });
 
   useEffect(()=>{
     setMode(register?'register':'login');
@@ -349,12 +358,16 @@ export function Auth({register=false}){
     setShowPassword(false);
   },[register,location.state]);
 
-  const handleGoogleAuth=async(email='tourist.google@gmail.com',name='Google Explorer')=>{
+  const handleGoogleAuth=async(email='',name='')=>{
+    const cleanEmail = (email||customGoogleEmail).trim().toLowerCase();
+    if(!cleanEmail){
+      setErr('Please enter a valid Gmail address.');
+      return;
+    }
     setGoogleLoading(true);
     setErr('');
     setMsg('');
-    const cleanEmail = email.trim().toLowerCase();
-    const cleanName = name.trim() || 'Google Explorer';
+    const cleanName = (name||customGoogleName).trim() || cleanEmail.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const googlePassword = `GoogleAuth#${cleanEmail}#2026!`;
 
     try{
@@ -364,6 +377,15 @@ export function Auth({register=false}){
         await api.post('/auth/register',{name:cleanName,email:cleanEmail,password:googlePassword});
         await auth('/auth/login',{email:cleanEmail,password:googlePassword});
       }
+
+      // Save user's actual Gmail to saved accounts list in localStorage
+      try{
+        const existing = JSON.parse(localStorage.getItem('tourmitra_google_accounts')||'[]');
+        const updated = [{ email: cleanEmail, name: cleanName }, ...existing.filter(a => a.email !== cleanEmail)].slice(0, 5);
+        localStorage.setItem('tourmitra_google_accounts', JSON.stringify(updated));
+        setSavedGoogleAccounts(updated);
+      }catch{}
+
       setShowGoogleModal(false);
       nav('/',{replace:true});
     }catch(x){
@@ -411,7 +433,10 @@ export function Auth({register=false}){
           <div className="mt-6 space-y-4">
             <button
               type="button"
-              onClick={()=>setShowGoogleModal(true)}
+              onClick={()=>{
+                setShowUseAnother(savedGoogleAccounts.length === 0);
+                setShowGoogleModal(true);
+              }}
               disabled={googleLoading}
               className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 font-bold text-sm shadow-xs hover:bg-slate-50 dark:hover:bg-slate-750 hover:border-slate-400 dark:hover:border-slate-600 transition"
             >
@@ -481,67 +506,83 @@ export function Auth({register=false}){
               </button>
             </div>
 
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              Choose an account to continue to <b>Tourmitra AI</b>
-            </p>
+            {savedGoogleAccounts.length > 0 && !showUseAnother ? (
+              <div className="space-y-3">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  Choose an account to continue to <b>Tourmitra AI</b>
+                </p>
 
-            {/* Quick Demo Google Accounts */}
-            <div className="space-y-2">
-              <button
-                type="button"
-                onClick={()=>handleGoogleAuth('kshitij.raj@gmail.com','Kshitij Raj')}
-                disabled={googleLoading}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/60 dark:hover:bg-slate-800 transition text-left"
-              >
-                <div className="h-9 w-9 rounded-full bg-teal-700 text-white font-bold grid place-items-center text-xs shrink-0">
-                  KR
+                <div className="space-y-2 max-h-56 overflow-y-auto">
+                  {savedGoogleAccounts.map((acc, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={()=>handleGoogleAuth(acc.email, acc.name)}
+                      disabled={googleLoading}
+                      className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/60 dark:hover:bg-slate-800 transition text-left group"
+                    >
+                      <div className="h-9 w-9 rounded-full bg-teal-700 text-white font-bold grid place-items-center text-xs shrink-0 group-hover:scale-105 transition-transform">
+                        {acc.name ? acc.name.slice(0,2).toUpperCase() : acc.email.slice(0,2).toUpperCase()}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{acc.name}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{acc.email}</p>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Kshitij Raj</p>
-                  <p className="text-[11px] text-slate-500 truncate">kshitij.raj@gmail.com</p>
-                </div>
-              </button>
 
-              <button
-                type="button"
-                onClick={()=>handleGoogleAuth('traveller.mitra@gmail.com','Tour Mitra')}
-                disabled={googleLoading}
-                className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-teal-50/60 dark:hover:bg-slate-800 transition text-left"
-              >
-                <div className="h-9 w-9 rounded-full bg-purple-700 text-white font-bold grid place-items-center text-xs shrink-0">
-                  TM
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <button
+                    type="button"
+                    onClick={()=>setShowUseAnother(true)}
+                    className="w-full py-2 text-xs font-semibold text-teal-700 dark:text-teal-400 hover:underline flex items-center justify-center gap-1.5"
+                  >
+                    <span>+ Use another Google account</span>
+                  </button>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate">Tour Mitra</p>
-                  <p className="text-[11px] text-slate-500 truncate">traveller.mitra@gmail.com</p>
-                </div>
-              </button>
-            </div>
+              </div>
+            ) : (
+              <form onSubmit={e=>{e.preventDefault(); handleGoogleAuth();}} className="space-y-3">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  Enter your Google Account / Gmail to continue to <b>Tourmitra AI</b>
+                </p>
 
-            {/* Custom Google Account Entry */}
-            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
-              <label className="text-[11px] font-bold text-slate-600 dark:text-slate-400">Or enter any Google/Gmail ID:</label>
-              <input
-                type="email"
-                placeholder="your.name@gmail.com"
-                value={customGoogleEmail}
-                onChange={e=>setCustomGoogleEmail(e.target.value)}
-                className="input !text-xs !py-2"
-              />
-              <button
-                type="button"
-                onClick={()=>{
-                  if(customGoogleEmail.trim()){
-                    const namePart = customGoogleEmail.split('@')[0].replace(/[._]/g,' ');
-                    handleGoogleAuth(customGoogleEmail, namePart);
-                  }
-                }}
-                disabled={!customGoogleEmail.trim() || googleLoading}
-                className="btn w-full !py-2 text-xs font-bold"
-              >
-                {googleLoading ? 'Signing in…' : 'Continue with this Gmail →'}
-              </button>
-            </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300" htmlFor="google_email_input">
+                    Google / Gmail Address:
+                  </label>
+                  <input
+                    id="google_email_input"
+                    type="email"
+                    placeholder="your.name@gmail.com"
+                    value={customGoogleEmail}
+                    onChange={e=>setCustomGoogleEmail(e.target.value)}
+                    required
+                    autoFocus
+                    className="input !text-xs !py-2.5"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={!customGoogleEmail.trim() || googleLoading}
+                  className="btn w-full !py-2.5 text-xs font-bold shadow-sm"
+                >
+                  {googleLoading ? 'Signing in…' : 'Continue with Google →'}
+                </button>
+
+                {savedGoogleAccounts.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={()=>setShowUseAnother(false)}
+                    className="w-full py-1 text-center text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                  >
+                    ← Back to saved accounts
+                  </button>
+                )}
+              </form>
+            )}
           </div>
         </div>
       )}
