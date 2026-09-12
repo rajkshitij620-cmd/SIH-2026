@@ -18,16 +18,33 @@ def public_profile(user):
  return {'id':user['id'],'name':user['name'],'avatar_url':user.get('avatar_url'),'bio':user.get('bio',''),'interests':user.get('interests',[]),'travel_style':user.get('travel_style','Balanced'),'is_premium':bool(user.get('is_premium',False)),'premium_tier':user.get('premium_tier','free')}
 
 def safe_trip(trip):
- """Never expose another traveller's precise location."""
- return {'id':trip['id'],'destination':trip['destination']['name'],'start_date':trip['input']['start_date'],'end_date':trip['input']['end_date'],'budget':trip['input']['budget'],'travel_type':trip['input']['travel_type'],'gender':trip['input'].get('gender'),'age':trip['input'].get('age'),'connection_option':trip['input'].get('connection_option'),'current_location_city':trip['input'].get('current_location_city'),'trip_photo':trip['input'].get('trip_photo')}
+    if not trip: return {}
+    dest = trip.get('destination')
+    dest_name = dest.get('name') if isinstance(dest, dict) else (dest or trip.get('input', {}).get('destination', ''))
+    inp = trip.get('input') or {}
+    return {
+        'id': trip.get('id', ''),
+        'destination': dest_name,
+        'start_date': inp.get('start_date', ''),
+        'end_date': inp.get('end_date', ''),
+        'budget': inp.get('budget', 0),
+        'travel_type': inp.get('travel_type', 'single'),
+        'gender': inp.get('gender'),
+        'age': inp.get('age'),
+        'connection_option': inp.get('connection_option'),
+        'current_location_city': inp.get('current_location_city'),
+        'trip_photo': inp.get('trip_photo')
+    }
 
 def matching_enabled(trip):
- """Group trips remain matchable for existing API clients; new UI matching is opt-in."""
- return trip['input'].get('travel_type')=='group' or trip['input'].get('connection_option')=='connect_people'
+    if not trip or not isinstance(trip.get('input'), dict): return False
+    return trip['input'].get('travel_type')=='group' or trip['input'].get('connection_option')=='connect_people'
 
 def budget_score(own, other):
- difference=abs(own-other)/own*100
- return 20 if difference<=10 else 15 if difference<=20 else 10 if difference<=35 else 5
+    if not own: return 10
+    difference=abs(own-other)/own*100
+    return 20 if difference<=10 else 15 if difference<=20 else 10 if difference<=35 else 5
+
 
 api=APIRouter(prefix='/api')
 @api.get('/health')
@@ -287,48 +304,65 @@ def recalc(identifier:str,u=Depends(current_user)):
  return x
 @api.get('/travelers/matches')
 def traveler_matches(trip_id:str='',destination:str='',u=Depends(current_user)):
- user_trips=store.itineraries_for_user(u['id'])
- if not trip_id and user_trips:
-  for t in reversed(user_trips):
-   if matching_enabled(t): trip_id=t['id']; break
-  if not trip_id: trip_id=user_trips[-1]['id']
- if trip_id:
-  own=store.itinerary_by_id(trip_id)
-  if not own or own['user_id']!=u['id']: raise HTTPException(404,'Trip not found')
-  city=own['input'].get('current_location_city') or ''
-  candidates=store.group_trips(own['destination']['name'],own['input']['start_date'],own['input']['end_date'],city,u['id']) if city else []
-  matches=[]
-  for candidate in candidates:
-   other=store.user_by_id(candidate['user_id'])
-   if not other: continue
-   score=80+budget_score(own['input']['budget'],candidate['input']['budget'])
-   connection=store.connection(u['id'],other['id'])
-   c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
-   profile=public_profile(other); profile['avatar_url']=candidate['input'].get('trip_photo') or profile['avatar_url']
-   matches.append({'traveller':profile,'trip':safe_trip(candidate),'match_percentage':score,'budget_difference_percentage':round(abs(own['input']['budget']-candidate['input']['budget'])/own['input']['budget']*100,1),'connection_status':c_status})
-  matches.sort(key=lambda x:(-x['match_percentage'],x['budget_difference_percentage']))
-  matched_ids={m['trip']['id'] for m in matches}
-  dest_candidates=store.all_matchable_trips(exclude_user_id=u['id'],destination=own['destination']['name'])
-  same_dest=[]
-  for candidate in dest_candidates:
-   if candidate['id'] in matched_ids: continue
-   other=store.user_by_id(candidate['user_id'])
-   if not other: continue
-   connection=store.connection(u['id'],other['id'])
-   c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
-   profile=public_profile(other); profile['avatar_url']=candidate['input'].get('trip_photo') or profile['avatar_url']
-   same_dest.append({'traveller':profile,'trip':safe_trip(candidate),'connection_status':c_status})
-  return {'trip':safe_trip(own),'user_trips':[safe_trip(t) for t in user_trips],'matches':matches,'same_destination_travelers':same_dest,'notice':'Only travellers with compatible destination details are shown.'}
- all_candidates=store.all_matchable_trips(exclude_user_id=u['id'],destination=destination if destination else None)
- travelers=[]
- for candidate in all_candidates:
-  other=store.user_by_id(candidate['user_id'])
-  if not other: continue
-  connection=store.connection(u['id'],other['id'])
-  c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
-  profile=public_profile(other); profile['avatar_url']=candidate['input'].get('trip_photo') or profile['avatar_url']
-  travelers.append({'traveller':profile,'trip':safe_trip(candidate),'connection_status':c_status})
- return {'trip':None,'user_trips':[],'matches':[],'same_destination_travelers':travelers,'notice':'Explore travellers heading to destinations across India.'}
+    try:
+        user_trips=store.itineraries_for_user(u['id'])
+        if not trip_id and user_trips:
+            for t in reversed(user_trips):
+                if matching_enabled(t): trip_id=t.get('id',''); break
+            if not trip_id: trip_id=user_trips[-1].get('id','')
+        if trip_id:
+            own=store.itinerary_by_id(trip_id)
+            if not own or own.get('user_id')!=u['id']:
+                own=next((t for t in reversed(user_trips) if matching_enabled(t)), user_trips[-1] if user_trips else None)
+            if own:
+                dest_name=own.get('destination',{}).get('name') if isinstance(own.get('destination'),dict) else (own.get('destination') or own.get('input',{}).get('destination',''))
+                city=own.get('input',{}).get('current_location_city') or ''
+                start_date=own.get('input',{}).get('start_date','')
+                end_date=own.get('input',{}).get('end_date','')
+                own_budget=own.get('input',{}).get('budget',15000) or 15000
+                candidates=store.group_trips(dest_name,start_date,end_date,city,u['id']) if city else []
+                matches=[]
+                for candidate in candidates:
+                    other=store.user_by_id(candidate.get('user_id'))
+                    if not other: continue
+                    cand_budget=candidate.get('input',{}).get('budget',15000) or 15000
+                    score=80+budget_score(own_budget,cand_budget)
+                    connection=store.connection(u['id'],other['id'])
+                    c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
+                    profile=public_profile(other)
+                    profile['avatar_url']=candidate.get('input',{}).get('trip_photo') or profile.get('avatar_url')
+                    budget_diff=round(abs(own_budget-cand_budget)/own_budget*100,1) if own_budget else 0.0
+                    matches.append({'traveller':profile,'trip':safe_trip(candidate),'match_percentage':score,'budget_difference_percentage':budget_diff,'connection_status':c_status})
+                matches.sort(key=lambda x:(-x['match_percentage'],x['budget_difference_percentage']))
+                matched_ids={m['trip']['id'] for m in matches}
+                dest_candidates=store.all_matchable_trips(exclude_user_id=u['id'],destination=dest_name)
+                same_dest=[]
+                for candidate in dest_candidates:
+                    if candidate.get('id') in matched_ids: continue
+                    other=store.user_by_id(candidate.get('user_id'))
+                    if not other: continue
+                    connection=store.connection(u['id'],other['id'])
+                    c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
+                    profile=public_profile(other)
+                    profile['avatar_url']=candidate.get('input',{}).get('trip_photo') or profile.get('avatar_url')
+                    same_dest.append({'traveller':profile,'trip':safe_trip(candidate),'connection_status':c_status})
+                return {'trip':safe_trip(own),'user_trips':[safe_trip(t) for t in user_trips],'matches':matches,'same_destination_travelers':same_dest,'notice':'Only travellers with compatible destination details are shown.'}
+        all_candidates=store.all_matchable_trips(exclude_user_id=u['id'],destination=destination if destination else None)
+        travelers=[]
+        for candidate in all_candidates:
+            other=store.user_by_id(candidate.get('user_id'))
+            if not other: continue
+            connection=store.connection(u['id'],other['id'])
+            c_status='accepted' if connection and connection.get('status')=='accepted' else 'pending' if connection and connection.get('status')=='pending' and connection.get('sender_id')==u['id'] else 'received' if connection and connection.get('status')=='pending' and connection.get('receiver_id')==u['id'] else None
+            profile=public_profile(other)
+            profile['avatar_url']=candidate.get('input',{}).get('trip_photo') or profile.get('avatar_url')
+            travelers.append({'traveller':profile,'trip':safe_trip(candidate),'connection_status':c_status})
+        return {'trip':None,'user_trips':[safe_trip(t) for t in user_trips],'matches':[],'same_destination_travelers':travelers,'notice':'Explore travellers heading to destinations across India.'}
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(500, f'Traveler matches error: {str(e)}')
+
 @api.get('/travelers/{identifier}/public-profile')
 def traveller_public_profile(identifier:str,trip_id:str='',u=Depends(current_user)):
  traveller=store.user_by_id(identifier)
