@@ -25,16 +25,19 @@ app.add_middleware(
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
-    origin = request.headers.get("origin", "*")
+    origin = request.headers.get("origin")
+    headers = {
+        "Access-Control-Allow-Origin": origin if origin else "*",
+        "Access-Control-Allow-Headers": "*",
+        "Access-Control-Allow-Methods": "*"
+    }
+    if origin:
+        headers["Access-Control-Allow-Credentials"] = "true"
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc) or "Internal Server Error"},
-        headers={
-            "Access-Control-Allow-Origin": origin if origin != "*" else "*",
-            "Access-Control-Allow-Credentials": "true",
-            "Access-Control-Allow-Headers": "*",
-            "Access-Control-Allow-Methods": "*"
-        }
+        headers=headers
     )
+
 
 app.include_router(api)
