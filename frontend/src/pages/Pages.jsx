@@ -1,8 +1,9 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link,useLocation,useNavigate,useParams} from 'react-router-dom';
-import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw,Crown,X} from 'lucide-react';
+import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw,Crown,X,Flame} from 'lucide-react';
 import {api} from '../services/api'; import {useAuth} from '../context/AuthContext'; import DestinationCard from '../components/DestinationCard';
 import PremiumModal from '../components/PremiumModal';
+import TouristHeatmap from '../components/TouristHeatmap';
 export function LatestGroupTravelPlan(){const nav=useNavigate(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{if(!groups.length)throw new Error('No connected travel group yet. Connect with a TravelMate first.');nav(`/travel-plan/${groups[0].id}`,{replace:true})}).catch(x=>setErr(x.message))},[nav]);return <div className="shell py-12">{err?<section className="card max-w-xl"><p className="text-slate-700">{err}</p><Link className="btn mt-5" to="/plan">Plan a group trip</Link></section>:<p>Opening your group travel plan…</p>}</div>}
 export function GroupTravelPlan(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{const group=groups.find(item=>item.id===id);if(!group)throw new Error('Travel group not found');return api.get('/trips/'+group.trip_id).then(trip=>setData({group,trip}))}).catch(x=>setErr(x.message))},[id]);if(err)return <div className="shell py-12 text-red-600">{err}</div>;if(!data)return <div className="shell py-12">Loading your shared travel plan…</div>;const {group,trip}=data,guide=trip.travel_guide;const save=async(tripId)=>{try{const saved=await api.post(`/trips/${tripId}/save`);setData(d=>({...d,trip:saved}));nav('/saved-tours')}catch(x){setErr(x.message)}};return <div className="shell py-10"><div className="flex flex-wrap items-center justify-between gap-3"><p className="eyebrow">Your group travel plan</p><div className="flex items-center gap-2"><button onClick={()=>save(trip.id)} className="btn !py-1.5 !px-3 text-xs"><Save size={14}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost !py-1.5 !px-3 text-xs" to="/groups">Open group chat</Link></div></div><section className="card mt-4 border-teal-200 bg-teal-50"><h1 className="text-3xl font-bold">{trip.destination.name} · {trip.input.days} days</h1><p className="mt-2 text-slate-600">{group.member_ids.length} connected travellers · {formatDate(group.start_date)} – {formatDate(group.end_date)}</p><p className="mt-2 text-sm text-teal-900">This shared plan is designed to stay within the total group budget of ₹{trip.input.budget.toLocaleString()}.</p></section><DayWisePlacesChart trip={trip}/>{guide&&<GuideHighlights guide={guide}/>}<section className="mt-6"><aside className="card max-w-md"><p className="eyebrow">Group budget</p><p className="mt-2 text-xl font-semibold">₹{trip.input.budget.toLocaleString()} total</p>{trip.budget_breakdown&&Object.entries(trip.budget_breakdown).map(([name,value])=><p className="mt-3 flex justify-between" key={name}><span className="capitalize">{name}</span><b>₹{Math.round(value)}</b></p>)}</aside></section><div className="mt-6 flex gap-3"><button onClick={()=>save(trip.id)} className="btn"><Save size={16}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost" to="/groups">Open group chat</Link></div></div>}
 const Field=({n,label,type='text',d='',autoComplete})=><div className="mt-4"><label className="label" htmlFor={n}>{label}</label><input className="input" id={n} name={n} type={type} defaultValue={d} autoComplete={autoComplete} required/></div>;
@@ -1038,7 +1039,94 @@ export function FindTravelers(){
   );
 }
 export function TravellerProfile(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState(''),trip=new URLSearchParams(window.location.search).get('trip');useEffect(()=>{api.get(`/travelers/${id}/public-profile?trip_id=${encodeURIComponent(trip||'')}`).then(setData).catch(x=>setErr(x.message))},[id,trip]);if(err)return <div className="shell py-12">{err}</div>;if(!data)return <div className="shell py-12">Loading traveller profile…</div>;return <div className="shell max-w-xl py-12"><section className="card"><Avatar user={data.profile} size="h-20 w-20"/><h1 className="mt-4 text-3xl font-bold flex items-center gap-2">{data.profile.name}{data.profile.is_premium&&<span className="inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wide"><Crown size={12} className="fill-amber-950"/> VIP PRO</span>}</h1><p className="mt-2 text-slate-600">{data.profile.bio||'Travel enthusiast'}</p><p className="mt-4 text-sm"><b>Interests:</b> {data.profile.interests?.join(', ')||'Travel and local experiences'}</p>{data.trip&&<div className="mt-4 space-y-1.5 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {data.trip.destination} · {formatDate(data.trip.start_date)} – {formatDate(data.trip.end_date)}</p>{data.trip.current_location_city&&<p>📍 <b>Location:</b> {data.trip.current_location_city}</p>}{data.trip.gender&&<p>👤 <b>Gender:</b> <span className="capitalize">{data.trip.gender}</span></p>}{data.trip.age&&<p>🎂 <b>Age:</b> {data.trip.age} years</p>}<p className="mt-2 text-teal-800 font-semibold">{data.match_percentage}% Match</p></div>}<button className="btn-ghost mt-6" onClick={()=>nav(-1)}>Back to TravelMates</button></section></div>}
-function LiveMap({location,trip}){const [map,setMap]=useState(null),[mapError,setMapError]=useState('');useEffect(()=>{let active=true;setMapError('');api.get('/maps/location?location='+encodeURIComponent(location)).then(data=>{if(active)setMap(data.available?data:null)}).catch(()=>active&&setMap(null));return()=>{active=false}},[location]);const openStreetMap=map?`https://www.openstreetmap.org/?mlat=${map.latitude}&mlon=${map.longitude}#map=12/${map.latitude}/${map.longitude}`:'';return <>{trip&&<DayWisePlacesChart trip={trip}/>} {trip?.travel_guide&&<GuideHighlights guide={trip.travel_guide}/>} {map&&<section className="card mt-6"><p className="eyebrow">Live location map</p>{!mapError?<img onError={()=>setMapError('Map preview is unavailable for this MapTiler key.')} className="mt-3 h-64 w-full rounded-lg object-cover" src={api.url('/maps/static?location='+encodeURIComponent(location))} alt={`Map of ${location}`}/>:<p className="mt-3 text-sm text-slate-600">{mapError}</p>}<a className="mt-3 inline-block text-sm font-medium text-teal-700 underline" href={openStreetMap} target="_blank" rel="noreferrer">Open {location} in OpenStreetMap</a><p className="mt-2 text-xs text-slate-500">Location found via MapTiler.</p></section>}</>}
+function LiveMap({location,trip}){
+  const [map,setMap]=useState(null),
+        [mapError,setMapError]=useState(''),
+        [viewMode,setViewMode]=useState('heatmap');
+
+  useEffect(()=>{
+    let active=true;
+    setMapError('');
+    api.get('/maps/location?location='+encodeURIComponent(location))
+      .then(data=>{if(active)setMap(data.available?data:null)})
+      .catch(()=>active&&setMap(null));
+    return()=>{active=false}
+  },[location]);
+
+  const openStreetMap=map?`https://www.openstreetmap.org/?mlat=${map.latitude}&mlon=${map.longitude}#map=12/${map.latitude}/${map.longitude}`:'';
+
+  return (
+    <>
+      {trip&&<DayWisePlacesChart trip={trip}/>}
+      {trip?.travel_guide&&<GuideHighlights guide={trip.travel_guide}/>}
+      
+      <section className="mt-8 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <p className="eyebrow">Smart GIS & Visual Tracking</p>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              Interactive Map & Live Heatmap
+            </h3>
+          </div>
+
+          <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700">
+            <button
+              onClick={()=>setViewMode('heatmap')}
+              className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+                viewMode==='heatmap'
+                  ? 'bg-white dark:bg-slate-900 text-teal-800 dark:text-teal-300 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              <Flame size={13} className="text-rose-500 animate-pulse"/>
+              <span>Live Crowd Heatmap</span>
+            </button>
+            <button
+              onClick={()=>setViewMode('osm')}
+              className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition flex items-center gap-1.5 ${
+                viewMode==='osm'
+                  ? 'bg-white dark:bg-slate-900 text-teal-800 dark:text-teal-300 shadow-xs'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+              }`}
+            >
+              <MapPin size={13} className="text-teal-600"/>
+              <span>Street Map</span>
+            </button>
+          </div>
+        </div>
+
+        {viewMode==='heatmap' ? (
+          <TouristHeatmap initialCity={location} embedded={true}/>
+        ) : (
+          map ? (
+            <div className="card">
+              <p className="eyebrow">Live location map</p>
+              {!mapError ? (
+                <img onError={()=>setMapError('Map preview is unavailable for this MapTiler key.')} className="mt-3 h-64 w-full rounded-lg object-cover" src={api.url('/maps/static?location='+encodeURIComponent(location))} alt={`Map of ${location}`}/>
+              ) : (
+                <p className="mt-3 text-sm text-slate-600">{mapError}</p>
+              )}
+              <a className="mt-3 inline-block text-sm font-medium text-teal-700 dark:text-teal-400 underline" href={openStreetMap} target="_blank" rel="noreferrer">Open {location} in OpenStreetMap</a>
+              <p className="mt-2 text-xs text-slate-500">Location found via MapTiler & OpenStreetMap.</p>
+            </div>
+          ) : (
+            <div className="card text-center py-8 text-xs text-slate-500">
+              Loading street map view…
+            </div>
+          )
+        )}
+      </section>
+    </>
+  );
+}
+
+export function HeatmapPage(){
+  return (
+    <div className="shell py-8">
+      <TouristHeatmap embedded={false}/>
+    </div>
+  );
+}
 function Listing({url,title}){const [data,setData]=useState([]);useEffect(()=>{api.get(url).then(setData)},[url]);return <div className="shell py-12"><p className="eyebrow">Destination discovery</p><h1 className="mt-2 text-3xl font-bold">{title}</h1><div className="mt-8 grid gap-5 md:grid-cols-3">{data.map(x=><DestinationCard key={x.id} x={x}/>)}</div></div>};export const Explore=()=> <Listing url="/recommendations" title="Explore destinations"/>;
 export function Discover(){const [data,setData]=useState([]);useEffect(()=>{api.get('/businesses').then(setData)},[]);return <div className="shell py-12"><p className="eyebrow">Local discovery</p><h1 className="mt-2 text-3xl font-bold">Meet the people behind the place.</h1><div className="mt-8 grid gap-4 md:grid-cols-2">{data.map(x=><article className="card" key={x.id}><p className="eyebrow">{x.category}</p><h2 className="mt-1 text-lg font-semibold">{x.name}</h2><p className="mt-3 text-slate-600">{x.description}</p><p className="mt-4 text-sm">{x.location} · ₹{x.price} · ★ {x.rating} · Verified</p></article>)}</div></div>}
 export function ItineraryView({trip,onSave,allTrips=[],selectedId,onTripChange}){const nav=useNavigate();if(!trip)return <div className="shell py-12">Building your itinerary…</div>;const destination=trip.destination?.name||trip.input?.destination||'Destination',days=trip.input?.days||trip.days?.length||1;return <div className="shell py-10"><p className="eyebrow">Your travel plan</p><div className="flex flex-wrap items-end justify-between gap-4"><div><h1 className="mt-2 text-3xl font-bold">{destination} · {days} days</h1><p className="mt-1 text-sm text-slate-500">{formatDate(trip.input?.start_date)} – {formatDate(trip.input?.end_date)} · ₹{trip.input?.budget?.toLocaleString()}</p></div><div className="flex flex-wrap items-center gap-2">{allTrips.length>1&&<label className="flex items-center text-xs font-medium text-slate-500">Choose trip:<select className="input ml-1.5 min-w-44 !py-1.5 !px-2 text-xs" value={selectedId||trip.id} onChange={e=>onTripChange?.(e.target.value)}>{allTrips.map(item=><option value={item.trip.id} key={item.trip.id}>{item.trip.destination?.name||item.trip.input?.destination} · {formatDate(item.trip.input?.start_date)}</option>)}</select></label>}<button onClick={()=>nav('/plan')} className="btn-ghost">Edit</button><button onClick={()=>onSave?.(trip.id)} className="btn"><Save size={16}/> {trip.saved?'Saved':'Save Tour'}</button></div></div>{trip.ai_summary&&<div className="card mt-6 border-teal-200 bg-teal-50"><p className="eyebrow">AI trip brief</p><p className="mt-2">{trip.ai_summary}</p><p className="mt-2 text-sm text-slate-600">{trip.ai_recommendation_reason}</p></div>}<LiveMap location={destination} trip={trip}/>{trip.budget_breakdown&&<aside className="card mt-6"><p className="eyebrow">Budget estimate</p><div className="mt-4 grid gap-3 sm:grid-cols-4">{Object.entries(trip.budget_breakdown).map(([k,v])=><div key={k} className="rounded-lg bg-stone-50 p-3"><p className="text-xs uppercase text-slate-500">{k}</p><p className="mt-1 text-lg font-semibold text-teal-800">₹{Math.round(v).toLocaleString()}</p></div>)}</div></aside>}</div>}
