@@ -271,56 +271,79 @@ export function Home(){
      </div>
     </div>
 
-    {/* 3. Stats / Key Metrics Bar (Near Footer) */}
+    {/* 3. Stats / Key Metrics Ribbon */}
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
      {[
-      {label:'Curated Indian Destinations',value:'500+',icon:Compass,color:'text-teal-600 dark:text-teal-400'},
-      {label:'Official Indian Languages',value:'22',icon:Languages,color:'text-purple-600 dark:text-purple-400'},
-      {label:'Weather-Adaptive Accuracy',value:'100%',icon:Sun,color:'text-amber-500 dark:text-amber-400'},
-      {label:'Crowd Mitigation Score',value:'Low',icon:ShieldCheck,color:'text-emerald-600 dark:text-emerald-400'}
+      {label:'Curated Destinations',value:'500+',icon:Compass,accent:'bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300'},
+      {label:'Official Indian Languages',value:'22',icon:Languages,accent:'bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300'},
+      {label:'Weather Accuracy',value:'100%',icon:Sun,accent:'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300'},
+      {label:'Crowd Mitigation',value:'Optimized',icon:ShieldCheck,accent:'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'}
      ].map((stat,i)=>(
-      <div key={i} className="card flex items-center gap-4 !p-5 hover:border-teal-300 transition-all">
-       <div className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-slate-100 dark:bg-slate-800 ${stat.color}`}>
-        <stat.icon size={24}/>
+      <div key={i} className="flex items-center gap-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/60 p-4 shadow-xs hover:border-teal-300 dark:hover:border-teal-700/60 transition-all">
+       <div className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${stat.accent}`}>
+        <stat.icon size={20}/>
        </div>
        <div>
-        <p className="text-2xl font-extrabold text-slate-900 dark:text-white">{stat.value}</p>
-        <p className="text-xs font-medium text-slate-500 dark:text-slate-400 leading-tight">{stat.label}</p>
+        <p className="text-xl font-bold text-slate-900 dark:text-white leading-tight">{stat.value}</p>
+        <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">{stat.label}</p>
        </div>
       </div>
      ))}
     </div>
 
-    {/* 4. 3 Core Technology Pillars (Right before Footer) */}
-    <div className="grid gap-6 md:grid-cols-3">
-     <div className="card hover:shadow-xl transition-all duration-300 border-t-4 border-t-teal-500">
-      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-teal-50 text-teal-700 dark:bg-teal-950/60 dark:text-teal-300 mb-4">
-       <Sparkles size={24}/>
-      </div>
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Demand-Aware AI Scheduling</h3>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-       Intelligently redistributes visitor footfall by suggesting pristine alternate sights and optimized time slots to eliminate overcrowded queues.
-      </p>
+    {/* 4. Core Innovation Pillars (Clean Modern App Style) */}
+    <div className="rounded-3xl border border-slate-200/90 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 p-6 sm:p-8">
+     <div className="text-center max-w-xl mx-auto mb-8">
+      <p className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">Next-Gen Travel Intelligence</p>
+      <h3 className="mt-1 text-2xl font-bold text-slate-900 dark:text-white">Engineered for Seamless Journeys</h3>
+      <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">Powered by multi-modal AI models, real-time meteorological forecasts, and smart community matchmaking.</p>
      </div>
 
-     <div className="card hover:shadow-xl transition-all duration-300 border-t-4 border-t-amber-500">
-      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 mb-4">
-       <Sun size={24}/>
+     <div className="grid gap-5 md:grid-cols-3">
+      <div className="group rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xs hover:shadow-md hover:border-teal-300 dark:hover:border-teal-700 transition-all duration-300 flex flex-col justify-between">
+       <div>
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-teal-50 text-teal-700 dark:bg-teal-950/70 dark:text-teal-300 mb-4 group-hover:scale-105 transition-transform">
+         <Sparkles size={20}/>
+        </div>
+        <h4 className="text-base font-bold text-slate-900 dark:text-white">Demand-Aware AI Scheduling</h4>
+        <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+         Intelligently balances visitor footfall by recommending alternate hidden gems and optimal visiting hours to bypass overcrowded queues.
+        </p>
+       </div>
+       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center text-[11px] font-bold text-teal-700 dark:text-teal-400">
+        <span>Overtourism Mitigation</span>
+       </div>
       </div>
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Live Weather Adaptability</h3>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-       Integrated with live meteorological data to automatically substitute indoor cultural experiences during sudden rain or extreme heat waves.
-      </p>
-     </div>
 
-     <div className="card hover:shadow-xl transition-all duration-300 border-t-4 border-t-purple-500">
-      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 mb-4">
-       <Users size={24}/>
+      <div className="group rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xs hover:shadow-md hover:border-amber-300 dark:hover:border-amber-700 transition-all duration-300 flex flex-col justify-between">
+       <div>
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-amber-50 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300 mb-4 group-hover:scale-105 transition-transform">
+         <Sun size={20}/>
+        </div>
+        <h4 className="text-base font-bold text-slate-900 dark:text-white">Live Weather Adaptability</h4>
+        <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+         Syncs with real-time meteorological forecasts to automatically substitute indoor cultural experiences during sudden rain or heat waves.
+        </p>
+       </div>
+       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center text-[11px] font-bold text-amber-700 dark:text-amber-400">
+        <span>Dynamic Weather Rerouting</span>
+       </div>
       </div>
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white">Smart TravelMates Grouping</h3>
-      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-       Find verified co-travelers heading to the same destination on similar dates with matching budgets, complete with shared itineraries and group chats.
-      </p>
+
+      <div className="group rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-xs hover:shadow-md hover:border-purple-300 dark:hover:border-purple-700 transition-all duration-300 flex flex-col justify-between">
+       <div>
+        <div className="grid h-11 w-11 place-items-center rounded-xl bg-purple-50 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300 mb-4 group-hover:scale-105 transition-transform">
+         <Users size={20}/>
+        </div>
+        <h4 className="text-base font-bold text-slate-900 dark:text-white">Smart TravelMates Matching</h4>
+        <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+         Connects verified co-travelers heading to the same destination on matching dates and budgets to share itineraries and split costs.
+        </p>
+       </div>
+       <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center text-[11px] font-bold text-purple-700 dark:text-purple-400">
+        <span>Verified Community Connect</span>
+       </div>
+      </div>
      </div>
     </div>
    </div>
