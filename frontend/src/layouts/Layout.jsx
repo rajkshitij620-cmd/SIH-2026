@@ -1,4 +1,4 @@
-import {Link, NavLink, useLocation} from 'react-router-dom';
+import {Link, NavLink, useLocation, useNavigate} from 'react-router-dom';
 import {Check, Globe, Menu, Moon, Search, Settings, Sun, X, Crown} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import {useAuth} from '../context/AuthContext';
@@ -38,6 +38,7 @@ export default function Layout({children}) {
  const {user,logout}=useAuth();
  const {theme,toggleTheme}=useTheme();
  const {pathname}=useLocation();
+ const navigate = useNavigate();
  const [menuOpen,setMenuOpen]=useState(false),[hasPreviousTrip,setHasPreviousTrip]=useState(false),[hasSavedTours,setHasSavedTours]=useState(false);
  const [settingsOpen, setSettingsOpen] = useState(false);
  const [premiumModalOpen, setPremiumModalOpen] = useState(false);
@@ -47,6 +48,23 @@ export default function Layout({children}) {
  const settingsRef = useRef(null);
 
  const closeMenu=()=>setMenuOpen(false);
+
+ const handlePremiumClick = () => {
+   if (!user) {
+     navigate('/login', { state: { from: pathname } });
+     return;
+   }
+   setPremiumModalOpen(true);
+ };
+
+ const handleMobilePremiumClick = () => {
+   closeMenu();
+   if (!user) {
+     navigate('/login', { state: { from: pathname } });
+     return;
+   }
+   setPremiumModalOpen(true);
+ };
 
  const handleLangChange = (lang) => {
   setCurrentLang(lang.name);
@@ -256,7 +274,7 @@ export default function Layout({children}) {
       {user?.is_premium ? (
         <button
           type="button"
-          onClick={() => setPremiumModalOpen(true)}
+          onClick={handlePremiumClick}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/20 to-amber-500/15 border border-amber-300 dark:border-amber-600 shadow-xs hover:scale-[1.02] transition"
           title="TourMitra VIP Pro Active · Click to view benefits"
         >
@@ -266,7 +284,7 @@ export default function Layout({children}) {
       ) : (
         <button
           type="button"
-          onClick={() => setPremiumModalOpen(true)}
+          onClick={handlePremiumClick}
           className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3 sm:px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/25 hover:scale-[1.03] transition group"
           title="Unlock Same-City TravelMate Group Matching & Single Traveler Connections"
         >
@@ -299,7 +317,7 @@ export default function Layout({children}) {
       {user?.is_premium ? (
         <button
           type="button"
-          onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
+          onClick={handleMobilePremiumClick}
           className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 text-xs font-bold text-amber-800 dark:text-amber-200 shadow-sm"
         >
           <Crown size={15} className="text-amber-500 fill-amber-500" />
@@ -308,7 +326,7 @@ export default function Layout({children}) {
       ) : (
         <button
           type="button"
-          onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
+          onClick={handleMobilePremiumClick}
           className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-md shadow-amber-500/20"
         >
           <Crown size={15} className="fill-white" />
