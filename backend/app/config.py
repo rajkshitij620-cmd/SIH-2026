@@ -14,16 +14,13 @@ class Settings:
         origin.strip().rstrip('/')
         for origin in os.getenv(
             'CORS_ORIGINS',
-            'http://localhost:5173,http://localhost:5174',
+            '*,http://localhost:5173,http://localhost:5174,https://sih-2026-three-sigma.vercel.app',
         ).split(',')
         if origin.strip()
     ]
-    # Local Vite can choose the next free port (for example 5173, 5174, or
-    # 5175).  Keep production origins explicit via CORS_ORIGINS while making
-    # local development resilient to that port change.
     cors_origin_regex = os.getenv(
         'CORS_ORIGIN_REGEX',
-        r'^https?://(localhost|127\.0\.0\.1)(:\d+)?$|^https://.*\.vercel\.app$',
+        r'.*',
     )
     demo_mode = os.getenv('DEMO_MODE', 'true').lower() == 'true'
     weather_key = os.getenv('WEATHER_API_KEY', '')
