@@ -275,22 +275,19 @@ export default function Layout({children}) {
         <button
           type="button"
           onClick={handlePremiumClick}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/20 to-amber-500/15 border border-amber-300 dark:border-amber-600 shadow-xs hover:scale-[1.02] transition"
+          className="inline-flex items-center px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/20 to-amber-500/15 border border-amber-300 dark:border-amber-600 shadow-xs hover:scale-[1.02] transition"
           title="TourMitra VIP Pro Active · Click to view benefits"
         >
-          <Crown size={14} className="text-amber-500 fill-amber-500 animate-pulse" />
           <span className="text-xs font-extrabold uppercase tracking-wide text-amber-900 dark:text-amber-200">PRO VIP</span>
         </button>
       ) : (
         <button
           type="button"
           onClick={handlePremiumClick}
-          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3 sm:px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/25 hover:scale-[1.03] transition group"
+          className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3.5 sm:px-4 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/25 hover:scale-[1.03] transition"
           title="Unlock Same-City TravelMate Group Matching & Single Traveler Connections"
         >
-          <Crown size={14} className="fill-white group-hover:rotate-12 transition-transform" />
           <span className="font-extrabold">Premium</span>
-          <span className="rounded bg-white/25 px-1 py-0.2 text-[9px] font-black uppercase">₹0</span>
         </button>
       )}
 
@@ -318,19 +315,17 @@ export default function Layout({children}) {
         <button
           type="button"
           onClick={handleMobilePremiumClick}
-          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 text-xs font-bold text-amber-800 dark:text-amber-200 shadow-sm"
+          className="flex items-center justify-center px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 text-xs font-bold text-amber-800 dark:text-amber-200 shadow-sm"
         >
-          <Crown size={15} className="text-amber-500 fill-amber-500" />
-          <span>TourMitra VIP Pro Active 👑</span>
+          <span>TourMitra VIP Pro</span>
         </button>
       ) : (
         <button
           type="button"
           onClick={handleMobilePremiumClick}
-          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-md shadow-amber-500/20"
+          className="flex items-center justify-center rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-md shadow-amber-500/20"
         >
-          <Crown size={15} className="fill-white" />
-          <span>Unlock TourMitra Pro (Free · ₹0) 👑</span>
+          <span>Premium</span>
         </button>
       )}
 
