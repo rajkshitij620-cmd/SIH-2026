@@ -4,6 +4,7 @@ import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudR
 import {api} from '../services/api'; import {useAuth} from '../context/AuthContext'; import DestinationCard from '../components/DestinationCard';
 import PremiumModal from '../components/PremiumModal';
 import TouristHeatmap from '../components/TouristHeatmap';
+import CityAutocomplete from '../components/CityAutocomplete';
 export function LatestGroupTravelPlan(){const nav=useNavigate(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{if(!groups.length)throw new Error('No connected travel group yet. Connect with a TravelMate first.');nav(`/travel-plan/${groups[0].id}`,{replace:true})}).catch(x=>setErr(x.message))},[nav]);return <div className="shell py-12">{err?<section className="card max-w-xl"><p className="text-slate-700">{err}</p><Link className="btn mt-5" to="/plan">Plan a group trip</Link></section>:<p>Opening your group travel plan…</p>}</div>}
 export function GroupTravelPlan(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{const group=groups.find(item=>item.id===id);if(!group)throw new Error('Travel group not found');return api.get('/trips/'+group.trip_id).then(trip=>setData({group,trip}))}).catch(x=>setErr(x.message))},[id]);if(err)return <div className="shell py-12 text-red-600">{err}</div>;if(!data)return <div className="shell py-12">Loading your shared travel plan…</div>;const {group,trip}=data,guide=trip.travel_guide;const save=async(tripId)=>{try{const saved=await api.post(`/trips/${tripId}/save`);setData(d=>({...d,trip:saved}));nav('/saved-tours')}catch(x){setErr(x.message)}};return <div className="shell py-10"><div className="flex flex-wrap items-center justify-between gap-3"><p className="eyebrow">Your group travel plan</p><div className="flex items-center gap-2"><button onClick={()=>save(trip.id)} className="btn !py-1.5 !px-3 text-xs"><Save size={14}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost !py-1.5 !px-3 text-xs" to="/groups">Open group chat</Link></div></div><section className="card mt-4 border-teal-200 bg-teal-50"><h1 className="text-3xl font-bold">{trip.destination.name} · {trip.input.days} days</h1><p className="mt-2 text-slate-600">{group.member_ids.length} connected travellers · {formatDate(group.start_date)} – {formatDate(group.end_date)}</p><p className="mt-2 text-sm text-teal-900">This shared plan is designed to stay within the total group budget of ₹{trip.input.budget.toLocaleString()}.</p></section><DayWisePlacesChart trip={trip}/>{guide&&<GuideHighlights guide={guide}/>}<section className="mt-6"><aside className="card max-w-md"><p className="eyebrow">Group budget</p><p className="mt-2 text-xl font-semibold">₹{trip.input.budget.toLocaleString()} total</p>{trip.budget_breakdown&&Object.entries(trip.budget_breakdown).map(([name,value])=><p className="mt-3 flex justify-between" key={name}><span className="capitalize">{name}</span><b>₹{Math.round(value)}</b></p>)}</aside></section><div className="mt-6 flex gap-3"><button onClick={()=>save(trip.id)} className="btn"><Save size={16}/> {trip.saved?'Saved':'Save Tour'}</button><Link className="btn-ghost" to="/groups">Open group chat</Link></div></div>}
 const Field=({n,label,type='text',d='',autoComplete})=><div className="mt-4"><label className="label" htmlFor={n}>{label}</label><input className="input" id={n} name={n} type={type} defaultValue={d} autoComplete={autoComplete} required/></div>;
@@ -100,17 +101,20 @@ export function Home(){
 
       {/* Search & Quick Planner Bar (Enlarged) */}
       <form onSubmit={handleQuickSearch} className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 rounded-2xl sm:rounded-full bg-white dark:bg-slate-700/90 p-2 sm:p-2.5 border border-slate-200 dark:border-slate-600 shadow-xl shadow-slate-300/50 dark:shadow-slate-950/50">
-       <div className="flex flex-1 items-center gap-3 px-4 py-2 sm:py-3">
-        <MapPin size={22} className="text-teal-600 dark:text-teal-300 shrink-0"/>
-        <input 
-         type="text" 
+       <div className="flex-1 min-w-0">
+        <CityAutocomplete
+         id="home-search-city"
+         name="home-search"
          value={searchCity}
-         onChange={(e)=>setSearchCity(e.target.value)}
-         placeholder="Where in India are you travelling? (e.g. Varanasi, Goa, Jaipur, Manali)" 
-         className="w-full bg-transparent text-base sm:text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-300 outline-none font-medium"
+         onChange={(val)=>setSearchCity(val)}
+         placeholder="Where in India are you travelling? (e.g. Varanasi, Goa, Jaipur, Manali)"
+         className="w-full"
+         inputClassName="w-full bg-transparent pl-11 pr-4 py-2 sm:py-3 text-base sm:text-lg text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-300 outline-none border-0 font-medium shadow-none focus:ring-0"
+         iconSize={22}
+         required={false}
         />
        </div>
-       <button type="submit" className="btn !bg-gradient-to-r !from-teal-800 !to-teal-900 dark:!from-teal-400 dark:!to-emerald-400 !text-white dark:!text-slate-950 font-bold !rounded-xl sm:!rounded-full px-7 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base flex items-center justify-center gap-2 shadow-md shadow-teal-900/15 dark:shadow-teal-400/25 hover:scale-[1.02] active:scale-95 transition-all">
+       <button type="submit" className="btn !bg-gradient-to-r !from-teal-800 !to-teal-900 dark:!from-teal-400 dark:!to-emerald-400 !text-white dark:!text-slate-950 font-bold !rounded-xl sm:!rounded-full px-7 sm:px-8 py-3.5 sm:py-4 text-sm sm:text-base flex items-center justify-center gap-2 shadow-md shadow-teal-900/15 dark:shadow-teal-400/25 hover:scale-[1.02] active:scale-95 transition-all shrink-0">
         <span>{hasPreviousTrip?'Plan New Trip':'Plan My Trip'}</span>
         <ArrowRight size={18}/>
        </button>
@@ -802,20 +806,16 @@ export function Planner(){
      </div>
     </div>
 
-    {/* Destination Input */}
+    {/* Destination Input with Live Autocomplete */}
     <div>
      <label className="label" htmlFor="destination">Destination City or Heritage Site</label>
-     <div className="relative mt-1">
-      <MapPin size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-teal-600"/>
-      <input 
-       className="input !pl-10 text-base" 
-       id="destination" 
-       name="destination" 
+     <div className="mt-1">
+      <CityAutocomplete
+       id="destination"
        value={destinationInput}
-       onChange={e=>setDestinationInput(e.target.value)}
-       placeholder="e.g. Varanasi, Goa, Jaipur, Agra, Manali, Kerala Backwaters…" 
-       autoComplete="address-level2" 
-       required
+       onChange={val=>setDestinationInput(val)}
+       placeholder="e.g. Varanasi, Goa, Jaipur, Bengaluru, Agra, Manali…"
+       required={true}
       />
      </div>
     </div>
