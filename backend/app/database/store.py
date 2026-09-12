@@ -89,20 +89,55 @@ class Store:
    try: return self._clean_many(self.mongo.itineraries.find({'user_id': user_id}, {'_id': 0}))
    except PyMongoError: return []
   return [x for x in self.itineraries.values() if x['user_id']==user_id]
+ @staticmethod
+ def _get_dest_name(doc):
+  if not doc: return ''
+  dest = doc.get('destination')
+  if isinstance(dest, dict): return dest.get('name') or ''
+  if isinstance(dest, str): return dest
+  inp = doc.get('input')
+  if isinstance(inp, dict): return inp.get('destination') or ''
+  return ''
+
  def group_trips(self, destination, start_date, end_date, current_location_city, exclude_user_id):
+  dest_str = (destination or '').strip().casefold()
+  city_str = (current_location_city or '').strip().casefold()
   query={'destination.name': {'$regex': f'^{destination}$', '$options': 'i'}, 'input.start_date': start_date, 'input.end_date': end_date, '$or':[{'input.travel_type':'group'},{'input.connection_option':'connect_people'}], 'input.current_location_city': {'$regex': f'^{current_location_city}$', '$options': 'i'}, 'user_id': {'$ne': exclude_user_id}}
   if self.mongo is not None:
    try: return self._clean_many(self.mongo.itineraries.find(query, {'_id': 0}))
-   except PyMongoError: return []
-  return [x for x in self.itineraries.values() if x.get('user_id') != exclude_user_id and (x.get('input', {}).get('travel_type') == 'group' or x.get('input', {}).get('connection_option') == 'connect_people') and x.get('input', {}).get('current_location_city', '').casefold() == current_location_city.casefold() and x.get('input', {}).get('start_date') == start_date and x.get('input', {}).get('end_date') == end_date and x.get('destination', {}).get('name', '').casefold() == destination.casefold()]
+   except Exception: pass
+  results = []
+  for x in self.itineraries.values():
+   if x.get('user_id') == exclude_user_id: continue
+   inp = x.get('input') or {}
+   if inp.get('travel_type') != 'group' and inp.get('connection_option') != 'connect_people': continue
+   x_city = (inp.get('current_location_city') or '').strip().casefold()
+   x_dest = (self._get_dest_name(x) or '').strip().casefold()
+   x_start = inp.get('start_date')
+   x_end = inp.get('end_date')
+   if x_city == city_str and x_dest == dest_str and x_start == start_date and x_end == end_date:
+    results.append(x)
+  return results
+
  def all_matchable_trips(self, exclude_user_id=None, destination=None):
+  dest_str = (destination or '').strip().casefold() if destination else None
   query={'destination.name': {'$regex': f'^{destination}$', '$options': 'i'}} if destination else {}
   query['$or']=[{'input.travel_type':'group'},{'input.connection_option':'connect_people'}]
   if exclude_user_id: query['user_id']={'$ne': exclude_user_id}
   if self.mongo is not None:
    try: return self._clean_many(self.mongo.itineraries.find(query, {'_id': 0}))
-   except PyMongoError: return []
-  return [x for x in self.itineraries.values() if (not exclude_user_id or x.get('user_id') != exclude_user_id) and (x.get('input', {}).get('travel_type') == 'group' or x.get('input', {}).get('connection_option') == 'connect_people') and (not destination or x.get('destination', {}).get('name', '').casefold() == destination.casefold())]
+   except Exception: pass
+  results = []
+  for x in self.itineraries.values():
+   if exclude_user_id and x.get('user_id') == exclude_user_id: continue
+   inp = x.get('input') or {}
+   if inp.get('travel_type') != 'group' and inp.get('connection_option') != 'connect_people': continue
+   if dest_str:
+    x_dest = (self._get_dest_name(x) or '').strip().casefold()
+    if x_dest != dest_str: continue
+   results.append(x)
+  return results
+
  def save_connection(self, connection):
   doc = connection.copy()
   if self.mongo is not None:
