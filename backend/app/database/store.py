@@ -22,7 +22,8 @@ class Store:
  @staticmethod
  def _clean(document):
   if not document: return document
-  document.pop('_id', None)
+  if isinstance(document, dict):
+   document.pop('_id', None)
   return document
  def _clean_many(self, documents): return [self._clean(x) for x in documents]
  def user_by_email(self, email):
@@ -36,24 +37,31 @@ class Store:
    except PyMongoError: return None
   return self.users.get(identifier)
  def create_user(self, user):
+  doc = user.copy()
   if self.mongo is not None:
-   self.mongo.users.insert_one(user.copy())
+   try: self.mongo.users.insert_one(doc)
+   except Exception: self.users[user['id']]=user
   else: self.users[user['id']]=user
+  user.pop('_id', None)
   return user
  def update_user(self, identifier, fields):
   if self.mongo is not None:
-   self.mongo.users.update_one({'id': identifier}, {'$set': fields})
-   return self.user_by_id(identifier)
-  self.users[identifier].update(fields)
-  return self.users[identifier]
+   try: self.mongo.users.update_one({'id': identifier}, {'$set': fields}); return self.user_by_id(identifier)
+   except Exception: pass
+  if identifier in self.users: self.users[identifier].update(fields)
+  return self.users.get(identifier)
  def users_by_ids(self, identifiers):
   if self.mongo is not None:
    try: return self._clean_many(self.mongo.users.find({'id': {'$in': identifiers}}, {'_id': 0}))
    except PyMongoError: return []
   return [self.users[x] for x in identifiers if x in self.users]
  def save_itinerary(self, itinerary):
-  if self.mongo is not None: self.mongo.itineraries.insert_one(itinerary.copy())
+  doc = itinerary.copy()
+  if self.mongo is not None:
+   try: self.mongo.itineraries.insert_one(doc)
+   except Exception: self.itineraries[itinerary['id']]=itinerary
   else: self.itineraries[itinerary['id']]=itinerary
+  itinerary.pop('_id', None)
   return itinerary
  def itinerary_by_id(self, identifier):
   if self.mongo is not None:
@@ -62,12 +70,14 @@ class Store:
   return self.itineraries.get(identifier)
  def update_itinerary(self, identifier, fields):
   if self.mongo is not None:
-   self.mongo.itineraries.update_one({'id': identifier}, {'$set': fields})
-   return self.itinerary_by_id(identifier)
+   try: self.mongo.itineraries.update_one({'id': identifier}, {'$set': fields}); return self.itinerary_by_id(identifier)
+   except Exception: pass
   if identifier in self.itineraries: self.itineraries[identifier].update(fields)
   return self.itineraries.get(identifier)
  def delete_itinerary(self, identifier):
-  if self.mongo is not None: return bool(self.mongo.itineraries.delete_one({'id': identifier}).deleted_count)
+  if self.mongo is not None:
+   try: return bool(self.mongo.itineraries.delete_one({'id': identifier}).deleted_count)
+   except Exception: pass
   return self.itineraries.pop(identifier, None) is not None
  def saved_itineraries(self, user_id):
   if self.mongo is not None:
@@ -80,8 +90,6 @@ class Store:
    except PyMongoError: return []
   return [x for x in self.itineraries.values() if x['user_id']==user_id]
  def group_trips(self, destination, start_date, end_date, current_location_city, exclude_user_id):
-  # ``group`` keeps legacy API clients working; new clients opt in through
-  # the explicit Connect People choice after selecting Single Travel.
   query={'destination.name': {'$regex': f'^{destination}$', '$options': 'i'}, 'input.start_date': start_date, 'input.end_date': end_date, '$or':[{'input.travel_type':'group'},{'input.connection_option':'connect_people'}], 'input.current_location_city': {'$regex': f'^{current_location_city}$', '$options': 'i'}, 'user_id': {'$ne': exclude_user_id}}
   if self.mongo is not None:
    try: return self._clean_many(self.mongo.itineraries.find(query, {'_id': 0}))
@@ -96,8 +104,12 @@ class Store:
    except PyMongoError: return []
   return [x for x in self.itineraries.values() if (not exclude_user_id or x.get('user_id') != exclude_user_id) and (x.get('input', {}).get('travel_type') == 'group' or x.get('input', {}).get('connection_option') == 'connect_people') and (not destination or x.get('destination', {}).get('name', '').casefold() == destination.casefold())]
  def save_connection(self, connection):
-  if self.mongo is not None: self.mongo.connections.insert_one(connection.copy())
+  doc = connection.copy()
+  if self.mongo is not None:
+   try: self.mongo.connections.insert_one(doc)
+   except Exception: self.connections[connection['id']]=connection
   else: self.connections[connection['id']]=connection
+  connection.pop('_id', None)
   return connection
  def connection(self, sender_id, receiver_id):
   if self.mongo is not None:
@@ -116,12 +128,17 @@ class Store:
   return sorted((x for x in self.connections.values() if x['receiver_id']==user_id),key=lambda x:x['created_at'],reverse=True)
  def update_connection(self, identifier, fields):
   if self.mongo is not None:
-   self.mongo.connections.update_one({'id': identifier}, {'$set': fields}); return self.connection_by_id(identifier)
+   try: self.mongo.connections.update_one({'id': identifier}, {'$set': fields}); return self.connection_by_id(identifier)
+   except Exception: pass
   if identifier in self.connections: self.connections[identifier].update(fields)
   return self.connections.get(identifier)
  def save_group(self, group):
-  if self.mongo is not None: self.mongo.travel_groups.insert_one(group.copy())
+  doc = group.copy()
+  if self.mongo is not None:
+   try: self.mongo.travel_groups.insert_one(doc)
+   except Exception: self.groups[group['id']]=group
   else: self.groups[group['id']]=group
+  group.pop('_id', None)
   return group
  def groups_for_user(self, user_id):
   if self.mongo is not None:
@@ -140,19 +157,25 @@ class Store:
   return next((group for group in self.groups.values() if group['trip_id']==trip_id and member_id in group['member_ids']),None)
  def update_group(self, identifier, fields):
   if self.mongo is not None:
-   self.mongo.travel_groups.update_one({'id': identifier}, {'$set': fields})
-   return self.group_by_id(identifier)
+   try: self.mongo.travel_groups.update_one({'id': identifier}, {'$set': fields}); return self.group_by_id(identifier)
+   except Exception: pass
   if identifier in self.groups: self.groups[identifier].update(fields)
   return self.groups.get(identifier)
  def delete_group(self, identifier):
   if self.mongo is not None:
-   self.mongo.group_messages.delete_many({'group_id': identifier})
-   return bool(self.mongo.travel_groups.delete_one({'id': identifier}).deleted_count)
+   try:
+    self.mongo.group_messages.delete_many({'group_id': identifier})
+    return bool(self.mongo.travel_groups.delete_one({'id': identifier}).deleted_count)
+   except Exception: pass
   self.group_messages.pop(identifier, None)
   return self.groups.pop(identifier, None) is not None
  def save_group_message(self, message):
-  if self.mongo is not None: self.mongo.group_messages.insert_one(message.copy())
+  doc = message.copy()
+  if self.mongo is not None:
+   try: self.mongo.group_messages.insert_one(doc)
+   except Exception: self.group_messages.setdefault(message['group_id'],[]).append(message)
   else: self.group_messages.setdefault(message['group_id'],[]).append(message)
+  message.pop('_id', None)
   return message
  def group_messages_for(self, group_id):
   if self.mongo is not None:
