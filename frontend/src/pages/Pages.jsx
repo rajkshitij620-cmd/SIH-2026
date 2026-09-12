@@ -1078,7 +1078,7 @@ function LiveMap({location,trip}){
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
               }`}
             >
-              <Flame size={13} className="text-rose-500 animate-pulse"/>
+              <Flame size={13} className="text-rose-500"/>
               <span>Live Crowd Heatmap</span>
             </button>
             <button
@@ -1120,13 +1120,6 @@ function LiveMap({location,trip}){
   );
 }
 
-export function HeatmapPage(){
-  return (
-    <div className="shell py-8">
-      <TouristHeatmap embedded={false}/>
-    </div>
-  );
-}
 function Listing({url,title}){const [data,setData]=useState([]);useEffect(()=>{api.get(url).then(setData)},[url]);return <div className="shell py-12"><p className="eyebrow">Destination discovery</p><h1 className="mt-2 text-3xl font-bold">{title}</h1><div className="mt-8 grid gap-5 md:grid-cols-3">{data.map(x=><DestinationCard key={x.id} x={x}/>)}</div></div>};export const Explore=()=> <Listing url="/recommendations" title="Explore destinations"/>;
 export function Discover(){const [data,setData]=useState([]);useEffect(()=>{api.get('/businesses').then(setData)},[]);return <div className="shell py-12"><p className="eyebrow">Local discovery</p><h1 className="mt-2 text-3xl font-bold">Meet the people behind the place.</h1><div className="mt-8 grid gap-4 md:grid-cols-2">{data.map(x=><article className="card" key={x.id}><p className="eyebrow">{x.category}</p><h2 className="mt-1 text-lg font-semibold">{x.name}</h2><p className="mt-3 text-slate-600">{x.description}</p><p className="mt-4 text-sm">{x.location} · ₹{x.price} · ★ {x.rating} · Verified</p></article>)}</div></div>}
 export function ItineraryView({trip,onSave,allTrips=[],selectedId,onTripChange}){const nav=useNavigate();if(!trip)return <div className="shell py-12">Building your itinerary…</div>;const destination=trip.destination?.name||trip.input?.destination||'Destination',days=trip.input?.days||trip.days?.length||1;return <div className="shell py-10"><p className="eyebrow">Your travel plan</p><div className="flex flex-wrap items-end justify-between gap-4"><div><h1 className="mt-2 text-3xl font-bold">{destination} · {days} days</h1><p className="mt-1 text-sm text-slate-500">{formatDate(trip.input?.start_date)} – {formatDate(trip.input?.end_date)} · ₹{trip.input?.budget?.toLocaleString()}</p></div><div className="flex flex-wrap items-center gap-2">{allTrips.length>1&&<label className="flex items-center text-xs font-medium text-slate-500">Choose trip:<select className="input ml-1.5 min-w-44 !py-1.5 !px-2 text-xs" value={selectedId||trip.id} onChange={e=>onTripChange?.(e.target.value)}>{allTrips.map(item=><option value={item.trip.id} key={item.trip.id}>{item.trip.destination?.name||item.trip.input?.destination} · {formatDate(item.trip.input?.start_date)}</option>)}</select></label>}<button onClick={()=>nav('/plan')} className="btn-ghost">Edit</button><button onClick={()=>onSave?.(trip.id)} className="btn"><Save size={16}/> {trip.saved?'Saved':'Save Tour'}</button></div></div>{trip.ai_summary&&<div className="card mt-6 border-teal-200 bg-teal-50"><p className="eyebrow">AI trip brief</p><p className="mt-2">{trip.ai_summary}</p><p className="mt-2 text-sm text-slate-600">{trip.ai_recommendation_reason}</p></div>}<LiveMap location={destination} trip={trip}/>{trip.budget_breakdown&&<aside className="card mt-6"><p className="eyebrow">Budget estimate</p><div className="mt-4 grid gap-3 sm:grid-cols-4">{Object.entries(trip.budget_breakdown).map(([k,v])=><div key={k} className="rounded-lg bg-stone-50 p-3"><p className="text-xs uppercase text-slate-500">{k}</p><p className="mt-1 text-lg font-semibold text-teal-800">₹{Math.round(v).toLocaleString()}</p></div>)}</div></aside>}</div>}

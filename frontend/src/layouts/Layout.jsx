@@ -125,12 +125,12 @@ export default function Layout({children}) {
   const links = !user
   ? [['/','Home'],['/plan','Plan Trip'],['/assistant','AI Assistant']]
   : isMakeGroupPage
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
   : hasSavedTours
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
   : isUnsavedTourView
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/tour-guide','Tour Guide'],['/assistant','AI Assistant']]
-  : [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/assistant','AI Assistant']];
+  ? [['/','Home'],['/plan','Plan Trip'],['/tour-guide','Tour Guide'],['/assistant','AI Assistant']]
+  : [['/','Home'],['/plan','Plan Trip'],['/assistant','AI Assistant']];
   const isHomePage = pathname === '/';
   return <div className="flex min-h-screen flex-col">
    <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
@@ -368,7 +368,6 @@ export default function Layout({children}) {
       <ul className="mt-3 space-y-2 text-sm text-slate-600">
        <li><Link to="/" className="hover:text-teal-700">Home</Link></li>
        <li><Link to="/plan" className="hover:text-teal-700">Plan Trip</Link></li>
-       {user&&<li><Link to="/heatmap" className="hover:text-teal-700 flex items-center gap-1"><span>Live Heatmap</span> <span className="rounded-full bg-rose-500/20 text-rose-600 px-1.5 py-0.5 text-[9px] font-bold uppercase">New</span></Link></li>}
        <li><Link to="/explore" className="hover:text-teal-700">Explore Destinations</Link></li>
        <li><Link to="/assistant" className="hover:text-teal-700">AI Travel Assistant</Link></li>
       </ul>
