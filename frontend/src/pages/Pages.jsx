@@ -619,6 +619,7 @@ export function Planner(){
 
  const getUserCurrentLocation=()=>{setErr('');if(!navigator.geolocation){setErr('Location is unavailable on this device. Enter your city manually.');return}navigator.geolocation.getCurrentPosition(p=>{setCoords({current_location_latitude:p.coords.latitude,current_location_longitude:p.coords.longitude});setLocation('Near your current location')},()=>setErr('Location permission is required for Single Travel. Enter your city manually.'))};
  const readImage=(file,onLoad)=>{setErr('');if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){setErr('Upload a JPEG, JPG, or PNG photo only.');return}if(file.size>4*1024*1024){setErr('Each photo must be 4 MB or smaller.');return}const reader=new FileReader();reader.onload=()=>onLoad(reader.result);reader.readAsDataURL(file)};
+ const selectPhoto=file=>readImage(file,setPhoto);
  const cleanTripPayload=(payload)=>{
   const res={
    destination:(payload.destination||'').trim(),
