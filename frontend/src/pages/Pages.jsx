@@ -766,42 +766,30 @@ export function Planner(){
      <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
       <div 
        onClick={()=>setTravelType('single')}
-       className={`cursor-pointer rounded-2xl border-2 p-4 transition-all duration-200 ${
+       className={`cursor-pointer rounded-2xl border-2 p-4 flex items-center justify-center transition-all duration-200 ${
         travelType==='single'
          ? 'border-teal-600 bg-teal-50/60 dark:bg-teal-950/40 shadow-sm'
          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
        }`}
       >
-       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-         <User size={18} className={travelType==='single'?'text-teal-600':'text-slate-400'}/>
-         <span>Solo Traveler</span>
-        </div>
-        <span className="rounded-full bg-teal-100 dark:bg-teal-900 px-2.5 py-0.5 text-[10px] font-bold text-teal-800 dark:text-teal-200">Solo & Matchmaking</span>
+       <div className="flex items-center gap-2.5 font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+        <User size={20} className={travelType==='single'?'text-teal-600 dark:text-teal-400':'text-slate-400'}/>
+        <span>Solo Traveler</span>
        </div>
-       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-        Generate a personalized solo tour guide or connect with verified TravelMates heading to this destination.
-       </p>
       </div>
 
       <div 
        onClick={()=>setTravelType('group')}
-       className={`cursor-pointer rounded-2xl border-2 p-4 transition-all duration-200 ${
+       className={`cursor-pointer rounded-2xl border-2 p-4 flex items-center justify-center transition-all duration-200 ${
         travelType==='group'
          ? 'border-teal-600 bg-teal-50/60 dark:bg-teal-950/40 shadow-sm'
          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300'
        }`}
       >
-       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-         <Users size={18} className={travelType==='group'?'text-teal-600':'text-slate-400'}/>
-         <span>Group & Family</span>
-        </div>
-        <span className="rounded-full bg-emerald-100 dark:bg-emerald-900 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 dark:text-emerald-200">Full Guide & Split</span>
+       <div className="flex items-center gap-2.5 font-bold text-slate-900 dark:text-white text-sm sm:text-base">
+        <Users size={20} className={travelType==='group'?'text-teal-600 dark:text-teal-400':'text-slate-400'}/>
+        <span>Group & Family</span>
        </div>
-       <p className="mt-2 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-        Complete multi-person itinerary with automated per-head shared budget splitting for friends and family.
-       </p>
       </div>
      </div>
     </div>
