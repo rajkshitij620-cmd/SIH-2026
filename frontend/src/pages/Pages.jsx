@@ -1,6 +1,6 @@
 import {useEffect,useRef,useState} from 'react';
 import {Link,useLocation,useNavigate,useParams} from 'react-router-dom';
-import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw,Crown} from 'lucide-react';
+import {Camera,ChevronDown,Eye,EyeOff,ImageUp,Save,Send,Trash2,MapPin,Sun,CloudRain,Sparkles,Copy,Check,RotateCcw,Languages,Globe,Compass,ShieldCheck,ArrowRight,TrendingUp,Calendar,Users,User,Sparkle,Search,IndianRupee,RefreshCw,Crown,X} from 'lucide-react';
 import {api} from '../services/api'; import {useAuth} from '../context/AuthContext'; import DestinationCard from '../components/DestinationCard';
 import PremiumModal from '../components/PremiumModal';
 export function LatestGroupTravelPlan(){const nav=useNavigate(),[err,setErr]=useState('');useEffect(()=>{api.get('/travel-groups').then(groups=>{if(!groups.length)throw new Error('No connected travel group yet. Connect with a TravelMate first.');nav(`/travel-plan/${groups[0].id}`,{replace:true})}).catch(x=>setErr(x.message))},[nav]);return <div className="shell py-12">{err?<section className="card max-w-xl"><p className="text-slate-700">{err}</p><Link className="btn mt-5" to="/plan">Plan a group trip</Link></section>:<p>Opening your group travel plan…</p>}</div>}
