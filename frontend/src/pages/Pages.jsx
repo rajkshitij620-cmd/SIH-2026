@@ -924,117 +924,78 @@ export function Planner(){
 }
 
 export function FindTravelers(){
-  const nav=useNavigate(),location=useLocation(),queryTrip=new URLSearchParams(location.search).get('trip'),[selectedTripId,setSelectedTripId]=useState(queryTrip||''),[data,setData]=useState(),[load,setLoad]=useState(true),[pendingList,setPendingList]=useState([]);
+  const nav=useNavigate(),location=useLocation(),queryTrip=new URLSearchParams(location.search).get('trip'),[selectedTripId,setSelectedTripId]=useState(queryTrip||''),[data,setData]=useState(),[load,setLoad]=useState(true),[err,setErr]=useState('');
   
-  const fetchMatches=async(tripId='')=>{
+  const fetchMatches=(tripId='')=>{
     setLoad(true);
+    setErr('');
     const param=tripId?`?trip_id=${encodeURIComponent(tripId)}`:'';
-    try{
-      let res;
-      try{
-        res=await api.get(`/travelers/matches${param}`);
-      }catch{
-        if(tripId){
-          res=await api.get('/travelers/matches');
-        }
-      }
-      if(res){
+    api.get(`/travelers/matches${param}`)
+      .then(res=>{
         setData(res);
-        if(res.trip?.id)setSelectedTripId(res.trip.id);
-      }
-    }catch{
-      setData({ matches: [], same_destination_travelers: [] });
-    }finally{
-      setLoad(false);
-    }
+        if(res.trip?.id) setSelectedTripId(res.trip.id);
+      })
+      .catch(x=>setErr(x.message))
+      .finally(()=>setLoad(false));
   };
 
   useEffect(()=>{fetchMatches(queryTrip||selectedTripId)},[queryTrip]);
 
   const connect=async(travellerId,tripId)=>{
-    setPendingList(prev=>[...prev, travellerId]);
     try{
       await api.post(`/connections/${travellerId}?trip_id=${encodeURIComponent(tripId||selectedTripId||'')}`);
       fetchMatches(selectedTripId);
-    }catch{
-      // Keep optimistic status for pending connection
+    }catch(x){
+      alert(x.message);
     }
   };
 
-  if(load&&!data)return <div className="shell py-12">Finding TravelMates…</div>;
+  if(err) return <div className="shell py-12"><p className="text-red-600">{err}</p><button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button></div>;
+  if(load&&!data) return <div className="shell py-12">Finding TravelMates…</div>;
 
-  const currentTrip=data?.trip;
-  const rawMatches=data?.matches||[];
-  const rawSameDest=data?.same_destination_travelers||[];
-  const allTravelers=[...rawMatches,...rawSameDest.filter(s=>!rawMatches.some(m=>m.traveller.id===s.traveller.id))];
+  const currentTrip=data?.trip,matches=data?.matches||[],sameDest=data?.same_destination_travelers||[],allTravelers=[...matches,...sameDest.filter(s=>!matches.some(m=>m.traveller.id===s.traveller.id))];
 
   return (
     <div className="shell max-w-5xl py-8">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="eyebrow">Community Matchmaking</p>
-          <h1 className="text-2xl sm:text-3xl font-bold">Find Verified TravelMates</h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">Connect with compatible travellers heading to your destination to share routes and split costs.</p>
-        </div>
-        <div className="flex gap-2">
-          {currentTrip?.id&&<button className="btn-ghost text-xs sm:text-sm" onClick={()=>nav(`/tour-guide?trip=${currentTrip.id}`)}>View Tour Guide</button>}
-          <button className="btn text-xs sm:text-sm" onClick={()=>nav('/plan')}>+ Plan New Trip</button>
-        </div>
-      </div>
-
-      {allTravelers.length===0?(
-        <section className="card text-center py-12">
-          <div className="mx-auto w-14 h-14 rounded-2xl bg-teal-50 dark:bg-teal-950 flex items-center justify-center text-teal-600 dark:text-teal-400 mb-4">
-            <Users size={28}/>
-          </div>
-          <h2 className="text-xl font-bold">No TravelMates Found Yet</h2>
-          <p className="mt-2 text-sm text-slate-500 max-w-md mx-auto">
-            {currentTrip?.destination ? `Currently, no other registered travellers from ${currentTrip.current_location_city||'your city'} are heading to ${currentTrip.destination} on your dates.` : 'No other matchable travelers found.'}
-          </p>
-          <p className="mt-2 text-xs text-slate-400">Your profile is active in TravelMates matchmaking. When other explorers plan a trip to the same destination, they will appear here.</p>
-          <div className="mt-6 flex justify-center gap-3">
-            {currentTrip?.id&&<button className="btn" onClick={()=>nav(`/tour-guide?trip=${currentTrip.id}`)}>Open Your Tour Guide</button>}
-            <button className="btn-ghost" onClick={()=>nav('/plan')}>Plan Another Trip</button>
-          </div>
-        </section>
-      ):(
+      {allTravelers.length>0?(
         <div className="grid gap-4 md:grid-cols-2">
-          {allTravelers.map(m=>{
-            const isPending = m.connection_status==='pending' || pendingList.includes(m.traveller.id);
-            return (
-              <article className="card" key={m.traveller.id}>
-                <div className="flex items-center gap-3">
-                  <Avatar user={m.traveller}/>
-                  <div>
-                    <h2 className="font-semibold flex items-center gap-1.5">
-                      {m.traveller.name}
-                      {m.traveller.is_premium&&<span className="inline-flex items-center gap-0.5 rounded-full bg-amber-400 text-amber-950 px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-tight shadow-xs"><Crown size={9} className="fill-amber-950"/> PRO</span>}
-                    </h2>
-                    <p className="text-sm text-slate-500">
-                      {m.trip.current_location_city}{m.trip.gender?` · ${m.trip.gender.charAt(0).toUpperCase()+m.trip.gender.slice(1)}`:''}{m.trip.age?` · ${m.trip.age} yrs`:''}
-                    </p>
-                  </div>
-                  {m.match_percentage?<b className="ml-auto text-teal-800 dark:text-teal-400">{m.match_percentage}% Match</b>:<span className="ml-auto rounded-full bg-teal-50 dark:bg-teal-950/60 px-2.5 py-1 text-xs font-medium text-teal-800 dark:text-teal-300">{m.trip.destination}</span>}
+          {allTravelers.map(m=>(
+            <article className="card" key={m.traveller.id}>
+              <div className="flex items-center gap-3">
+                <Avatar user={m.traveller}/>
+                <div>
+                  <h2 className="font-semibold">{m.traveller.name}</h2>
+                  <p className="text-sm text-slate-500">
+                    {m.trip.current_location_city}{m.trip.gender?` · ${m.trip.gender.charAt(0).toUpperCase()+m.trip.gender.slice(1)}`:''}{m.trip.age?` · ${m.trip.age} yrs`:''}
+                  </p>
                 </div>
-                <div className="mt-4 space-y-1 rounded-lg bg-stone-50 dark:bg-slate-800/60 p-3 text-sm">
-                  <p>✈ <b>Destination:</b> {m.trip.destination}</p>
-                  <p>📅 <b>Dates:</b> {formatDate(m.trip.start_date)} – {formatDate(m.trip.end_date)} · 💰 ₹{m.trip.budget?.toLocaleString()}</p>
-                </div>
-                <div className="mt-5">
-                  {isPending ? (
-                    <button className="btn w-full opacity-70 cursor-not-allowed bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" disabled>Request Sent</button>
-                  ) : (
-                    <button className="btn w-full" onClick={()=>connect(m.traveller.id,currentTrip?.id||m.trip.id)}>Connect</button>
-                  )}
-                </div>
-              </article>
-            );
-          })}
+                {m.match_percentage?<b className="ml-auto text-teal-800 dark:text-teal-400">{m.match_percentage}% Match</b>:<span className="ml-auto rounded-full bg-teal-50 dark:bg-teal-950 px-2.5 py-1 text-xs font-medium text-teal-800 dark:text-teal-300">{m.trip.destination}</span>}
+              </div>
+              <div className="mt-4 space-y-1 rounded-lg bg-stone-50 dark:bg-slate-800/60 p-3 text-sm">
+                <p>✈ <b>Destination:</b> {m.trip.destination}</p>
+                <p>📅 <b>Dates:</b> {formatDate(m.trip.start_date)} – {formatDate(m.trip.end_date)} · 💰 ₹{m.trip.budget?.toLocaleString()}</p>
+              </div>
+              <div className="mt-5">
+                {m.connection_status==='pending'?(
+                  <button className="btn w-full opacity-70 cursor-not-allowed" disabled>Request Sent</button>
+                ):(
+                  <button className="btn w-full" onClick={()=>connect(m.traveller.id,currentTrip?.id||m.trip.id)}>Connect</button>
+                )}
+              </div>
+            </article>
+          ))}
         </div>
+      ):(
+        <section className="card mt-6 py-10 text-center">
+          <h2 className="text-lg font-semibold">No TravelMates found yet</h2>
+          <p className="mt-2 text-slate-600 dark:text-slate-400">Be the first to connect with other travellers heading to this destination.</p>
+          <button className="btn mt-4" onClick={()=>nav('/plan')}>Plan a trip</button>
+        </section>
       )}
     </div>
   );
 }
+
 
 export function TravellerProfile(){const {id}=useParams(),nav=useNavigate(),[data,setData]=useState(),[err,setErr]=useState(''),trip=new URLSearchParams(window.location.search).get('trip');useEffect(()=>{api.get(`/travelers/${id}/public-profile?trip_id=${encodeURIComponent(trip||'')}`).then(setData).catch(x=>setErr(x.message))},[id,trip]);if(err)return <div className="shell py-12">{err}</div>;if(!data)return <div className="shell py-12">Loading traveller profile…</div>;return <div className="shell max-w-xl py-12"><section className="card"><Avatar user={data.profile} size="h-20 w-20"/><h1 className="mt-4 text-3xl font-bold flex items-center gap-2">{data.profile.name}{data.profile.is_premium&&<span className="inline-flex items-center gap-1 rounded-full bg-amber-400 text-amber-950 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wide"><Crown size={12} className="fill-amber-950"/> VIP PRO</span>}</h1><p className="mt-2 text-slate-600">{data.profile.bio||'Travel enthusiast'}</p><p className="mt-4 text-sm"><b>Interests:</b> {data.profile.interests?.join(', ')||'Travel and local experiences'}</p>{data.trip&&<div className="mt-4 space-y-1.5 rounded-lg bg-stone-50 p-3 text-sm"><p>✈ <b>Destination:</b> {data.trip.destination} · {formatDate(data.trip.start_date)} – {formatDate(data.trip.end_date)}</p>{data.trip.current_location_city&&<p>📍 <b>Location:</b> {data.trip.current_location_city}</p>}{data.trip.gender&&<p>👤 <b>Gender:</b> <span className="capitalize">{data.trip.gender}</span></p>}{data.trip.age&&<p>🎂 <b>Age:</b> {data.trip.age} years</p>}<p className="mt-2 text-teal-800 font-semibold">{data.match_percentage}% Match</p></div>}<button className="btn-ghost mt-6" onClick={()=>nav(-1)}>Back to TravelMates</button></section></div>}
 function LiveMap({location,trip}){
