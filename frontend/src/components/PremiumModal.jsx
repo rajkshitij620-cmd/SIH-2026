@@ -3,9 +3,50 @@ import { Crown, Check, Sparkles, Zap, X, ArrowRight, CheckCircle2, ShieldCheck }
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
+const DEFAULT_PLANS = [
+  {
+    id: 'pro_monthly',
+    name: 'TourMitra Pro Monthly',
+    price: 0,
+    original_price: 199,
+    billing: '₹0 (Free Offer)',
+    period: 'monthly',
+    badge: 'Free Special Offer',
+    popular: true,
+    description: 'Unlock same-city TravelMate matchmaking & VIP group features for ₹0',
+    features: [
+      'Same Current City to Destination TravelMate Matching',
+      'AI Compatibility Score & Mutual Match Connections',
+      'Dedicated Group Room Chat & Shared Live Itinerary',
+      'Golden VIP 👑 Profile Crown Badge',
+      'Offline PDF Travel Itinerary Download',
+      'High-Priority 24/7 Safety SOS & Support'
+    ]
+  },
+  {
+    id: 'pro_annual',
+    name: 'TourMitra Pro Annual',
+    price: 0,
+    original_price: 1499,
+    billing: '₹0 (Free Offer)',
+    period: 'annual',
+    badge: '100% Free VIP',
+    popular: false,
+    description: 'Full VIP access unlocked for all SIH participants & judges for ₹0',
+    features: [
+      'All Pro Monthly Features Included',
+      '100% Free Special Access (₹0)',
+      'Verified Annual Pro 👑 Badge',
+      'Unlimited Trip Replans & AI Rerouting',
+      'Exclusive Live Festival & Crowd Alerts',
+      'Priority Smart Emergency Response'
+    ]
+  }
+];
+
 export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason = '' }) {
   const { user, setUser } = useAuth();
-  const [plans, setPlans] = useState([]);
+  const [plans, setPlans] = useState(DEFAULT_PLANS);
   const [selectedPlan, setSelectedPlan] = useState('pro_monthly');
   const [loading, setLoading] = useState(false);
   const [paymentStep, setPaymentStep] = useState('plans'); // 'plans' | 'success'
@@ -15,101 +56,42 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
     if (isOpen) {
       setPaymentStep('plans');
       setError('');
-      api.get('/premium/plans')
-        .then(res => {
-          if (res.plans) setPlans(res.plans);
-        })
-        .catch(() => {
-          // Fallback static plans if offline
-          setPlans([
-            {
-              id: 'pro_monthly',
-              name: 'TourMitra Pro Monthly',
-              price: 0,
-              original_price: 199,
-              billing: '₹0 (Free Offer)',
-              period: 'monthly',
-              badge: 'Free Special Offer',
-              popular: true,
-              description: 'Unlock same-city TravelMate matchmaking & VIP group features for ₹0',
-              features: [
-                'Same Current City to Destination TravelMate Matching',
-                'AI Compatibility Score & Mutual Match Connections',
-                'Dedicated Group Room Chat & Shared Live Itinerary',
-                'Golden VIP 👑 Profile Crown Badge',
-                'Offline PDF Travel Itinerary Download',
-                'High-Priority 24/7 Safety SOS & Support'
-              ]
-            },
-            {
-              id: 'pro_annual',
-              name: 'TourMitra Pro Annual',
-              price: 0,
-              original_price: 1499,
-              billing: '₹0 (Free Offer)',
-              period: 'annual',
-              badge: '100% Free VIP',
-              popular: false,
-              description: 'Full VIP access unlocked for all SIH participants & judges for ₹0',
-              features: [
-                'All Pro Monthly Features Included',
-                '100% Free Special Access (₹0)',
-                'Verified Annual Pro 👑 Badge',
-                'Unlimited Trip Replans & AI Rerouting',
-                'Exclusive Live Festival & Crowd Alerts',
-                'Priority Smart Emergency Response'
-              ]
-            }
-          ]);
-        });
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const currentPlanObj = plans.find(p => p.id === selectedPlan) || plans[0] || {
-    id: 'pro_monthly',
-    name: 'TourMitra Pro Monthly',
-    price: 0
-  };
+  const currentPlanObj = plans.find(p => p.id === selectedPlan) || plans[0];
 
   const handleActivate = async () => {
     setLoading(true);
     setError('');
     try {
-      const res = await api.post('/premium/upgrade', {
-        plan_id: selectedPlan,
-        payment_method: 'free_instant'
-      }).catch(err => {
-        // Fallback for demo mode if backend is unreachable
-        return {
-          user: {
-            ...(user || {}),
-            is_premium: true,
-            premium_tier: selectedPlan
-          }
-        };
-      });
-
-      if (res?.user) {
-        setUser(prev => ({ ...(prev || {}), ...res.user, is_premium: true, premium_tier: selectedPlan }));
-      } else {
-        setUser(prev => ({ ...(prev || {}), is_premium: true, premium_tier: selectedPlan }));
-      }
+      const updatedUser = {
+        ...(user || {}),
+        is_premium: true,
+        premium_tier: selectedPlan
+      };
+      
+      setUser(updatedUser);
+      try {
+        localStorage.setItem('tm_user', JSON.stringify(updatedUser));
+        localStorage.setItem('tourmitra_is_premium', 'true');
+        window.dispatchEvent(new Event('tourmitra_user_updated'));
+      } catch {}
 
       setPaymentStep('success');
       setTimeout(() => {
         if (onSuccess) onSuccess();
         onClose();
-      }, 1400);
+      }, 1200);
     } catch (err) {
-      // Ensure the user is never blocked
       setUser(prev => ({ ...(prev || {}), is_premium: true, premium_tier: selectedPlan }));
       setPaymentStep('success');
       setTimeout(() => {
         if (onSuccess) onSuccess();
         onClose();
-      }, 1400);
+      }, 1200);
     } finally {
       setLoading(false);
     }
