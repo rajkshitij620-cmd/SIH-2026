@@ -201,7 +201,14 @@ def map_static(location:str):
  content,content_type=result
  return Response(content=content,media_type=content_type,headers={'Cache-Control':'public, max-age=900'})
 @api.post('/trips/plan')
-def trip(v:TripInput,u=Depends(optional_user)): return plan(v,u['id'] if u else None)
+def trip(v:TripInput,u=Depends(optional_user)):
+    try:
+        return plan(v, u['id'] if u else None)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(500, f'Planner error: {str(e)}')
+
 @api.get('/trips/history')
 def trip_history(u=Depends(current_user)):
  groups=store.groups_for_user(u['id'])
