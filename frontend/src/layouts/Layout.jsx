@@ -250,24 +250,28 @@ export default function Layout({children}) {
       )}
      </div>
 
-      {/* Pro Membership / Upgrade Badge */}
-      {user && (
-        user.is_premium ? (
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-amber-500/10 via-yellow-500/15 to-amber-500/10 border border-amber-300 dark:border-amber-600/50 shadow-xs" title="TourMitra VIP Pro Active">
-            <Crown size={14} className="text-amber-500 fill-amber-500 animate-pulse" />
-            <span className="text-xs font-extrabold uppercase tracking-wide text-amber-900 dark:text-amber-200">PRO</span>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setPremiumModalOpen(true)}
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/20 hover:scale-[1.03] transition"
-            title="Unlock Same-City TravelMate Group Matching"
-          >
-            <Crown size={14} className="fill-white" />
-            <span>Go Pro</span>
-          </button>
-        )
+      {/* Pro Membership / Upgrade Badge on Header Navbar */}
+      {user?.is_premium ? (
+        <button
+          type="button"
+          onClick={() => setPremiumModalOpen(true)}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/20 to-amber-500/15 border border-amber-300 dark:border-amber-600 shadow-xs hover:scale-[1.02] transition"
+          title="TourMitra VIP Pro Active · Click to view benefits"
+        >
+          <Crown size={14} className="text-amber-500 fill-amber-500 animate-pulse" />
+          <span className="text-xs font-extrabold uppercase tracking-wide text-amber-900 dark:text-amber-200">PRO VIP</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setPremiumModalOpen(true)}
+          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-3 sm:px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-amber-500/25 hover:scale-[1.03] transition group"
+          title="Unlock Same-City TravelMate Group Matching & Single Traveler Connections"
+        >
+          <Crown size={14} className="fill-white group-hover:rotate-12 transition-transform" />
+          <span className="font-extrabold">Premium</span>
+          <span className="rounded bg-white/25 px-1 py-0.2 text-[9px] font-black uppercase">₹0</span>
+        </button>
       )}
 
       {/* Sign in / Sign out button on desktop */}
@@ -290,22 +294,24 @@ export default function Layout({children}) {
       {user&&links.map(([to,label])=><NavLink key={to} to={to} className={linkClass} onClick={closeMenu}>{label}</NavLink>)}
       
       {/* Mobile Pro Upgrade / Status button */}
-      {user && (
-        user.is_premium ? (
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-xs font-bold text-amber-800 dark:text-amber-200">
-            <Crown size={14} className="text-amber-500 fill-amber-500" />
-            <span>TourMitra VIP Pro Active 👑</span>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
-            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-bold text-white shadow-sm"
-          >
-            <Crown size={14} className="fill-white" />
-            <span>Upgrade to TourMitra Pro 👑</span>
-          </button>
-        )
+      {user?.is_premium ? (
+        <button
+          type="button"
+          onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
+          className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-700 text-xs font-bold text-amber-800 dark:text-amber-200 shadow-sm"
+        >
+          <Crown size={15} className="text-amber-500 fill-amber-500" />
+          <span>TourMitra VIP Pro Active 👑</span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => { setPremiumModalOpen(true); closeMenu(); }}
+          className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 px-4 py-2.5 text-xs font-extrabold text-white shadow-md shadow-amber-500/20"
+        >
+          <Crown size={15} className="fill-white" />
+          <span>Unlock TourMitra Pro (Free · ₹0) 👑</span>
+        </button>
       )}
 
       {/* Quick mobile settings buttons */}

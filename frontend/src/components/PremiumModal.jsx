@@ -141,25 +141,61 @@ export default function PremiumModal({ isOpen, onClose, onSuccess, initialReason
 
           {paymentStep === 'plans' && (
             <>
-              {/* Value Highlights */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3.5 flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 grid place-items-center shrink-0">
-                    <Zap size={16} />
+              {/* Core Causes & Why Upgrade Cards */}
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2.5">
+                  Why Get TourMitra Pro? (Key Benefits)
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-amber-200/80 dark:border-amber-900/60 bg-gradient-to-br from-amber-50/70 to-yellow-50/40 dark:from-amber-950/40 dark:to-yellow-950/20 p-3.5 flex items-start gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-amber-500 text-white grid place-items-center shrink-0 shadow-sm">
+                      <Zap size={16} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
+                        <span>Single Traveler Group Creation</span>
+                        <span className="rounded bg-amber-200 dark:bg-amber-900 text-amber-900 dark:text-amber-200 text-[9px] px-1 font-extrabold">FLAGSHIP</span>
+                      </h4>
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-relaxed">
+                        Solo travelers can create & match travel groups with people starting from the <b>same current city</b> heading to the exact same destination.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">Same-City Matching</h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Connect with travelers from your exact city heading to same destination.</p>
-                  </div>
-                </div>
 
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3.5 flex items-start gap-3">
-                  <div className="h-8 w-8 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 grid place-items-center shrink-0">
-                    <Crown size={16} />
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3.5 flex items-start gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-teal-100 dark:bg-teal-950/80 text-teal-700 dark:text-teal-300 grid place-items-center shrink-0">
+                      <Sparkles size={16} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">AI Compatibility & Group Chat</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Smart budget & interest matching score with a private room to chat and plan itineraries together.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">👑 VIP Profile Badge</h4>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Golden crown badge on your profile and TravelMate listings.</p>
+
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3.5 flex items-start gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-yellow-100 dark:bg-yellow-950/80 text-yellow-700 dark:text-yellow-300 grid place-items-center shrink-0">
+                      <Crown size={16} className="fill-yellow-600" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">👑 VIP Crown Profile Badge</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Golden VIP badge displayed across your profile, TravelMate searches, and group listings.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 p-3.5 flex items-start gap-3">
+                    <div className="h-8 w-8 rounded-xl bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 grid place-items-center shrink-0">
+                      <ShieldCheck size={16} />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white">Priority SOS & Offline PDF</h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Instant emergency response backup and offline PDF itinerary download for zero-network areas.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
