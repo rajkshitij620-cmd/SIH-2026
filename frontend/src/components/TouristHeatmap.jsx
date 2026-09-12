@@ -79,18 +79,6 @@ export const CITIES_HEAT_DATA = {
       { id: 'm5', name: 'Juhu Beach & Pav Bhaji Stalls', type: 'Beach & Street Food', baseIntensity: 0.92, morningRush: 0.45, middayRush: 0.50, eveningRush: 0.97, nightRush: 0.90, x: 36, y: 32, rating: 4.6, tip: 'Famous Mumbai street food stalls operate at full swing in evening.' }
     ]
   },
-  kolkata: {
-    name: 'Kolkata, West Bengal',
-    tagline: 'City of Joy, Colonial Heritage & Culture',
-    baseCoord: { lat: 22.5726, lng: 88.3639 },
-    hotspots: [
-      { id: 'k1', name: 'Victoria Memorial & Maidan', type: 'Monument', baseIntensity: 0.90, morningRush: 0.50, middayRush: 0.75, eveningRush: 0.94, nightRush: 0.30, x: 45, y: 65, rating: 4.8, tip: 'Marble galleries and sprawling gardens are very peaceful before 9:30 AM.' },
-      { id: 'k2', name: 'Howrah Bridge & Flower Market', type: 'Landmark / Market', baseIntensity: 0.95, morningRush: 0.98, middayRush: 0.80, eveningRush: 0.92, nightRush: 0.50, x: 40, y: 30, rating: 4.7, tip: 'Mallick Ghat flower market is most vibrant between 6:00 AM - 8:00 AM.' },
-      { id: 'k3', name: 'Park Street Dining & Heritage', type: 'Food / Nightlife', baseIntensity: 0.92, morningRush: 0.20, middayRush: 0.70, eveningRush: 0.96, nightRush: 0.95, x: 55, y: 60, rating: 4.9, tip: 'Historic bakeries and continental restaurants get 20 min queues on weekends.' },
-      { id: 'k4', name: 'Dakshineswar Kali Temple', type: 'Temple', baseIntensity: 0.93, morningRush: 0.90, middayRush: 0.60, eveningRush: 0.88, nightRush: 0.20, x: 42, y: 15, rating: 4.9, tip: 'Take the scenic AC Ferry from Belur Math to skip road traffic.' },
-      { id: 'k5', name: 'College Street & Indian Coffee House', type: 'Books & Culture', baseIntensity: 0.80, morningRush: 0.30, middayRush: 0.85, eveningRush: 0.88, nightRush: 0.30, x: 58, y: 40, rating: 4.6, tip: 'Historic book stalls remain lively throughout afternoon and evening.' }
-    ]
-  },
   agra: {
     name: 'Agra, Uttar Pradesh',
     tagline: 'Mughal Architecture & Taj Mahal Wonder',
@@ -114,6 +102,75 @@ export const CITIES_HEAT_DATA = {
       { id: 'mn4', name: 'Mall Road & Tibetan Monasteries', type: 'Shopping & Stroll', baseIntensity: 0.96, morningRush: 0.25, middayRush: 0.70, eveningRush: 0.99, nightRush: 0.90, x: 55, y: 58, rating: 4.6, tip: 'Pedestrian only zone; peak woollen shopping rush 5:00 PM - 8:30 PM.' },
       { id: 'mn5', name: 'Atal Tunnel & Sissu Waterfall', type: 'Scenic Highway', baseIntensity: 0.92, morningRush: 0.75, middayRush: 0.94, eveningRush: 0.50, nightRush: 0.05, x: 62, y: 15, rating: 4.9, tip: 'Engineering marvel into Lahaul valley; check winter road conditions.' },
       { id: 'mn6', name: 'Vashisht Village & Hot Sulphur Springs', type: 'Hot Springs / Temple', baseIntensity: 0.80, morningRush: 0.80, middayRush: 0.65, eveningRush: 0.75, nightRush: 0.20, x: 60, y: 44, rating: 4.5, tip: 'Natural warm springs are refreshing in the crisp morning air.' }
+    ]
+  },
+  udaipur: {
+    name: 'Udaipur, Rajasthan',
+    tagline: 'City of Lakes, Palaces & Ghats',
+    baseCoord: { lat: 24.5854, lng: 73.7125 },
+    hotspots: [
+      { id: 'u1', name: 'City Palace & Lake Pichola', type: 'Royal Palace', baseIntensity: 0.95, morningRush: 0.60, middayRush: 0.94, eveningRush: 0.88, nightRush: 0.20, x: 48, y: 52, rating: 4.9, tip: 'Composite museum ticket lets you explore Mewar royal corridors at ease.' },
+      { id: 'u2', name: 'Jag Mandir Island Boat Cruise', type: 'Island Palace', baseIntensity: 0.90, morningRush: 0.40, middayRush: 0.75, eveningRush: 0.98, nightRush: 0.60, x: 44, y: 64, rating: 4.8, tip: 'Take the sunset boat cruise from Rameshwar Ghat for golden lake reflections.' },
+      { id: 'u3', name: 'Fateh Sagar Lake & Saheliyon Ki Bari', type: 'Lake / Garden', baseIntensity: 0.88, morningRush: 0.70, middayRush: 0.50, eveningRush: 0.95, nightRush: 0.85, x: 54, y: 32, rating: 4.7, tip: 'Chowpatty food stalls on lake rim open at 4:30 PM with coffee & snacks.' },
+      { id: 'u4', name: 'Sajjangarh Monsoon Palace Sunset', type: 'Hilltop Palace', baseIntensity: 0.92, morningRush: 0.20, middayRush: 0.35, eveningRush: 0.99, nightRush: 0.20, x: 30, y: 36, rating: 4.8, tip: 'Hill peak offers 360-degree sunset view of lakes and Aravalli mountains.' },
+      { id: 'u5', name: 'Bagore Ki Haveli & Dharohar Dance', type: 'Culture / Dance', baseIntensity: 0.91, morningRush: 0.30, middayRush: 0.50, eveningRush: 0.96, nightRush: 0.90, x: 50, y: 48, rating: 4.9, tip: 'Book 7:00 PM Rajasthani folk & puppet show ticket before 5:00 PM.' }
+    ]
+  },
+  amritsar: {
+    name: 'Amritsar, Punjab',
+    tagline: 'Golden Temple, Wagah Border & Punjabi Heritage',
+    baseCoord: { lat: 31.6340, lng: 74.8723 },
+    hotspots: [
+      { id: 'am1', name: 'Sri Harmandir Sahib (Golden Temple)', type: 'Sacred Gurdwara', baseIntensity: 0.99, morningRush: 0.95, middayRush: 0.85, eveningRush: 0.98, nightRush: 0.92, x: 50, y: 50, rating: 5.0, tip: 'Palki Sahib ceremony at 4:30 AM & 9:30 PM is deeply spiritual. Langar runs 24/7.' },
+      { id: 'am2', name: 'Wagah Border Beating Retreat Ceremony', type: 'National Border', baseIntensity: 0.96, morningRush: 0.10, middayRush: 0.40, eveningRush: 0.99, nightRush: 0.05, x: 22, y: 48, rating: 4.9, tip: 'Reach border stadium by 3:00 PM for front bleacher seats.' },
+      { id: 'am3', name: 'Jallianwala Bagh Memorial', type: 'Historic Memorial', baseIntensity: 0.90, morningRush: 0.60, middayRush: 0.92, eveningRush: 0.80, nightRush: 0.10, x: 54, y: 53, rating: 4.8, tip: 'Light and Sound evening show is moving and informative.' },
+      { id: 'am4', name: 'Heritage Street & Hall Bazaar Food Walk', type: 'Food / Market', baseIntensity: 0.94, morningRush: 0.50, middayRush: 0.80, eveningRush: 0.98, nightRush: 0.90, x: 46, y: 44, rating: 4.8, tip: 'Try authentic Amritsari Kulcha, Lassi & Jalebis on Heritage Street.' }
+    ]
+  },
+  rishikesh: {
+    name: 'Rishikesh & Haridwar, Uttarakhand',
+    tagline: 'Yoga Capital, Ganga Ghats & River Adventure',
+    baseCoord: { lat: 30.0869, lng: 78.2676 },
+    hotspots: [
+      { id: 'r1', name: 'Triveni Ghat Evening Maha Aarti', type: 'Ghat / Aarti', baseIntensity: 0.96, morningRush: 0.65, middayRush: 0.40, eveningRush: 0.99, nightRush: 0.40, x: 48, y: 62, rating: 4.9, tip: 'Arrive by 5:15 PM for seated front view of chanting and floating diyas.' },
+      { id: 'r2', name: 'Laxman Jhula & Ram Jhula Walkways', type: 'Suspension Bridge', baseIntensity: 0.92, morningRush: 0.70, middayRush: 0.75, eveningRush: 0.95, nightRush: 0.60, x: 52, y: 35, rating: 4.7, tip: 'Cross on foot in morning; vibrant riverside cafes line both banks.' },
+      { id: 'r3', name: 'Shivpuri White Water River Rafting', type: 'Adventure / Rafting', baseIntensity: 0.90, morningRush: 0.90, middayRush: 0.85, eveningRush: 0.40, nightRush: 0.05, x: 65, y: 20, rating: 4.9, tip: 'Grade III rapids run best from 9:00 AM - 1:00 PM.' },
+      { id: 'r4', name: 'Beatles Ashram (Chaurasi Kutia)', type: 'Heritage / Yoga', baseIntensity: 0.82, morningRush: 0.55, middayRush: 0.70, eveningRush: 0.60, nightRush: 0.05, x: 58, y: 45, rating: 4.7, tip: 'Graffiti meditation caves inside Rajaji Tiger Reserve boundary.' },
+      { id: 'r5', name: 'Har Ki Pauri Ghat (Haridwar)', type: 'Sacred Ghat', baseIntensity: 0.98, morningRush: 0.85, middayRush: 0.60, eveningRush: 0.99, nightRush: 0.70, x: 38, y: 80, rating: 4.9, tip: 'Ganga Aarti at sunset is one of the most sacred sights in India.' }
+    ]
+  },
+  hyderabad: {
+    name: 'Hyderabad, Telangana',
+    tagline: 'City of Pearls, Charminar & Biryani Corridors',
+    baseCoord: { lat: 17.3850, lng: 78.4867 },
+    hotspots: [
+      { id: 'h1', name: 'Charminar & Laad Bazaar', type: 'Heritage / Bazaars', baseIntensity: 0.97, morningRush: 0.40, middayRush: 0.85, eveningRush: 0.99, nightRush: 0.95, x: 50, y: 70, rating: 4.8, tip: 'Bangle market and Irani Chai bakeries around monument stay bustling till midnight.' },
+      { id: 'h2', name: 'Golconda Fort & Sound Light Show', type: 'Citadel', baseIntensity: 0.90, morningRush: 0.60, middayRush: 0.85, eveningRush: 0.94, nightRush: 0.30, x: 32, y: 44, rating: 4.8, tip: 'Acoustic clapping portico and hilltop sunset view are world renowned.' },
+      { id: 'h3', name: 'Hussain Sagar Lake & Buddha Statue', type: 'Lake Promenade', baseIntensity: 0.88, morningRush: 0.50, middayRush: 0.45, eveningRush: 0.96, nightRush: 0.85, x: 52, y: 45, rating: 4.7, tip: 'Take the speedboat to the monolithic Buddha statue at sunset.' },
+      { id: 'h4', name: 'Qutb Shahi Tombs & Heritage Park', type: 'Heritage Gardens', baseIntensity: 0.82, morningRush: 0.60, middayRush: 0.70, eveningRush: 0.75, nightRush: 0.10, x: 28, y: 40, rating: 4.7, tip: 'Magnificent domed architecture and peaceful restored gardens.' },
+      { id: 'h5', name: 'HITEC City & Gachibowli Dining District', type: 'Modern Dining', baseIntensity: 0.92, morningRush: 0.20, middayRush: 0.70, eveningRush: 0.90, nightRush: 0.98, x: 68, y: 35, rating: 4.8, tip: 'Tech hub with fine dining, brewpubs and night lounges.' }
+    ]
+  },
+  chennai: {
+    name: 'Chennai, Tamil Nadu',
+    tagline: 'Marina Beach, Dravidian Temples & Coastal Culture',
+    baseCoord: { lat: 13.0827, lng: 80.2707 },
+    hotspots: [
+      { id: 'ch1', name: 'Marina Beach & Light House Promenade', type: 'Beach Coast', baseIntensity: 0.95, morningRush: 0.80, middayRush: 0.35, eveningRush: 0.99, nightRush: 0.88, x: 60, y: 55, rating: 4.7, tip: 'Second longest urban beach; evening breeze and sundal food stalls.' },
+      { id: 'ch2', name: 'Kapaleeshwarar Temple (Mylapore)', type: 'Dravidian Temple', baseIntensity: 0.92, morningRush: 0.95, middayRush: 0.40, eveningRush: 0.92, nightRush: 0.30, x: 52, y: 65, rating: 4.9, tip: 'Towering gopuram and peaceful temple tank; best in early morning.' },
+      { id: 'ch3', name: 'San Thome Cathedral Basilica', type: 'Heritage Church', baseIntensity: 0.82, morningRush: 0.60, middayRush: 0.65, eveningRush: 0.75, nightRush: 0.15, x: 62, y: 68, rating: 4.7, tip: 'Historic neo-Gothic cathedral built over the tomb of St. Thomas.' },
+      { id: 'ch4', name: 'Besant Nagar (Elliot’s Beach) & Cafes', type: 'Beach / Cafes', baseIntensity: 0.90, morningRush: 0.65, middayRush: 0.40, eveningRush: 0.98, nightRush: 0.90, x: 65, y: 80, rating: 4.8, tip: 'Popular cafe street and relaxed seaside strolling.' }
+    ]
+  },
+  kochi: {
+    name: 'Kochi & Alleppey, Kerala',
+    tagline: 'Houseboats, Fort Kochi Chinese Nets & Backwaters',
+    baseCoord: { lat: 9.9312, lng: 76.2673 },
+    hotspots: [
+      { id: 'kc1', name: 'Fort Kochi Beach & Chinese Fishing Nets', type: 'Coastal Heritage', baseIntensity: 0.94, morningRush: 0.60, middayRush: 0.60, eveningRush: 0.99, nightRush: 0.70, x: 42, y: 45, rating: 4.8, tip: 'Sunset against the silhouette of working cantilevered fishing nets.' },
+      { id: 'kc2', name: 'Mattancherry Palace (Dutch Palace) & Jew Town', type: 'Heritage / Antiquities', baseIntensity: 0.88, morningRush: 0.50, middayRush: 0.88, eveningRush: 0.70, nightRush: 0.10, x: 48, y: 55, rating: 4.7, tip: '16th century murals and antique spice warehouses in Jew Town.' },
+      { id: 'kc3', name: 'Alleppey Backwaters & Houseboat Cruise', type: 'Backwaters', baseIntensity: 0.96, morningRush: 0.80, middayRush: 0.90, eveningRush: 0.92, nightRush: 0.50, x: 55, y: 80, rating: 4.9, tip: 'Overnight houseboat or 3-hour Shikara boat through palm-fringed canals.' },
+      { id: 'kc4', name: 'Marine Drive Promenade & Rainbow Bridge', type: 'Promenade', baseIntensity: 0.89, morningRush: 0.45, middayRush: 0.50, eveningRush: 0.96, nightRush: 0.85, x: 58, y: 38, rating: 4.6, tip: 'Harbour sunset cruise boats depart every 30 minutes.' }
     ]
   }
 };
@@ -152,25 +209,27 @@ function generateDynamicCityData(cityName, trip) {
   }
 
   // Deduplicate and filter
-  const uniquePlaces = Array.from(new Set(tripPlaces)).slice(0, 6);
+  const uniquePlaces = Array.from(new Set(tripPlaces.map(p => {
+    return p.replace(/^(visit|explore|head to|discover|tour)\s+/i, '').trim();
+  }))).slice(0, 6);
 
   const fallbackTemplates = [
     { suffix: 'Historic Fort & Heritage Palace', type: 'Heritage / Monument', rush: [0.45, 0.90, 0.82, 0.15], x: 50, y: 32, tip: 'Visit in the early morning for best photography and minimal queue.' },
     { suffix: 'Central Gardens & Promenade', type: 'Nature & Botanical', rush: [0.85, 0.45, 0.92, 0.30], x: 42, y: 55, tip: 'Peaceful morning walk hours between 6:30 AM and 9:00 AM.' },
     { suffix: 'Old City Bazaar & Food Corridor', type: 'Market / Street Food', rush: [0.20, 0.65, 0.98, 0.92], x: 62, y: 50, tip: 'Peak shopping and local cuisine rush from 5:00 PM to 8:30 PM.' },
     { suffix: 'Sacred Temple & Spiritual Shrine', type: 'Spiritual & Cultural', rush: [0.92, 0.70, 0.85, 0.35], x: 35, y: 68, tip: 'Morning and evening aarti darshan hours are most auspicious.' },
-    { suffix: 'Scenic Sunset Viewpoint & Lake', type: 'Viewpoint & Sunset', rush: [0.25, 0.40, 0.96, 0.60], x: 68, y: 28, rating: 4.8, tip: 'Arrive 40 minutes prior to golden hour for unobstructed sunset views.' },
+    { suffix: 'Scenic Sunset Viewpoint & Lake', type: 'Viewpoint & Sunset', rush: [0.25, 0.40, 0.96, 0.60], x: 68, y: 28, tip: 'Arrive 40 minutes prior to golden hour for unobstructed sunset views.' },
     { suffix: 'Cultural Arts & Crafts Pavilion', type: 'Museum & Arts', rush: [0.30, 0.80, 0.75, 0.10], x: 56, y: 78, tip: 'Composite entry ticket available at entrance; very calm post-lunch.' }
   ];
 
   const hotspots = [];
 
-  if (uniquePlaces.length >= 3) {
+  if (uniquePlaces.length >= 2) {
     uniquePlaces.forEach((p, idx) => {
       const template = fallbackTemplates[idx % fallbackTemplates.length];
       hotspots.push({
         id: `dyn_${idx + 1}`,
-        name: p,
+        name: p.includes(baseTitle) ? p : `${p}`,
         type: template.type,
         baseIntensity: 0.85 + (idx % 3) * 0.05,
         morningRush: template.rush[0],
@@ -217,7 +276,7 @@ function resolveCityData(targetCity, trip) {
   }
   const clean = targetCity.toLowerCase().trim();
 
-  // Direct and alias matches
+  // Direct and alias matches for all major predefined cities
   if (clean.includes('bengaluru') || clean.includes('bangalore')) return CITIES_HEAT_DATA.bengaluru;
   if (clean.includes('jaipur')) return CITIES_HEAT_DATA.jaipur;
   if (clean.includes('varanasi') || clean.includes('kashi') || clean.includes('banaras')) return CITIES_HEAT_DATA.varanasi;
@@ -227,6 +286,12 @@ function resolveCityData(targetCity, trip) {
   if (clean.includes('kolkata') || clean.includes('calcutta')) return CITIES_HEAT_DATA.kolkata;
   if (clean.includes('agra')) return CITIES_HEAT_DATA.agra;
   if (clean.includes('manali') || clean.includes('solang') || clean.includes('kullu')) return CITIES_HEAT_DATA.manali;
+  if (clean.includes('udaipur')) return CITIES_HEAT_DATA.udaipur;
+  if (clean.includes('amritsar')) return CITIES_HEAT_DATA.amritsar;
+  if (clean.includes('rishikesh') || clean.includes('haridwar')) return CITIES_HEAT_DATA.rishikesh;
+  if (clean.includes('hyderabad')) return CITIES_HEAT_DATA.hyderabad;
+  if (clean.includes('chennai') || clean.includes('madras')) return CITIES_HEAT_DATA.chennai;
+  if (clean.includes('kochi') || clean.includes('cochin') || clean.includes('kerala') || clean.includes('alleppey')) return CITIES_HEAT_DATA.kochi;
 
   // Check any other key in CITIES_HEAT_DATA
   for (const [key, data] of Object.entries(CITIES_HEAT_DATA)) {
@@ -235,7 +300,7 @@ function resolveCityData(targetCity, trip) {
     }
   }
 
-  // Dynamic fallback for any other destination in India
+  // Dynamic fallback for any other destination in India (e.g. Bodh Gaya, Patna, Lucknow, Gangtok, Puri, Hampi, Ooty, Darjeeling, etc.)
   return generateDynamicCityData(targetCity, trip);
 }
 
