@@ -318,7 +318,7 @@ export default function TouristHeatmap({ initialCity = 'jaipur', embedded = fals
             avgRush >= 50 ? 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300' :
             'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
           }`}>
-            {avgRush >= 80 ? '🔴 High Rush' : avgRush >= 50 ? '🟡 Moderate' : '🟢 Smooth / Calm'}
+            {avgRush >= 80 ? 'High Rush' : avgRush >= 50 ? 'Moderate' : 'Smooth / Calm'}
           </span>
         </div>
       </div>
@@ -377,7 +377,7 @@ export default function TouristHeatmap({ initialCity = 'jaipur', embedded = fals
 
           {/* Map Overlay Badges */}
           <div className="absolute top-3 left-3 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700 text-white text-[11px] font-medium shadow">
-            📍 <b>{cityData.name}</b> · {activeLayer === 'crowd' ? 'Live Heatmap' : activeLayer === 'popularity' ? 'Popularity Map' : 'Safety Map'}
+            <b>{cityData.name}</b> · {activeLayer === 'crowd' ? 'Live Heatmap' : activeLayer === 'popularity' ? 'Popularity Map' : 'Safety Map'}
           </div>
 
           {/* Color Gradient Legend */}
@@ -437,7 +437,7 @@ export default function TouristHeatmap({ initialCity = 'jaipur', embedded = fals
 
                   <div className="mt-1 flex items-center justify-between text-[11px] text-slate-500">
                     <span>{spot.type} · ★ {spot.rating}</span>
-                    <span className="text-teal-700 dark:text-teal-400 font-medium">Click for Advice →</span>
+                    <span className="text-teal-700 dark:text-teal-400 font-medium">View Advice →</span>
                   </div>
                 </article>
               );
@@ -452,7 +452,7 @@ export default function TouristHeatmap({ initialCity = 'jaipur', embedded = fals
                 <span className="text-[11px] text-teal-800 dark:text-teal-300 font-bold">★ {selectedHotspot.rating}</span>
               </div>
               <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
-                💡 <b>AI Visitor Tip:</b> {selectedHotspot.tip}
+                <b>AI Visitor Tip:</b> {selectedHotspot.tip}
               </p>
               <a
                 href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedHotspot.name + ' ' + cityData.name)}`}

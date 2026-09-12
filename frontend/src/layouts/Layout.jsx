@@ -125,12 +125,12 @@ export default function Layout({children}) {
   const links = !user
   ? [['/','Home'],['/plan','Plan Trip'],['/assistant','AI Assistant']]
   : isMakeGroupPage
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','🔥 Heatmap'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/groups','My Groups'],['/find-travelers','TravelMates'],['/requests','Requests'],['/assistant','AI Assistant']]
   : hasSavedTours
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','🔥 Heatmap'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
+  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/saved-tours','Saved Tours'],['/assistant','AI Assistant']]
   : isUnsavedTourView
-  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','🔥 Heatmap'],['/tour-guide','Tour Guide'],['/assistant','AI Assistant']]
-  : [['/','Home'],['/plan','Plan Trip'],['/heatmap','🔥 Heatmap'],['/assistant','AI Assistant']];
+  ? [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/tour-guide','Tour Guide'],['/assistant','AI Assistant']]
+  : [['/','Home'],['/plan','Plan Trip'],['/heatmap','Heatmap'],['/assistant','AI Assistant']];
   const isHomePage = pathname === '/';
   return <div className="flex min-h-screen flex-col">
    <header className={`site-header sticky top-0 z-40 transition-all duration-300 ${
