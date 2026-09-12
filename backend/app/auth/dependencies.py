@@ -9,3 +9,10 @@ def current_user(credentials: HTTPAuthorizationCredentials=Depends(bearer)):
  user=store.user_by_id(decode_token(credentials.credentials))
  if not user: raise HTTPException(401,'User not found')
  return user
+
+def optional_user(credentials: HTTPAuthorizationCredentials=Depends(bearer)):
+ if not credentials: return None
+ user_id=decode_token(credentials.credentials)
+ if not user_id: return None
+ return store.user_by_id(user_id)
+

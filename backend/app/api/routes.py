@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Response, Header
 from pymongo.errors import DuplicateKeyError
 from app.schemas.core import RegisterInput, LoginInput, ResetPasswordInput, GoogleAuthInput, TripInput, ChatInput, ConnectionDecision, GroupInput, GroupMessageInput
 from app.auth.security import hash_password, verify_password, password_needs_rehash, create_token, decode_token
-from app.auth.dependencies import current_user
+from app.auth.dependencies import current_user, optional_user
 from app.database.store import store
 from app.ai.recommender.engine import recommend, crowd_alternative
 from app.services.planner import plan, recalculate
@@ -201,7 +201,7 @@ def map_static(location:str):
  content,content_type=result
  return Response(content=content,media_type=content_type,headers={'Cache-Control':'public, max-age=900'})
 @api.post('/trips/plan')
-def trip(v:TripInput,u=Depends(current_user)): return plan(v,u['id'])
+def trip(v:TripInput,u=Depends(optional_user)): return plan(v,u['id'] if u else None)
 @api.get('/trips/history')
 def trip_history(u=Depends(current_user)):
  groups=store.groups_for_user(u['id'])
@@ -237,13 +237,15 @@ def saved_tours(u=Depends(current_user)):
    seen_trip_ids.add(trip['id'])
  return sorted(entries,key=lambda entry:(entry['trip'].get('created_at',''),entry['trip']['input'].get('start_date','')),reverse=True)
 @api.get('/trips/{identifier}')
-def trip_get(identifier:str,u=Depends(current_user)):
+def trip_get(identifier:str,u=Depends(optional_user)):
  x=store.itinerary_by_id(identifier)
  if not x: raise HTTPException(404,'Trip not found')
- owner=x['user_id']==u['id']
+ if not x.get('user_id') or not u:
+  return {**x,'shared_with_group':False}
+ owner=x.get('user_id')==u['id']
  shared=any(group['trip_id']==identifier and u['id'] in group['member_ids'] for group in store.groups_for_user(u['id']))
- if not owner and not shared: raise HTTPException(404,'Trip not found')
  return {**x,'shared_with_group':shared and not owner}
+
 @api.post('/trips/{identifier}/save')
 def save(identifier:str,u=Depends(current_user)):
  x=store.itinerary_by_id(identifier)

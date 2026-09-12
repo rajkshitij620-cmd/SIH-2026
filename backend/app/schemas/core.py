@@ -23,23 +23,34 @@ class GoogleAuthInput(BaseModel):
 class TripInput(BaseModel):
     destination: str = Field(min_length=2)
     budget: int = Field(ge=1000, le=1000000)
-    days: int = Field(default=1, ge=1, le=14)
-    travellers: int = Field(ge=1)
+    days: Optional[int] = Field(default=1, ge=1, le=14)
+    travellers: int = Field(default=1, ge=1)
     traveller_type: str = 'Family'
-    gender: Optional[str] = Field(default=None, pattern='^(male|female|other)$')
-    age: Optional[int] = Field(default=None, ge=18, le=120)
+    gender: Optional[str] = None
+    age: Optional[int] = None
     interests: List[str] = []
     language: str = 'en'
     preferences: List[str] = []
     start_date: str = Field(min_length=10, max_length=10)
     end_date: str = Field(min_length=10, max_length=10)
-    travel_type: str = Field(pattern='^(single|group)$')
-    connection_option: Optional[str] = Field(default=None, pattern='^(single_travelling|connect_people)$')
-    trip_photo: Optional[str] = Field(default=None, max_length=6_000_000)
+    travel_type: str = 'single'
+    connection_option: Optional[str] = None
+    trip_photo: Optional[str] = None
     group_member_photos: List[str] = Field(default_factory=list, max_length=10)
-    current_location_city: Optional[str] = Field(default=None, max_length=100)
-    current_location_latitude: Optional[float] = Field(default=None, ge=-90, le=90)
-    current_location_longitude: Optional[float] = Field(default=None, ge=-180, le=180)
+    current_location_city: Optional[str] = None
+    current_location_latitude: Optional[float] = None
+    current_location_longitude: Optional[float] = None
+
+    @model_validator(mode='before')
+    @classmethod
+    def clean_empty_strings(cls, values):
+        if isinstance(values, dict):
+            for k in ['gender', 'connection_option', 'trip_photo', 'current_location_city', 'age']:
+                if values.get(k) == '' or values.get(k) is None:
+                    values[k] = None
+            if values.get('travel_type') not in ['single', 'group']:
+                values['travel_type'] = 'single'
+        return values
 
     @model_validator(mode='after')
     def valid_trip_dates(self):
@@ -65,3 +76,4 @@ class GroupInput(BaseModel):
 
 class GroupMessageInput(BaseModel):
     message: str = Field(min_length=1, max_length=1000)
+
