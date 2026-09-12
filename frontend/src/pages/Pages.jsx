@@ -755,7 +755,7 @@ export function Planner(){
   <div className="shell max-w-3xl py-10 sm:py-14">
    <div className="text-center max-w-xl mx-auto">
     <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
-     {hasPreviousTrip?'Plan Another Journey with AI':'Craft Your Personalized Journey'}
+     Plan Your Perfect Trip
     </h1>
    </div>
 
