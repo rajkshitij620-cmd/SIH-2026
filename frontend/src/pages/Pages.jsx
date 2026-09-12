@@ -1096,7 +1096,7 @@ function LiveMap({location,trip}){
         </div>
 
         {viewMode==='heatmap' ? (
-          <TouristHeatmap initialCity={location} embedded={true}/>
+          <TouristHeatmap initialCity={location} trip={trip} embedded={true}/>
         ) : (
           map ? (
             <div className="card">
