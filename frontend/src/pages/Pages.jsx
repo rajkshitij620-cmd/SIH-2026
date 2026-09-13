@@ -654,9 +654,6 @@ export function Planner(){
     </div>
     <p className="eyebrow mt-4">Single Travel Selection</p>
     <h1 className="text-2xl sm:text-3xl font-bold mt-1">How would you like to explore {draft.destination}?</h1>
-    <p className="mt-3 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-     Get a tailored day-wise Solo Tour Guide (Free), or match with verified TravelMates from your same city heading to {draft.destination} (TourMitra Pro).
-    </p>
     
     <div className="mt-8 grid gap-4 sm:grid-cols-2">
      <button 
