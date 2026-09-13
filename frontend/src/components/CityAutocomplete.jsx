@@ -271,7 +271,8 @@ export default function CityAutocomplete({
   inputClassName = "",
   showIcon = true,
   iconSize = 18,
-  autoFocus = false
+  autoFocus = false,
+  simple = false
 }) {
   const [query, setQuery] = useState(value || '');
   const [isOpen, setIsOpen] = useState(false);
@@ -384,15 +385,39 @@ export default function CityAutocomplete({
 
       {/* Autocomplete Suggestion Dropdown */}
       {isOpen && suggestions.length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 max-h-72 overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl z-50 animate-in fade-in duration-100">
-          <div className="p-1.5 space-y-1">
-            <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-              <span>Suggested Indian Destinations</span>
-              <span className="text-[9px] font-normal lowercase">Press ↑↓ to navigate</span>
-            </div>
+        <div className="absolute left-0 right-0 top-full mt-1.5 max-h-64 overflow-y-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl z-50 animate-in fade-in duration-100">
+          <div className="p-1.5 space-y-0.5">
+            {!simple && (
+              <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center mb-1">
+                <span>Suggested Indian Destinations</span>
+                <span className="text-[9px] font-normal lowercase">Press ↑↓ to navigate</span>
+              </div>
+            )}
 
             {suggestions.map((dest, index) => {
               const isHighlighted = highlightedIndex === index;
+              const cityName = dest.name.includes('(') ? dest.name.split('(')[0].trim() : dest.name;
+
+              if (simple) {
+                return (
+                  <div
+                    key={dest.name + index}
+                    onClick={() => handleSelect(dest)}
+                    onMouseEnter={() => setHighlightedIndex(index)}
+                    className={`cursor-pointer rounded-lg px-3 py-2 text-sm flex items-center justify-between transition-colors ${
+                      isHighlighted
+                        ? 'bg-teal-700 text-white font-semibold shadow-xs'
+                        : 'hover:bg-teal-50 dark:hover:bg-teal-950/60 text-slate-800 dark:text-slate-200'
+                    }`}
+                  >
+                    <span className="truncate font-medium">{cityName}</span>
+                    <span className={`text-xs ml-2 shrink-0 ${isHighlighted ? 'text-teal-100' : 'text-slate-400 dark:text-slate-500'}`}>
+                      {dest.state}
+                    </span>
+                  </div>
+                );
+              }
+
               return (
                 <div
                   key={dest.name + index}

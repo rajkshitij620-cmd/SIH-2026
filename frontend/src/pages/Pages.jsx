@@ -762,6 +762,7 @@ export function Planner(){
         placeholder="e.g. Delhi, Mumbai, Patna"
         required={true}
         showIcon={false}
+        simple={true}
         inputClassName="input bg-white dark:bg-slate-900"
        />
       </div>
