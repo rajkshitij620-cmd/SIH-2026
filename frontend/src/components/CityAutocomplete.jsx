@@ -148,10 +148,27 @@ export const ALL_INDIAN_DESTINATIONS = [
 
   // P
   { name: 'Patna', state: 'Bihar', tag: 'Golghar, Takht Sri Patna Sahib & Ganga Ghats', category: 'Heritage' },
+  { name: 'Pune', state: 'Maharashtra', tag: 'Shaniwar Wada & Sinhagad Fort', category: 'Heritage' },
   { name: 'Puri', state: 'Odisha', tag: 'Jagannath Temple & Golden Beach', category: 'Spiritual' },
   { name: 'Pushkar', state: 'Rajasthan', tag: 'Brahma Temple & Sacred Lake', category: 'Spiritual' },
-  { name: 'Pune', state: 'Maharashtra', tag: 'Shaniwar Wada & Sinhagad Fort', category: 'Heritage' },
   { name: 'Pondicherry (Puducherry)', state: 'Puducherry', tag: 'French Colony, Promenade & Auroville', category: 'Coastal' },
+  { name: 'Panipat', state: 'Haryana', tag: 'Historic Battles & Textile City', category: 'Heritage' },
+  { name: 'Palakkad', state: 'Kerala', tag: 'Palakkad Fort & Silent Valley', category: 'Nature' },
+  { name: 'Panchkula', state: 'Haryana', tag: 'Mata Mansa Devi & Pinjore Gardens', category: 'City' },
+  { name: 'Pathankot', state: 'Punjab', tag: 'Mukteshwar Temple & Gateway to Hills', category: 'City' },
+  { name: 'Patiala', state: 'Punjab', tag: 'Qila Mubarak & Sheesh Mahal', category: 'Heritage' },
+  { name: 'Purnia (Purnea)', state: 'Bihar', tag: 'City of Purnea & Kali Mandir', category: 'City' },
+  { name: 'Pali', state: 'Rajasthan', tag: 'Ranakpur Jain Temple & Om Banna', category: 'Heritage' },
+  { name: 'Panna', state: 'Madhya Pradesh', tag: 'Panna National Park & Diamond Mines', category: 'Nature' },
+  { name: 'Panvel', state: 'Maharashtra', tag: 'Karnala Bird Sanctuary & Fort', category: 'City' },
+  { name: 'Parbhani', state: 'Maharashtra', tag: 'Hazrat Turabul Haq Dargah', category: 'City' },
+  { name: 'Pithoragarh', state: 'Uttarakhand', tag: 'Mini Kashmir & Himalayan Peaks', category: 'Mountains' },
+  { name: 'Palani', state: 'Tamil Nadu', tag: 'Murugan Temple & Sacred Hills', category: 'Spiritual' },
+  { name: 'Pollachi', state: 'Tamil Nadu', tag: 'Topslip & Anamalai Tiger Reserve', category: 'Nature' },
+  { name: 'Phagwara', state: 'Punjab', tag: 'NRI Hub & Heritage City', category: 'City' },
+  { name: 'Pelling', state: 'Sikkim', tag: 'Kanchenjunga View & Pemayangtse Monastery', category: 'Mountains' },
+  { name: 'Pilani', state: 'Rajasthan', tag: 'BITS Pilani & Birla Museum', category: 'City' },
+  { name: 'Pratapgarh', state: 'Uttar Pradesh', tag: 'Bhakti Dham Mangarh & Amla City', category: 'City' },
   { name: 'Pahalgam', state: 'Jammu & Kashmir', tag: 'Betaab Valley & Aru Valley', category: 'Mountains' },
   { name: 'Panaji', state: 'Goa', tag: 'Fontainhas Latin Quarter & Mandovi River', category: 'Coastal' },
   { name: 'Prayagraj (Allahabad)', state: 'Uttar Pradesh', tag: 'Triveni Sangam & Kumbh Mela', category: 'Spiritual' },
@@ -167,6 +184,11 @@ export const ALL_INDIAN_DESTINATIONS = [
   { name: 'Ranchi', state: 'Jharkhand', tag: 'Hundru Falls & Tagore Hill', category: 'Nature' },
   { name: 'Raipur', state: 'Chhattisgarh', tag: 'Swami Vivekananda Sarovar', category: 'City' },
   { name: 'Rajkot', state: 'Gujarat', tag: 'Watson Museum & Gandhi Smriti', category: 'Heritage' },
+  { name: 'Rohtak', state: 'Haryana', tag: 'Tilyar Lake & Heritage', category: 'City' },
+  { name: 'Rewa', state: 'Madhya Pradesh', tag: 'White Tiger Safari & Waterfalls', category: 'Nature' },
+  { name: 'Ratlam', state: 'Madhya Pradesh', tag: 'Cactus Garden & Sev Capital', category: 'City' },
+  { name: 'Rajahmundry', state: 'Andhra Pradesh', tag: 'Godavari River & Pushkar Ghat', category: 'Spiritual' },
+  { name: 'Raichur', state: 'Karnataka', tag: 'Raichur Fort & Krishna River', category: 'Heritage' },
   { name: 'Rohtang Pass', state: 'Himachal Pradesh', tag: 'High Altitude Snow Pass', category: 'Mountains' },
   { name: 'Rourkela', state: 'Odisha', tag: 'Vedvyas & Hanuman Vatika', category: 'City' },
   { name: 'Ratnagiri', state: 'Maharashtra', tag: 'Alphonso Mangoes & Ganpatipule', category: 'Coastal' },
@@ -184,6 +206,18 @@ export const ALL_INDIAN_DESTINATIONS = [
   { name: 'Sanchi', state: 'Madhya Pradesh', tag: 'Great Buddhist Stupa & UNESCO Site', category: 'Heritage' },
   { name: 'Sarnath', state: 'Uttar Pradesh', tag: 'Dhamek Stupa & Ashoka Pillar', category: 'Heritage' },
   { name: 'Sundarbans', state: 'West Bengal', tag: 'Royal Bengal Tiger Mangrove Delta', category: 'Nature' },
+  { name: 'Saharanpur', state: 'Uttar Pradesh', tag: 'Woodcraft Capital & Shakumbhari Devi', category: 'City' },
+  { name: 'Salem', state: 'Tamil Nadu', tag: 'Yercaud Hills & Mango City', category: 'City' },
+  { name: 'Sambalpur', state: 'Odisha', tag: 'Hirakud Dam & Samaleswari Temple', category: 'Heritage' },
+  { name: 'Sangli', state: 'Maharashtra', tag: 'Turmeric City & Krishna River', category: 'City' },
+  { name: 'Satara', state: 'Maharashtra', tag: 'Kaas Plateau Valley of Flowers', category: 'Nature' },
+  { name: 'Satna', state: 'Madhya Pradesh', tag: 'Maihar Sharda Devi & Chitrakoot', category: 'Spiritual' },
+  { name: 'Sikar', state: 'Rajasthan', tag: 'Khatu Shyam Ji & Shekhawati Havelis', category: 'Spiritual' },
+  { name: 'Sirsa', state: 'Haryana', tag: 'Tara Baba Kutiya & Ancient Sarsuti', category: 'City' },
+  { name: 'Solapur', state: 'Maharashtra', tag: 'Siddheshwar Temple & Solapuri Chaddar', category: 'Spiritual' },
+  { name: 'Sonipat', state: 'Haryana', tag: 'Khwaja Khizr Tomb & Murthal Dhabas', category: 'City' },
+  { name: 'Shimoga (Shivamogga)', state: 'Karnataka', tag: 'Jog Falls & Western Ghats', category: 'Nature' },
+  { name: 'Silchar', state: 'Assam', tag: 'Barak Valley & Khaspur Ruins', category: 'City' },
 
   // T
   { name: 'Tirupati', state: 'Andhra Pradesh', tag: 'Sri Venkateswara Tirumala Temple', category: 'Spiritual' },
@@ -193,12 +227,18 @@ export const ALL_INDIAN_DESTINATIONS = [
   { name: 'Thekkady (Periyar)', state: 'Kerala', tag: 'Elephant & Wildlife Boat Safari', category: 'Nature' },
   { name: 'Tawang', state: 'Arunachal Pradesh', tag: 'Tawang Monastery & Sela Pass', category: 'Mountains' },
   { name: 'Tezpur', state: 'Assam', tag: 'Agnigarh & Cultural City', category: 'Heritage' },
+  { name: 'Thane', state: 'Maharashtra', tag: 'City of Lakes & Upvan Lake', category: 'City' },
+  { name: 'Tiruchirappalli (Trichy)', state: 'Tamil Nadu', tag: 'Rockfort Temple & Srirangam', category: 'Spiritual' },
+  { name: 'Tirunelveli', state: 'Tamil Nadu', tag: 'Nellaiappar Temple & Halwa City', category: 'Spiritual' },
+  { name: 'Tirupur', state: 'Tamil Nadu', tag: 'Knitwear Capital of India', category: 'City' },
+  { name: 'Tumakuru (Tumkur)', state: 'Karnataka', tag: 'Siddaganga Mutt & Devarayanadurga', category: 'Spiritual' },
 
   // U
   { name: 'Udaipur', state: 'Rajasthan', tag: 'City of Lakes, City Palace & Lake Pichola', category: 'Heritage' },
   { name: 'Ujjain', state: 'Madhya Pradesh', tag: 'Mahakaleshwar Jyotirlinga & Mahakal Lok', category: 'Spiritual' },
   { name: 'Uttarkashi', state: 'Uttarakhand', tag: 'Vishwanath Temple & Trekking Hub', category: 'Mountains' },
   { name: 'Udupi', state: 'Karnataka', tag: 'Krishna Mutt & Malpe St. Mary’s Island', category: 'Coastal' },
+  { name: 'Unnao', state: 'Uttar Pradesh', tag: 'Nawabganj Bird Sanctuary', category: 'City' },
 
   // V
   { name: 'Varanasi (Kashi / Banaras)', state: 'Uttar Pradesh', tag: 'Kashi Vishwanath, Ganga Ghats & Aarti', category: 'Spiritual' },
@@ -208,10 +248,16 @@ export const ALL_INDIAN_DESTINATIONS = [
   { name: 'Vijayawada', state: 'Andhra Pradesh', tag: 'Kanaka Durga Temple & Prakasam Barrage', category: 'Spiritual' },
   { name: 'Vellore', state: 'Tamil Nadu', tag: 'Vellore Fort & Sripuram Golden Temple', category: 'Heritage' },
   { name: 'Vapi', state: 'Gujarat', tag: 'Industrial Hub & Daman Gateway', category: 'City' },
+  { name: 'Vasai-Virar', state: 'Maharashtra', tag: 'Vasai Fort & Suruchi Beach', category: 'Coastal' },
 
   // W
   { name: 'Wayanad', state: 'Kerala', tag: 'Edakkal Caves, Chembra Peak & Waterfalls', category: 'Nature' },
-  { name: 'Warangal', state: 'Telangana', tag: 'Thousand Pillar Temple & Warangal Fort', category: 'Heritage' }
+  { name: 'Warangal', state: 'Telangana', tag: 'Thousand Pillar Temple & Warangal Fort', category: 'Heritage' },
+  { name: 'Wardha', state: 'Maharashtra', tag: 'Sevagram Ashram & Bapu Kuti', category: 'Heritage' },
+
+  // Y
+  { name: 'Yamunanagar', state: 'Haryana', tag: 'Kalesar National Park & Hathni Kund', category: 'Nature' },
+  { name: 'Yavatmal', state: 'Maharashtra', tag: 'Tipeshwar Wildlife Sanctuary', category: 'Nature' }
 ];
 
 export default function CityAutocomplete({ 

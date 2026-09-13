@@ -750,8 +750,16 @@ export function Planner(){
        <input id="group-age" type="number" min="18" max="120" className="input bg-white dark:bg-slate-900" value={age} onChange={e=>setAge(e.target.value)} placeholder="e.g. 24" aria-label="Age"/>
       </div>
       <div>
-       <label className="label">Current Location City</label>
-       <input className="input bg-white dark:bg-slate-900" value={location} onChange={e=>setLocation(e.target.value)} placeholder="e.g. Delhi, Mumbai, Patna" aria-label="Current city" required/>
+       <label className="label" htmlFor="current-location-city">Current Location City</label>
+       <CityAutocomplete
+        id="current-location-city"
+        name="current_location_city"
+        value={location}
+        onChange={val=>setLocation(val)}
+        placeholder="e.g. Delhi, Mumbai, Patna, Pune, Prayagraj…"
+        required={true}
+        inputClassName="bg-white dark:bg-slate-900"
+       />
       </div>
      </div>
      <button type="button" className="btn-ghost mt-3 text-xs flex items-center gap-1.5" onClick={getUserCurrentLocation}>
