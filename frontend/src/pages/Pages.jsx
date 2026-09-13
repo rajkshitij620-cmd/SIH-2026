@@ -392,7 +392,8 @@ export function Auth({register=false}){
       }catch{}
 
       setShowGoogleModal(false);
-      nav('/',{replace:true});
+      const target=location.state?.from||'/';
+      nav(target,{replace:true});
     }catch(x){
       setErr(x.message||'Google sign-in failed. Please try again.');
     }finally{
@@ -408,13 +409,15 @@ export function Auth({register=false}){
     try{
       if(mode==='register'){
         await api.post('/auth/register',body);
-        nav('/login',{replace:true,state:{message:'Account created successfully! Please sign in with your credentials.',email:body.email}});
+        nav('/login',{replace:true,state:{message:'Account created successfully! Please sign in with your credentials.',email:body.email,from:location.state?.from}});
       }else if(mode==='reset'){
         await auth('/auth/reset-password',{email:body.email,new_password:body.password});
-        nav('/',{replace:true});
+        const target=location.state?.from||'/';
+        nav(target,{replace:true});
       }else{
         await auth('/auth/login',body);
-        nav('/',{replace:true});
+        const target=location.state?.from||'/';
+        nav(target,{replace:true});
       }
     }catch(x){
       if(mode==='register'&&x.message==='Email is already registered'){

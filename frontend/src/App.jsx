@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 import {Routes,Route,Navigate,useLocation} from 'react-router-dom';import Layout from './layouts/Layout';import * as P from './pages/Pages';import {useAuth} from './context/AuthContext';
-function Protected({children}){const {user,loading}=useAuth(),location=useLocation();if(loading)return <div className="shell py-12">Loading…</div>;return user?children:<Navigate to="/register" replace state={{from:location.pathname}}/>}
+function Protected({children}){const {user,loading}=useAuth(),location=useLocation();if(loading)return <div className="shell py-12">Loading…</div>;return user?children:<Navigate to="/login" replace state={{from:location.pathname+location.search}}/>}
 
 const pageTitles={
   '/':'Tourmitra | Next-Gen Smart Tourism AI',
