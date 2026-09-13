@@ -759,9 +759,10 @@ export function Planner(){
         name="current_location_city"
         value={location}
         onChange={val=>setLocation(val)}
-        placeholder="e.g. Delhi, Mumbai, Patna, Pune, Prayagraj…"
+        placeholder="e.g. Delhi, Mumbai, Patna"
         required={true}
-        inputClassName="bg-white dark:bg-slate-900"
+        showIcon={false}
+        inputClassName="input bg-white dark:bg-slate-900"
        />
       </div>
      </div>
