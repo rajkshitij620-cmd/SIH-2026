@@ -477,29 +477,32 @@ def chat(v: ChatInput):
     # Check query intent types
     food_keywords = {'food', 'dish', 'dishes', 'khana', 'cuisine', 'cuisines', 'sweets', 'mithai', 'taste', 'specialty', 'specialties', 'specialities', 'restaurant', 'restaurants', 'eateries', 'delicacies', 'snack', 'snacks', 'chaat', 'breakfast', 'lunch', 'dinner'}
     places_keywords = {'place', 'places', 'sightseeing', 'ghoomna', 'attraction', 'attractions', 'spots', 'monuments', 'dharohar', 'heritage', 'sthal', 'tourist', 'viewpoint', 'viewpoints'}
-    temple_keywords = {'mandir', 'temple', 'temples', 'spiritual', 'dharmik', 'gurudwara', 'ashram', 'ghat', 'ghats', 'aarti', 'puja', 'darshan', 'masjid', 'church'}
+    temple_keywords = {'mandir', 'temple', 'temples', 'spiritual', 'dharmik', 'gurudwara', 'ashram', 'ghat', 'ghats', 'aarti', 'puja', 'darshan', 'masjid', 'church', 'monastery'}
+    hotel_keywords = {'hotel', 'hotels', 'stay', 'stays', 'hostel', 'hostels', 'resort', 'resorts', 'dharamshala', 'dharamshalas', 'guesthouse', 'lodge', 'lodging', 'rukne', 'room', 'rooms'}
+    park_keywords = {'park', 'parks', 'garden', 'gardens', 'nature', 'lake', 'lakes', 'waterfall', 'waterfalls', 'wildlife', 'sanctuary'}
     budget_keywords = {'budget', 'cost', 'kharcha', 'expense', 'expenses', 'price', 'rates', 'cheap', 'expensive'}
     time_keywords = {'season', 'months', 'timing', 'timings'}
     weather_keywords = {'weather', 'temperature', 'temp', 'mausam', 'baarish', 'rain', 'rainfall', 'humidity', 'forecast', 'climate', 'garmi', 'sardi', 'taapman'}
 
     is_food_inquiry = bool(tokens.intersection(food_keywords)) or any(k in msg_lower for k in ['street food', 'khana peena', 'famous food', 'kya khaye', 'kya khayein'])
     is_temple_inquiry = bool(tokens.intersection(temple_keywords)) or any(k in msg_lower for k in ['famous temple', 'famous mandir', 'puja timing', 'darshan timing'])
+    is_hotel_inquiry = bool(tokens.intersection(hotel_keywords)) or any(k in msg_lower for k in ['where to stay', 'kahan ruke', 'kahan rukein', 'best hotels', 'budget stay'])
+    is_park_inquiry = bool(tokens.intersection(park_keywords)) or any(k in msg_lower for k in ['famous park', 'botanical garden', 'nature spot'])
     is_budget_inquiry = bool(tokens.intersection(budget_keywords)) or any(k in msg_lower for k in ['how much', 'kitna kharcha', 'kitna lagega', 'per day budget', 'trip cost'])
     is_best_time_inquiry = bool(tokens.intersection(time_keywords)) or any(k in msg_lower for k in ['best time', 'when to visit', 'kab jayein', 'kab jana', 'right time', 'sahi samay'])
     is_places_inquiry = bool(tokens.intersection(places_keywords)) or any(k in msg_lower for k in ['famous places', 'tourist spot', 'ghoomne ki jagah', 'kahan ghume', 'kahan ghoomein', 'places to visit'])
     is_weather_inquiry = bool(tokens.intersection(weather_keywords))
 
+    # Determine intent (if multiple or generic, default to 360-degree complete guide)
+    intents_count = sum([is_food_inquiry, is_temple_inquiry, is_hotel_inquiry, is_park_inquiry, is_budget_inquiry, is_best_time_inquiry, is_places_inquiry])
     spec_type = None
-    if is_food_inquiry:
-        spec_type = 'food'
-    elif is_best_time_inquiry:
-        spec_type = 'best_time'
-    elif is_budget_inquiry:
-        spec_type = 'budget'
-    elif is_temple_inquiry:
-        spec_type = 'temples'
-    elif is_places_inquiry:
-        spec_type = 'places'
+    if intents_count == 1:
+        if is_food_inquiry: spec_type = 'food'
+        elif is_hotel_inquiry: spec_type = 'hotels'
+        elif is_best_time_inquiry: spec_type = 'best_time'
+        elif is_budget_inquiry: spec_type = 'budget'
+        elif is_temple_inquiry: spec_type = 'temples'
+        elif is_places_inquiry: spec_type = 'places'
 
     # 1. Match Indian Cities from comprehensive Knowledge Base & Destination Store
     city_kb_data = get_city_knowledge(raw_msg)
@@ -552,14 +555,17 @@ def chat(v: ChatInput):
             'name': city_kb_data['name'],
             'state': city_kb_data['state'],
             'description': city_kb_data['description'],
-            'famous_places': city_kb_data['famous_places'],
-            'famous_food': city_kb_data['famous_food'],
-            'temples_spiritual': city_kb_data['temples_spiritual'],
-            'heritage_sites': city_kb_data['heritage_sites'],
-            'budget': city_kb_data['budget'],
-            'best_time': city_kb_data['best_time'],
-            'specialties': city_kb_data['specialties'],
-            'user_intent': spec_type or 'general_overview'
+            'famous_places': city_kb_data.get('famous_places', []),
+            'famous_food': city_kb_data.get('famous_food', []),
+            'temples_spiritual': city_kb_data.get('temples_spiritual', []),
+            'heritage_sites': city_kb_data.get('heritage_sites', []),
+            'parks_nature': city_kb_data.get('parks_nature', []),
+            'hotels_stay': city_kb_data.get('hotels_stay', {}),
+            'local_transport': city_kb_data.get('local_transport', ''),
+            'budget': city_kb_data.get('budget', {}),
+            'best_time': city_kb_data.get('best_time', ''),
+            'specialties': city_kb_data.get('specialties', ''),
+            'user_intent': spec_type or 'comprehensive_360_guide'
         })
     elif matched_destinations:
         context_payload.extend([

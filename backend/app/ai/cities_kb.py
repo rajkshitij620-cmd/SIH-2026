@@ -789,143 +789,123 @@ def get_city_knowledge(query: str) -> Optional[Dict[str, Any]]:
     return None
 
 def format_city_guide(city_data: Dict[str, Any], hindi: bool = False, specific_type: Optional[str] = None) -> str:
-    """Formats city information strictly based on user intent."""
+    """Formats rich 360-degree city intelligence covering Places, Temples, Parks, Food, Hotels, Transport, and Budget."""
     name = city_data["name"]
     state = city_data["state"]
     desc = city_data["description"]
     nl = chr(10)
-    places_str = nl.join(["   • " + str(p) for p in city_data["famous_places"]])
-    food_str = nl.join(["   • " + str(f) for f in city_data["famous_food"]])
-    temples_str = nl.join(["   • " + str(t) for t in city_data["temples_spiritual"]])
-    heritage_str = nl.join(["   • " + str(h) for h in city_data["heritage_sites"]])
-    budget_dict = city_data["budget"]
+    places_str = nl.join(["   • " + str(p) for p in city_data.get("famous_places", [name])])
+    food_str = nl.join(["   • " + str(f) for f in city_data.get("famous_food", ["Local traditional thali & regional street foods"])])
+    temples_str = nl.join(["   • " + str(t) for t in city_data.get("temples_spiritual", [f"Famous local temples & shrines in {name}"])])
+    heritage_str = nl.join(["   • " + str(h) for h in city_data.get("heritage_sites", [f"Historic landmarks of {name}"])])
+    
+    # Parks, Gardens & Nature
+    parks_list = city_data.get("parks_nature", [
+        f"Prominent public parks, scenic viewpoints and botanical gardens in {name}",
+        f"Lakes, waterfalls & peaceful nature spots surrounding {name}"
+    ])
+    parks_str = nl.join(["   • " + str(p) for p in parks_list])
+
+    # Hotels & Stays
+    hotels_info = city_data.get("hotels_stay", {
+        "budget": f"Hostels, Dharamshalas & Homestays near railway station / city center (~₹800–1,200/night)",
+        "mid": f"3-Star Comfort Family Hotels & Boutique Stays (~₹2,000–3,500/night)",
+        "luxury": f"Premium 4/5-Star Heritage Resorts & Modern Luxury Hotels (~₹5,500+/night)",
+        "best_areas": f"City Center, Mall Road / Station Area, and Tourist Promenade"
+    })
+    
+    # Local Transport
+    transport_info = city_data.get("local_transport", f"Local buses, auto-rickshaws, e-rickshaws, cab aggregators (Ola/Uber) & two-wheeler rentals.")
+
+    budget_dict = city_data.get("budget", {})
     b_low = budget_dict.get("budget", "₹1,000 – ₹1,500/day")
     b_mid = budget_dict.get("mid", "₹2,500 – ₹4,000/day")
     b_lux = budget_dict.get("luxury", "₹6,000+/day")
-    best_time = city_data["best_time"]
-    specialties = city_data["specialties"]
+    best_time = city_data.get("best_time", "October to March (Pleasant weather)")
+    specialties = city_data.get("specialties", "Local regional handicrafts, textiles & traditional sweets")
 
-    # 1. FOOD ONLY
+    # If user explicitly asked ONLY for food
     if specific_type == "food":
         if hindi:
             return (
-                f"🍛 **{name} ({state}) ke Prasiddh Vyanjan & Food Guide**\n\n"
-                f"{name} ka swaad aur khana behad anokha aur prasiddh hai. Yahan ke famous dishes aur street food:\n\n"
+                f"🍛 **{name} ({state}) – Prasiddh Khana, Street Food & Iconic Eateries**\n\n"
+                f"{name} ka swaad aur paramparik cuisine behad mashhoor hai:\n\n"
                 f"{food_str}\n\n"
-                f"🛍️ **Prasiddh Mithai & Souvenirs**: {specialties}\n\n"
-                f"Agar aapko {name} ke specific restaurants ya iconic food stalls ki location chahiye toh batayein!"
+                f"🛍️ **Prasiddh Mithai & Food Souvenirs**: {specialties}\n\n"
+                f"💡 *Travel Tip*: Purane bazar aur local food streets me shaam ke waqt fresh authentic dishes zaroor try karein!"
             )
         else:
             return (
-                f"🍛 **{name} ({state}) Famous Food & Culinary Delights**\n\n"
-                f"{name} is renowned for its iconic traditional cuisines, signature dishes, and vibrant street food culture:\n\n"
+                f"🍛 **{name} ({state}) – Famous Food, Street Eats & Iconic Cuisines**\n\n"
+                f"{name} is celebrated for its authentic regional delicacies and signature street foods:\n\n"
                 f"{food_str}\n\n"
-                f"🛍️ **Local Food Specialties & Gifts**: {specialties}\n\n"
-                f"Let me know if you would like recommendations for specific iconic eateries or food streets in {name}!"
+                f"🛍️ **Famous Food Specialties & Treats**: {specialties}\n\n"
+                f"💡 *Foodie Tip*: Explore local heritage bazaars in the evening for authentic freshly-prepared delicacies!"
             )
 
-    # 2. PLACES & SIGHTSEEING ONLY
-    if specific_type == "places":
+    # If user explicitly asked ONLY for hotels/stay
+    if specific_type == "hotels":
         if hindi:
             return (
-                f"🏛️ **{name} ({state}) ke Pramukh Paryatan Sthal (Sightseeing Attractions)**\n\n"
-                f"{desc}\n\n"
-                f"**Top Must-Visit Attractions:**\n{places_str}\n\n"
-                f"🏰 **Aitihasik Dharohar (Heritage Landmarks):**\n{heritage_str}\n\n"
-                f"🗓️ **Ghoomne Ka Best Samay**: {best_time}\n\n"
-                f"Kya aapko {name} ke sightseeing ke liye customized day-wise plan chahiye?"
+                f"🏨 **{name} ({state}) – Hotels & Stay Recommendations**\n\n"
+                f"• **Budget Stay (Dharamshala / Hostels)**: {hotels_info.get('budget')}\n"
+                f"• **Mid-Range Family Hotels**: {hotels_info.get('mid')}\n"
+                f"• **Luxury & Heritage Resorts**: {hotels_info.get('luxury')}\n"
+                f"• 📍 **Best Areas to Stay**: {hotels_info.get('best_areas')}\n\n"
+                f"💡 *Booking Tip*: Peak season me advance booking zaroor karein."
             )
         else:
             return (
-                f"🏛️ **Top Attractions & Sightseeing in {name} ({state})**\n\n"
-                f"{desc}\n\n"
-                f"**Must-Visit Attractions:**\n{places_str}\n\n"
-                f"🏰 **Heritage & Historical Landmarks:**\n{heritage_str}\n\n"
-                f"🗓️ **Best Time to Visit**: {best_time}\n\n"
-                f"Would you like a day-by-day customized sightseeing itinerary for {name}?"
+                f"🏨 **{name} ({state}) – Hotels & Stay Recommendations**\n\n"
+                f"• **Budget (Hostels / Guesthouses)**: {hotels_info.get('budget')}\n"
+                f"• **Mid-Range (3-Star Family Hotels)**: {hotels_info.get('mid')}\n"
+                f"• **Luxury (Resorts & 5-Star Stays)**: {hotels_info.get('luxury')}\n"
+                f"• 📍 **Best Neighborhoods to Stay**: {hotels_info.get('best_areas')}\n\n"
+                f"💡 *Travel Tip*: Reserve your stays in advance during holiday and festival seasons for the best rates."
             )
 
-    # 3. TEMPLES & SPIRITUAL ONLY
-    if specific_type == "temples":
-        if hindi:
-            return (
-                f"🛕 **{name} ({state}) ke Prasiddh Mandir & Dharmik Sthal**\n\n"
-                f"{name} ke sabse prasiddh mandir, aashram aur spiritual sthal:\n\n"
-                f"{temples_str}\n\n"
-                f"Aapko kisi specific mandir ke darshan timing ya aarti ke baare me jaanna hai?"
-            )
-        else:
-            return (
-                f"🛕 **Temples & Spiritual Sanctuaries in {name} ({state})**\n\n"
-                f"Here are the prominent historical temples, shrines, and sacred sites in {name}:\n\n"
-                f"{temples_str}\n\n"
-                f"Would you like details on Darshan timings or Aarti rituals for any specific temple?"
-            )
-
-    # 4. BUDGET ONLY
-    if specific_type == "budget":
-        if hindi:
-            return (
-                f"💰 **{name} ({state}) Trip Budget Breakdown (Per Day Per Person)**\n\n"
-                f"• **Budget Traveller**: {b_low}\n"
-                f"• **Mid-Range Traveller**: {b_mid}\n"
-                f"• **Luxury Traveller**: {b_lux}\n\n"
-                f"💡 *Budget Tip*: Dharamshala ya budget homestays aur public transport / e-rickshaw use karke kharcha kafi kam ho jata hai."
-            )
-        else:
-            return (
-                f"💰 **Estimated Per-Day Budget Breakdown for {name} ({state})**\n\n"
-                f"• **Budget Traveller**: {b_low}\n"
-                f"• **Mid-Range Traveller**: {b_mid}\n"
-                f"• **Luxury Traveller**: {b_lux}\n\n"
-                f"💡 *Savings Tip*: Booking trains/buses in advance and enjoying local street delicacies keeps costs affordable!"
-            )
-
-    # 5. BEST TIME ONLY
-    if specific_type == "best_time":
-        if hindi:
-            return (
-                f"🗓️ **{name} ({state}) Ghoomne Ka Sahi Samay (Best Time to Visit)**\n\n"
-                f"• **Ideal Season / Months**: {best_time}\n\n"
-                f"Iss samay mausam suhana rehta hai aur sightseeing me koi pareshani nahi hoti."
-            )
-        else:
-            return (
-                f"🗓️ **Best Time to Visit {name} ({state})**\n\n"
-                f"• **Optimal Months & Season**: {best_time}\n\n"
-                f"During these months, weather conditions are most pleasant and ideal for sightseeing and outdoor exploring."
-            )
-
-    # 6. COMPLETE 360 GUIDE
+    # 360-DEGREE COMPLETE TRAVEL INTELLIGENCE GUIDE
     if hindi:
         return (
-            f"🌟 **{name} ({state}) – Sampoorna Travel & Heritage Guide**\n\n"
+            f"🌟 **{name} ({state}) – Sampoorna Travel Guide (Places, Food, Temples, Parks & Hotels)**\n\n"
             f"{desc}\n\n"
-            f"1. 🏛️ **Prasiddh Sthal & Attractions (Famous Places)**:\n{places_str}\n\n"
-            f"2. 🍛 **Prasiddh Khana & Swaad (Famous Food)**:\n{food_str}\n\n"
-            f"3. 🛕 **Mandir, Gurudwara & Dharmik Sthal (Spiritual Sites)**:\n{temples_str}\n\n"
-            f"4. 🏰 **Aitihasik Dharohar (Heritage & History)**:\n{heritage_str}\n\n"
-            f"5. 💰 **Per-Day Anumanit Budget (Per Person)**:\n"
+            f"🏛️ **1. Pramukh Paryatan Sthal (Top Sightseeing & Attractions)**:\n{places_str}\n\n"
+            f"🛕 **2. Mandir, Gurudwara & Dharmik Sthal (Spiritual Sites)**:\n{temples_str}\n\n"
+            f"🌳 **3. Parks, Gardens, Lakes & Nature (Prakritik Sthal)**:\n{parks_str}\n\n"
+            f"🍛 **4. Prasiddh Khana & Street Food (Famous Food)**:\n{food_str}\n\n"
+            f"🏨 **5. Hotels & Stay Recommendations (Rukne Ki Jagah)**:\n"
+            f"   • **Budget (Dharamshala/Hostel)**: {hotels_info.get('budget')}\n"
+            f"   • **Mid-Range (Family Hotel)**: {hotels_info.get('mid')}\n"
+            f"   • **Luxury (Resorts/Heritage)**: {hotels_info.get('luxury')}\n"
+            f"   • 📍 **Best Area**: {hotels_info.get('best_areas')}\n\n"
+            f"🗓️ **6. Ghoomne Ka Sahi Samay (Best Time to Visit)**: {best_time}\n\n"
+            f"🚗 **7. Local Transport & Commute**: {transport_info}\n\n"
+            f"💰 **8. Anumanit Per-Day Budget (Per Person)**:\n"
             f"   • **Budget**: {b_low}\n"
             f"   • **Mid-Range**: {b_mid}\n"
             f"   • **Luxury**: {b_lux}\n\n"
-            f"6. 🗓️ **Ghoomne Ka Sabse Accha Samay (Best Time to Visit)**: {best_time}\n"
-            f"7. 🛍️ **Prasiddh Handicrafts & Shopping**: {specialties}\n\n"
-            f"Aapko {name} ke hotels, cab booking ya day-wise itinerary me madad chahiye toh batayein!"
+            f"🛍️ **9. Prasiddh Shopping & Handicrafts**: {specialties}\n\n"
+            f"Aapko {name} ke baare me kisi specific place, hotel ya route ki aur details chahiye toh poochhein!"
         )
     else:
         return (
-            f"🌟 **{name} ({state}) – Complete Travel & Heritage Guide**\n\n"
+            f"🌟 **{name} ({state}) – Complete 360° Travel Guide (Places, Food, Temples, Parks & Hotels)**\n\n"
             f"{desc}\n\n"
-            f"1. 🏛️ **Famous Places & Must-Visit Attractions**:\n{places_str}\n\n"
-            f"2. 🍛 **Famous Food & Iconic Cuisines**:\n{food_str}\n\n"
-            f"3. 🛕 **Temples & Spiritual Sanctuaries**:\n{temples_str}\n\n"
-            f"4. 🏰 **Historic & Heritage Landmarks**:\n{heritage_str}\n\n"
-            f"5. 💰 **Estimated Per-Day Budget Breakdown**:\n"
+            f"🏛️ **1. Top Sightseeing & Famous Places**:\n{places_str}\n\n"
+            f"🛕 **2. Temples, Shrines & Spiritual Sites**:\n{temples_str}\n\n"
+            f"🌳 **3. Parks, Gardens & Nature Spots**:\n{parks_str}\n\n"
+            f"🍛 **4. Famous Local Food, Delicacies & Street Eats**:\n{food_str}\n\n"
+            f"🏨 **5. Hotels & Where to Stay**:\n"
+            f"   • **Budget**: {hotels_info.get('budget')}\n"
+            f"   • **Mid-Range**: {hotels_info.get('mid')}\n"
+            f"   • **Luxury**: {hotels_info.get('luxury')}\n"
+            f"   • 📍 **Recommended Area**: {hotels_info.get('best_areas')}\n\n"
+            f"🗓️ **6. Best Time to Visit & Climate**: {best_time}\n\n"
+            f"🚗 **7. Local Transport & How to Commute**: {transport_info}\n\n"
+            f"💰 **8. Estimated Per-Day Budget Breakdown**:\n"
             f"   • **Budget Traveller**: {b_low}\n"
             f"   • **Mid-Range Traveller**: {b_mid}\n"
             f"   • **Luxury Traveller**: {b_lux}\n\n"
-            f"6. 🗓️ **Best Season / Time to Visit**: {best_time}\n"
-            f"7. 🛍️ **Local Specialties & Handlooms**: {specialties}\n\n"
-            f"Let me know if you would like a tailored day-wise itinerary, hotel suggestions, or route guidance for {name}!"
+            f"🛍️ **9. Shopping & Local Souvenirs**: {specialties}\n\n"
+            f"Let me know if you would like custom day-wise itinerary planning, hotel bookings, or directions for {name}!"
         )

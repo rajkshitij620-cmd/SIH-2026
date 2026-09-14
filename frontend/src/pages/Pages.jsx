@@ -1144,10 +1144,10 @@ const indianLanguages=[
  {code:'ks',name:'Kashmiri',native:'कॉशुर'}
 ];
 const geminiPrompts=[
- {icon:'🛕',title:'Varanasi Temples & Ghats',desc:'Ghats, Kashi Vishwanath, famous food & 2-day budget',query:'Varanasi famous places, temples, food, historic sites and per day budget'},
- {icon:'🍲',title:'Kolkata Food & Heritage',desc:'Street food, sweets, Victoria Memorial & cost',query:'Kolkata famous street food, sweets, temples, historic places and daily budget'},
- {icon:'🏰',title:'Jaipur Forts & Culture',desc:'Hawa Mahal, Amer Fort, local cuisine & expenses',query:'Jaipur top forts, famous food, historic sites and 2-day budget'},
- {icon:'🌤️',title:'Live Weather & Travel',desc:'Current live weather, temperature & best travel time',query:'What is the current live weather in Kolkata and Goa, and best time to visit?'}
+ {icon:'🏔️',title:'Dehradun & Hill Gateways',desc:'Places, Robber’s Cave, temples, parks, local food & hotels',query:'Dehradun complete travel guide: famous places, temples, parks, local food, hotels to stay & budget'},
+ {icon:'🛕',title:'Varanasi 360° Guide',desc:'Kashi Vishwanath, ghats, food, hotels/stays & daily budget',query:'Varanasi complete travel details: top ghats, temples, famous food, hotels, parks and daily budget'},
+ {icon:'🍲',title:'Patna & Bihar Heritage',desc:'Golghar, Takht Sri Patna Sahib, food, parks & hotels',query:'Patna complete travel details: famous places, temples, parks, iconic food, hotels & best time to visit'},
+ {icon:'🏰',title:'Jaipur Royal City Guide',desc:'Forts, Hawa Mahal, street cuisine, resorts & travel tips',query:'Jaipur complete travel guide: famous places, temples, parks, food, hotels and per day budget'}
 ];
 export function Assistant(){
  const [msg,setMsg]=useState([]),[q,setQ]=useState(''),[lang,setLang]=useState('en'),[sending,setSending]=useState(false),[copiedIndex,setCopiedIndex]=useState(null),chatBottomRef=useRef(null),inputRef=useRef(null);
@@ -1204,6 +1204,7 @@ export function Assistant(){
      <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-800 dark:text-slate-100">
       Where would you like to explore in India today?
      </h2>
+     <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">Ask about any small or large city, town, hill station or heritage place in India for places, temples, parks, food, hotels & budgets.</p>
     </div>
     <div className="mt-8 grid gap-3 sm:grid-cols-2">
      {geminiPrompts.map((p,idx)=><button key={idx} type="button" onClick={()=>handleSendQuery(p.query)} className="group flex flex-col justify-between rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 p-4 text-left shadow-sm transition hover:border-purple-300 hover:shadow-md hover:bg-gradient-to-br hover:from-white hover:to-purple-50/40 dark:hover:from-slate-900 dark:hover:to-purple-950/20">
@@ -1227,7 +1228,7 @@ export function Assistant(){
     {sending&&<div className="flex gap-3">
      <div className="mt-1 shrink-0"><div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white animate-pulse"><GeminiStar className="w-5 h-5"/></div></div>
      <div className="max-w-[85%] rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/90 dark:bg-slate-900 p-4 shadow-sm">
-      <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300"><Sparkles size={16} className="text-purple-500 animate-spin" style={{animationDuration:'3s'}}/><span>Tourmitra is analyzing destinations & preparing your guide…</span></div>
+      <div className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300"><Sparkles size={16} className="text-purple-500 animate-spin" style={{animationDuration:'3s'}}/><span>Tourmitra is preparing your complete Indian destination intelligence guide…</span></div>
       <div className="mt-3 h-1.5 w-48 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"><div className="h-full w-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 animate-[pulse_1.2s_ease-in-out_infinite]"/></div>
      </div>
     </div>}
@@ -1237,10 +1238,10 @@ export function Assistant(){
   <div className="sticky bottom-4 mt-4">
    <form onSubmit={(e)=>{e.preventDefault();handleSendQuery();}} className="flex items-center gap-2 rounded-3xl border border-slate-200/90 dark:border-slate-700/80 bg-white/95 dark:bg-slate-900/95 p-2 shadow-lg backdrop-blur-md transition focus-within:border-purple-400 focus-within:ring-2 focus-within:ring-purple-400/20">
     <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-tr from-blue-50 via-purple-50 to-pink-50 dark:from-slate-800 dark:to-slate-800 text-purple-600"><Sparkles size={18}/></div>
-    <input ref={inputRef} className="flex-1 bg-transparent px-2 py-2 text-sm sm:text-base outline-none placeholder:text-slate-400 text-slate-800 dark:text-slate-100" id="assistant-question" name="assistant-question" value={q} onChange={(e)=>setQ(e.target.value)} placeholder={lang==='en'?"Ask about any Indian city, food, temples, history, per-day budget…":`${selectedLangObj.native} (${selectedLangObj.name}) - Kisi bhi city, food, temples, history ya budget ke baare me poochhein…`} autoComplete="off" disabled={sending}/>
+    <input ref={inputRef} className="flex-1 bg-transparent px-2 py-2 text-sm sm:text-base outline-none placeholder:text-slate-400 text-slate-800 dark:text-slate-100" id="assistant-question" name="assistant-question" value={q} onChange={(e)=>setQ(e.target.value)} placeholder={lang==='en'?"Ask about ANY Indian city (small or large): places, temples, parks, food, hotels, budget…":`${selectedLangObj.native} (${selectedLangObj.name}) - Bharat ke kisi bhi sheher ke places, mandir, park, khana, hotel ya budget ke baare me poochhein…`} autoComplete="off" disabled={sending}/>
     <button type="submit" disabled={sending||!q.trim()} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white shadow-md shadow-indigo-500/20 transition hover:opacity-95 active:scale-95 disabled:opacity-40 disabled:pointer-events-none" aria-label="Send message"><Send size={17}/></button>
    </form>
-   <p className="mt-2 text-center text-[11px] text-slate-400 dark:text-slate-500">Tourmitra provides destination insights, real-time weather, authentic food recommendations, and travel budgets.</p>
+   <p className="mt-2 text-center text-[11px] text-slate-400 dark:text-slate-500">Tourmitra AI covers places, temples, parks, food, hotels, transports and budgets for any Indian destination.</p>
   </div>
  </div>;
 }
